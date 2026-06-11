@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 10px; color: #222; }
+  h1 { color: #1a3a5c; font-size: 16px; margin-bottom: 4px; }
+  h2 { color: #1a3a5c; font-size: 12px; margin: 12px 0 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  th { background: #1a3a5c; color: #fff; padding: 5px 6px; text-align: left; }
+  td { border: 1px solid #ccc; padding: 4px 6px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f7fb; }
+  .badge-sim { color: #155724; font-weight: bold; }
+  .badge-nao { color: #721c24; }
+  .rodape { margin-top: 20px; font-size: 9px; color: #888; text-align: center; }
+</style>
+</head>
+<body>
+  <h1>Relatório da Programação Anual de Saúde — SESA-MA</h1>
+  {% if ciclo %}<p><strong>Ciclo:</strong> {{ ciclo }}</p>{% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Diretriz</th><th>Objetivo</th><th>Meta</th><th>Área</th>
+        <th>Previsto</th><th>Realizado</th>
+        <th>Válid. Coord.</th><th>Válid. ASPLAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in registros %}
+      <tr>
+        <td>{{ r.meta.objetivo.diretriz.codigo }}</td>
+        <td>{{ r.meta.objetivo.codigo }}</td>
+        <td>{{ r.meta.codigo }} — {{ r.meta.descricao }}</td>
+        <td>{{ r.meta.area.sigla }}</td>
+        <td>{{ r.meta.previsto_exercicio }}</td>
+        <td>{{ r.realizado }}</td>
+        <td class="{% if r.validado_coord %}badge-sim{% else %}badge-nao{% endif %}">
+          {% if r.validado_coord %}Sim{% else %}Não{% endif %}
+        </td>
+        <td class="{% if r.validado_asplan %}badge-sim{% else %}badge-nao{% endif %}">
+          {% if r.validado_asplan %}Sim{% else %}Não{% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" style="text-align:center">Nenhum registro encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="rodape">Gerado pelo SISPAS — Secretaria de Estado da Saúde do Maranhão</div>
+</body>
+</html>
