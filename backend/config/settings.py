@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'monitoramento',
     'relatorios',
     'auditoria',
+    'notificacoes',
 ]
 
 MIDDLEWARE = [

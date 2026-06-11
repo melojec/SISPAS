@@ -6,6 +6,7 @@ from rest_framework.filters import OrderingFilter
 from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira
 from .serializers import CicloSerializer, RegistroQuadrimestralSerializer, ExecucaoFinanceiraSerializer
 from usuarios.permissions import IsASPLAN, IsCoordenador, IsUsuarioAtivo, IsUsuarioDeArea
+from notificacoes import services as notif
 
 
 class CicloViewSet(viewsets.ModelViewSet):
@@ -18,6 +19,15 @@ class CicloViewSet(viewsets.ModelViewSet):
         if self.action in ('create', 'update', 'partial_update', 'destroy'):
             return [IsASPLAN()]
         return [IsUsuarioAtivo()]
+
+    def perform_update(self, serializer):
+        anterior = self.get_object().situacao
+        ciclo = serializer.save()
+        if anterior != ciclo.situacao:
+            if ciclo.situacao == Ciclo.ABERTO:
+                notif.notificar_ciclo_aberto(ciclo)
+            else:
+                notif.notificar_ciclo_fechado(ciclo)
 
     @action(detail=False, methods=['get'])
     def atual(self, request):
@@ -43,11 +53,16 @@ class RegistroQuadrimestralViewSet(viewsets.ModelViewSet):
             return qs
         return qs.filter(meta__area=user.area)
 
+    def perform_create(self, serializer):
+        registro = serializer.save(criado_por=self.request.user)
+        notif.notificar_registro_enviado(registro)
+
     @action(detail=True, methods=['patch'], permission_classes=[IsCoordenador])
     def validar_coord(self, request, pk=None):
         registro = self.get_object()
         registro.validado_coord = True
         registro.save(update_fields=['validado_coord'])
+        notif.notificar_validado_coord(registro)
         return Response({'status': 'validado pelo coordenador'})
 
     @action(detail=True, methods=['patch'], permission_classes=[IsASPLAN])
@@ -55,6 +70,7 @@ class RegistroQuadrimestralViewSet(viewsets.ModelViewSet):
         registro = self.get_object()
         registro.validado_asplan = True
         registro.save(update_fields=['validado_asplan'])
+        notif.notificar_validado_asplan(registro)
         return Response({'status': 'validado pela ASPLAN'})
 
 
