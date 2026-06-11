@@ -80,6 +80,7 @@ class ExecucaoFinanceira(models.Model):
         verbose_name_plural = 'Execuções Financeiras'
         db_table = 'execucao_financeira'
         unique_together = ('atividade', 'ciclo')
+        ordering = ['-ciclo__ano', '-ciclo__quadrimestre']
 
     def __str__(self):
         return f'{self.atividade} | {self.ciclo}'

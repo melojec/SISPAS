@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import useAuthStore from '../store/authStore'
+import useDarkMode from '../store/useDarkMode'
+import logo from '../assets/logo.svg'
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm()
@@ -9,6 +11,7 @@ export default function Login() {
   const navigate = useNavigate()
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(false)
+  const [dark, toggleDark] = useDarkMode()
 
   const onSubmit = async ({ email, password }) => {
     setErro('')
@@ -25,10 +28,28 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-blue-950 dark:bg-gray-950 flex items-center justify-center px-4">
+      <button
+        onClick={toggleDark}
+        className="fixed top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+        title={dark ? 'Modo claro' : 'Modo escuro'}
+      >
+        {dark ? (
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.7.7M6.34 17.66l-.7.7m12.02 0-.7-.7M6.34 6.34l-.7-.7M12 7a5 5 0 100 10A5 5 0 0012 7z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+          </svg>
+        )}
+      </button>
+
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-950 dark:text-white">SISPAS</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Secretaria de Estado da Saúde — MA</p>
+        <div className="flex flex-col items-center text-center gap-2 mb-8">
+          <img src={logo} alt="SISPAS" className="h-30 w-auto" />
+          <div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Sistema de Monitoramento da Programação Anual de Saúde</p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

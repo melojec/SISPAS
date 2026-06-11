@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.db.models.expressions import RawSQL
+from django.conf import settings
 from .models import Area, Diretriz, Objetivo, Meta, Atividade
 from .serializers import (
     AreaSerializer, DiretrizSerializer, DiretrizDetalheSerializer,
@@ -10,7 +11,10 @@ from .serializers import (
 from usuarios.permissions import IsASPLAN, IsUsuarioAtivo
 
 def _nat(table):
-    """Ordenação natural qualificada com nome da tabela para evitar ambiguidade em JOINs."""
+    """Ordenação natural qualificada. Usa SUBSTRING_INDEX no MySQL/MariaDB; fallback simples no SQLite."""
+    engine = settings.DATABASES['default']['ENGINE']
+    if 'sqlite' in engine:
+        return ['codigo']
     return [
         RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
         RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),

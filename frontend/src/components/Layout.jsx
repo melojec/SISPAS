@@ -27,10 +27,10 @@ export default function Layout() {
   const [dark, toggle] = useDarkMode()
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0a0b0b]">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="h-12 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-end gap-1 px-6 shrink-0">
+        <header className="h-12 bg-white dark:bg-[#0a0b0b] border-b border-gray-200 dark:border-gray-700 flex items-center justify-end gap-1 px-6 shrink-0">
           <ToggleDark dark={dark} toggle={toggle} />
           <SinoBadge />
         </header>

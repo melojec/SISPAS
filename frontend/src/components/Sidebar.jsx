@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
+import logo from '../assets/logo.svg'
 
 const NAV = [
   { to: '/',           label: 'Dashboard',  icone: '📊', perfis: null },
@@ -17,9 +18,9 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-blue-950 dark:bg-[#252525] text-white flex flex-col">
-      <div className="px-6 py-5 border-b border-blue-800">
-        <h1 className="text-xl font-bold tracking-wide">SISPAS</h1>
-        <p className="text-xs text-blue-300 mt-1">SES-MA</p>
+      <div className="px-4 py-4 border-b border-blue-800 flex flex-col items-center text-center gap-2">
+        <img src={logo} alt="SISPAS" className="h-25 w-auto" />
+        <p className="text-[10px] text-blue-300 leading-snug">Sistema de Monitoramento da Programação Anual de Saúde</p>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1">

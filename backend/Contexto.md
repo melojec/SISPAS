@@ -67,27 +67,32 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - [x] Ordenação natural de códigos (1.1.1 → 1.1.2 → ... → 1.1.10) via RawSQL com prefixo de tabela (`_nat(table)`) para evitar ambiguidade em JOINs
 - [x] URL do Admin alterada para `/admsispas/`
 
-### ETAPA 3 — Frontend React 🔄 EM ANDAMENTO
+### ETAPA 3 — Frontend React ✅ COMPLETA
 - [x] Projeto React + Vite criado
 - [x] TailwindCSS, React Router, Zustand, React Query configurados
 - [x] Proxy /api → Django em desenvolvimento (vite.config.js)
 - [x] api.js com interceptors JWT (inject token + refresh automático)
 - [x] authStore (Zustand): login, logout, fetchMe
 - [x] ProtectedRoute com controle por perfil
-- [x] Login
-- [x] Layout + Sidebar
-- [x] DOMI (Diretrizes, Objetivos, Metas, Indicadores + Registro) ← módulo principal
-- [ ] Dashboard — existe o arquivo, verificar se está completo
-- [ ] Ciclos — existe o arquivo, verificar se está completo
-- [ ] Usuários — existe o arquivo, verificar se está completo
-- [ ] Auditoria — existe o arquivo, verificar se está completo
-- [ ] Relatórios — existe o arquivo, verificar se está completo
-- [ ] Notificações — não iniciado
-- [ ] Build de produção (npm run build)
+- [x] Login (com logotipo SVG + dark mode toggle)
+- [x] Layout + Sidebar (com logotipo SVG institucional)
+- [x] DOMI (Diretrizes, Objetivos, Metas, Indicadores + Registro)
+- [x] Dashboard
+- [x] Ciclos
+- [x] Usuários
+- [x] Auditoria
+- [x] Relatórios
+- [x] Notificações (sino no header, polling 30s, marcar lida/todas)
+- [x] Dark mode em todas as páginas + toggle no header e login
+- [x] Identidade institucional: logotipo SVG (frontend/src/assets/logo.svg)
 
-### ETAPA 4 — Testes ❌ NÃO INICIADA
-- [ ] pytest + pytest-django (backend)
-- [ ] Testes de serializers, permissões, regras de negócio
+### ETAPA 4 — Testes 🔄 EM ANDAMENTO
+- [x] pytest + pytest-django configurados (SQLite in-memory via config/settings_test.py)
+- [x] conftest.py com fixtures: api, area, admin, asplan, coordenador, usuario, visualizador
+- [x] Testes de model e API — usuarios (14 testes)
+- [x] Testes de model e API — core: Area, Diretriz, Meta (19 testes)
+- [x] Testes de model e API — monitoramento: Ciclo, Registro, Validações, ExecucaoFinanceira (20 testes)
+- [x] 53 testes passando, 0 falhas
 - [ ] Playwright (E2E frontend)
 
 ### ETAPA 5 — Deploy ❌ NÃO INICIADA
@@ -104,8 +109,10 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 ## Notas técnicas importantes
 - `_nat(table)` em `core/admin.py` e `core/views.py`: ordenação natural qualificada com nome da tabela. Necessário porque `select_related` gera JOINs entre tabelas que todas têm coluna `codigo`, tornando referência sem prefixo ambígua no MariaDB.
 - No Admin, usar `get_ordering()` (não `get_queryset`) para ordenação — o `ChangeList` sobrescreve o `order_by` do queryset com o resultado de `get_ordering`.
+- `_nat(table)` detecta o banco via `settings.DATABASES['default']['ENGINE']`: usa SUBSTRING_INDEX no MySQL/MariaDB e fallback `['codigo']` no SQLite (testes).
+- Testes rodam com SQLite in-memory (`config/settings_test.py`) — não requer permissão de criação de banco no MariaDB de desenvolvimento.
+- Logotipo SVG institucional em `frontend/src/assets/logo.svg` — usado no Sidebar e na tela de Login.
 
 ## Próximo foco
-Verificar e completar as páginas existentes da Etapa 3:
-Dashboard, Ciclos, Usuarios, Auditoria, Relatorios.
-Depois: Notificações → Testes → Deploy.
+Etapa 4 — Playwright (E2E frontend).
+Depois: Etapa 5 — Deploy.
