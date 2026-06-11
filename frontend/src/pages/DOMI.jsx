@@ -10,7 +10,6 @@ function ModalMeta({ meta, ciclo, onClose }) {
 
   const ano = ciclo?.ano
 
-  // Registro qualitativo da meta no ciclo atual
   const { data: registroExistente } = useQuery({
     queryKey: ['registro', meta.id, ciclo?.id],
     queryFn: () => ciclo
@@ -20,7 +19,6 @@ function ModalMeta({ meta, ciclo, onClose }) {
     enabled: !!ciclo,
   })
 
-  // Todos os ciclos do ano para montar colunas Q1/Q2/Q3
   const { data: ciclosAno = [] } = useQuery({
     queryKey: ['ciclos-ano', ano],
     queryFn: () => api.get(`/ciclos/?ano=${ano}`).then(r => r.data.results ?? r.data),
@@ -28,23 +26,20 @@ function ModalMeta({ meta, ciclo, onClose }) {
   })
   const ciclosByQ = Object.fromEntries(ciclosAno.map(c => [c.quadrimestre, c]))
 
-  // Execuções financeiras das atividades desta meta neste ano
   const { data: execucoes = [] } = useQuery({
     queryKey: ['execucoes', meta.id, ano],
     queryFn: () => api.get(`/execucoes/?atividade__meta=${meta.id}&ciclo__ano=${ano}`)
       .then(r => r.data.results ?? r.data),
     enabled: !!ano,
   })
-  // mapa: "atividadeId_cicloId" → execucao
   const execMap = Object.fromEntries(execucoes.map(e => [`${e.atividade}_${e.ciclo}`, e]))
 
-  // Form unificado: registro meta + execuções atividades
   const buildDefaults = () => {
     const d = {
       realizado: registroExistente?.realizado ?? 0,
-      problema: registroExistente?.problema ?? '',
-      acao: registroExistente?.acao ?? '',
-      analise: registroExistente?.analise ?? '',
+      problema:  registroExistente?.problema ?? '',
+      acao:      registroExistente?.acao ?? '',
+      analise:   registroExistente?.analise ?? '',
     }
     meta.atividades?.forEach(a => {
       [1, 2, 3].forEach(q => {
@@ -60,19 +55,17 @@ function ModalMeta({ meta, ciclo, onClose }) {
 
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
-      // 1. Salva registro da meta
       const registroPayload = {
         realizado: dados.realizado,
-        problema: dados.problema,
-        acao: dados.acao,
-        analise: dados.analise,
+        problema:  dados.problema,
+        acao:      dados.acao,
+        analise:   dados.analise,
       }
       if (registroExistente) {
         await api.patch(`/registros/${registroExistente.id}/`, registroPayload)
       } else {
         await api.post('/registros/', { ...registroPayload, meta: meta.id, ciclo: ciclo.id })
       }
-      // 2. Salva execuções das atividades
       const saves = []
       meta.atividades?.forEach(a => {
         [1, 2, 3].forEach(q => {
@@ -103,7 +96,7 @@ function ModalMeta({ meta, ciclo, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[96rem] my-6">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-[96rem] my-6">
 
         {/* Cabeçalho */}
         <div className="bg-blue-950 text-white px-6 py-5 rounded-t-2xl">
@@ -120,18 +113,18 @@ function ModalMeta({ meta, ciclo, onClose }) {
 
           {/* Indicador */}
           {meta.indicador && (
-            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
-              <p className="text-xs font-semibold text-blue-800 uppercase tracking-wide mb-1">Indicador da Meta</p>
-              <p className="text-sm text-gray-700">{meta.indicador}</p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-3">
+              <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">Indicador da Meta</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300">{meta.indicador}</p>
               {meta.unidade && (
-                <p className="text-xs text-gray-500 mt-1">Unidade: <strong>{meta.unidade}</strong></p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Unidade: <strong>{meta.unidade}</strong></p>
               )}
             </div>
           )}
 
           {/* Valores planejados */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Valores Planejados</p>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Valores Planejados</p>
             <div className="grid grid-cols-5 gap-2">
               {[
                 { label: 'PES',      valor: meta.previsto_ppa },
@@ -142,10 +135,12 @@ function ModalMeta({ meta, ciclo, onClose }) {
               ].map(({ label, valor, destaque }) => (
                 <div key={label}
                   className={`rounded-lg px-3 py-2 text-center border ${
-                    destaque ? 'bg-blue-900 text-white border-blue-900' : 'bg-gray-50 border-gray-200'
+                    destaque
+                      ? 'bg-blue-900 text-white border-blue-900'
+                      : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
                   }`}>
-                  <p className={`text-xs ${destaque ? 'text-blue-200' : 'text-gray-500'}`}>{label}</p>
-                  <p className={`text-base font-bold mt-0.5 ${destaque ? 'text-white' : 'text-gray-800'}`}>{fmt(valor)}</p>
+                  <p className={`text-xs ${destaque ? 'text-blue-200' : 'text-gray-500 dark:text-gray-400'}`}>{label}</p>
+                  <p className={`text-base font-bold mt-0.5 ${destaque ? 'text-white' : 'text-gray-800 dark:text-gray-100'}`}>{fmt(valor)}</p>
                 </div>
               ))}
             </div>
@@ -154,27 +149,27 @@ function ModalMeta({ meta, ciclo, onClose }) {
           {/* Atividades com campos Q1/Q2/Q3 */}
           {meta.atividades?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Atividades Planejadas</p>
-              <div className="rounded-xl border border-gray-200 overflow-hidden">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Atividades Planejadas</p>
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600">Atividade</th>
-                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600">Indicador</th>
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold text-gray-500 w-24">Unidade</th>
-                      <th className="px-3 py-2.5 text-center text-xs font-semibold text-gray-500 w-20">Meta</th>
-                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===1?'text-blue-700 bg-blue-50':'text-gray-500'}`}>Q1 Realiz.</th>
-                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===2?'text-blue-700 bg-blue-50':'text-gray-500'}`}>Q2 Realiz.</th>
-                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===3?'text-blue-700 bg-blue-50':'text-gray-500'}`}>Q3 Realiz.</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 dark:text-gray-400">Atividade</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 dark:text-gray-400">Indicador</th>
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 w-24">Unidade</th>
+                      <th className="px-3 py-2.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 w-20">Meta</th>
+                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===1 ? 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-500 dark:text-gray-400'}`}>Q1 Realiz.</th>
+                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===2 ? 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-500 dark:text-gray-400'}`}>Q2 Realiz.</th>
+                      <th className={`px-3 py-2.5 text-center text-xs font-semibold w-24 ${cicloQ===3 ? 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-500 dark:text-gray-400'}`}>Q3 Realiz.</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                     {meta.atividades.map(a => (
-                      <tr key={a.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-gray-700 leading-snug">{a.descricao}</td>
-                        <td className="px-4 py-3 text-gray-600 text-xs leading-snug">{a.indicador || '—'}</td>
-                        <td className="px-3 py-3 text-center text-gray-500 text-xs">{a.unidade || '—'}</td>
-                        <td className="px-3 py-3 text-center text-gray-500 text-xs">{fmt(a.valor_previsto)}</td>
+                      <tr key={a.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <td className="px-4 py-3 text-gray-700 dark:text-gray-300 leading-snug">{a.descricao}</td>
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs leading-snug">{a.indicador || '—'}</td>
+                        <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{a.unidade || '—'}</td>
+                        <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{fmt(a.valor_previsto)}</td>
                         {[1, 2, 3].map(q => {
                           const cicloQ_ = ciclosByQ[q]
                           const isAtivo = cicloQ === q
@@ -183,7 +178,7 @@ function ModalMeta({ meta, ciclo, onClose }) {
                             <td
                               key={q}
                               title={!cicloQ_ ? 'Quadrimestre não disponível para preenchimento' : undefined}
-                              className={`px-3 py-3 text-center ${isAtivo ? 'bg-blue-50' : ''}`}
+                              className={`px-3 py-3 text-center ${isAtivo ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                             >
                               <input
                                 type="number"
@@ -192,8 +187,8 @@ function ModalMeta({ meta, ciclo, onClose }) {
                                 disabled={!podePreencher}
                                 className={`w-20 text-center border rounded-lg px-2 py-1.5 text-sm transition-colors ${
                                   isAtivo && cicloQ_
-                                    ? 'border-blue-300 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none'
-                                    : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                                    : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
                                 }`}
                                 {...register(`exec_${a.id}_q${q}`)}
                               />
@@ -211,27 +206,27 @@ function ModalMeta({ meta, ciclo, onClose }) {
           {/* Registro qualitativo + botões */}
           {ciclo ? (
             <form onSubmit={handleSubmit(d => salvarTudo.mutate(d))}>
-              <div className="border-t pt-5 space-y-4">
+              <div className="border-t dark:border-gray-700 pt-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Registro — {ciclo.ano} · {ciclo.quadrimestre_display}
                   </p>
                   {registroExistente?.validado_asplan && (
-                    <span className="text-xs bg-green-100 text-green-700 rounded px-2 py-0.5 font-medium">Validado pela ASPLAN</span>
+                    <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded px-2 py-0.5 font-medium">Validado pela ASPLAN</span>
                   )}
                   {registroExistente?.validado_coord && !registroExistente?.validado_asplan && (
-                    <span className="text-xs bg-blue-100 text-blue-700 rounded px-2 py-0.5">Validado pelo Coordenador</span>
+                    <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded px-2 py-0.5">Validado pelo Coordenador</span>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Quantidade Realizada <span className="text-gray-400 font-normal">({meta.unidade || 'unidade'})</span>
                   </label>
                   <input
                     type="number" step="0.01"
                     disabled={!podeEditar}
-                    className="w-40 border rounded-lg px-3 py-2 text-sm disabled:bg-gray-100 disabled:text-gray-400"
+                    className="w-40 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
                     {...register('realizado')}
                   />
                 </div>
@@ -242,11 +237,11 @@ function ModalMeta({ meta, ciclo, onClose }) {
                   { name: 'analise',  label: 'Análises e Considerações' },
                 ].map(({ name, label }) => (
                   <div key={name}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
                     <textarea
                       rows={3}
                       disabled={!podeEditar}
-                      className="w-full border rounded-lg px-3 py-2 text-sm resize-none disabled:bg-gray-100 disabled:text-gray-400"
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
                       {...register(name)}
                     />
                   </div>
@@ -260,7 +255,7 @@ function ModalMeta({ meta, ciclo, onClose }) {
 
                 <div className="flex justify-end gap-3 pt-1">
                   <button type="button" onClick={onClose}
-                    className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+                    className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                     Fechar
                   </button>
                   {podeEditar && (
@@ -273,7 +268,7 @@ function ModalMeta({ meta, ciclo, onClose }) {
               </div>
             </form>
           ) : (
-            <div className="border-t pt-4 text-sm text-amber-700 bg-amber-50 rounded-xl px-4 py-3">
+            <div className="border-t dark:border-gray-700 pt-4 text-sm text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl px-4 py-3">
               Nenhum ciclo aberto — preenchimento indisponível.
             </div>
           )}
@@ -311,7 +306,6 @@ export default function DOMI() {
     enabled: !!objetivoSel,
   })
 
-  // Status de registros das metas visíveis
   const { data: registros = [] } = useQuery({
     queryKey: ['registros-domi', objetivoSel, cicloAtual?.id],
     queryFn: () => cicloAtual && objetivoSel
@@ -328,12 +322,11 @@ export default function DOMI() {
 
   return (
     <div className="space-y-4">
-      {/* Título */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800">DOMI</h2>
-        <p className="text-sm text-gray-500">Diretrizes, Objetivos, Metas e Indicadores</p>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">DOMI</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Diretrizes, Objetivos, Metas e Indicadores</p>
         {cicloAtual && (
-          <p className="text-xs text-blue-700 mt-0.5">
+          <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">
             Ciclo ativo: <strong>{cicloAtual.ano} — {cicloAtual.quadrimestre_display}</strong>
           </p>
         )}
@@ -342,19 +335,19 @@ export default function DOMI() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Coluna Diretrizes */}
-        <div className="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden flex flex-col">
           <div className="bg-blue-900 text-white px-4 py-3 text-sm font-semibold">Diretrizes</div>
-          <ul className="flex-1 divide-y divide-gray-100 overflow-y-auto max-h-[32rem]">
+          <ul className="flex-1 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[32rem]">
             {diretrizes.map(d => (
               <li
                 key={d.id}
                 onClick={() => { setDiretrizSel(d.id); setObjetivoSel(null) }}
-                className={`px-4 py-3 cursor-pointer text-sm hover:bg-blue-50 transition-colors ${
-                  diretrizSel === d.id ? 'bg-blue-100 border-l-4 border-blue-600 font-semibold' : ''
+                className={`px-4 py-3 cursor-pointer text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${
+                  diretrizSel === d.id ? 'bg-blue-100 dark:bg-blue-900/40 border-l-4 border-blue-600 font-semibold' : ''
                 }`}
               >
-                <span className="inline-block font-mono text-blue-700 text-xs bg-blue-50 rounded px-1.5 py-0.5 mr-2">{d.codigo}</span>
-                <span className="text-gray-700 line-clamp-2">{d.descricao}</span>
+                <span className="inline-block font-mono text-blue-700 dark:text-blue-400 text-xs bg-blue-50 dark:bg-blue-900/30 rounded px-1.5 py-0.5 mr-2">{d.codigo}</span>
+                <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{d.descricao}</span>
               </li>
             ))}
             {diretrizes.length === 0 && (
@@ -364,22 +357,22 @@ export default function DOMI() {
         </div>
 
         {/* Coluna Objetivos */}
-        <div className="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden flex flex-col">
           <div className="bg-indigo-700 text-white px-4 py-3 text-sm font-semibold">
             Objetivos
             {diretrizAtual && <span className="ml-2 text-indigo-200 font-normal text-xs">— Dir. {diretrizAtual.codigo}</span>}
           </div>
-          <ul className="flex-1 divide-y divide-gray-100 overflow-y-auto max-h-[32rem]">
+          <ul className="flex-1 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[32rem]">
             {objetivos.map(o => (
               <li
                 key={o.id}
                 onClick={() => setObjetivoSel(o.id)}
-                className={`px-4 py-3 cursor-pointer text-sm hover:bg-indigo-50 transition-colors ${
-                  objetivoSel === o.id ? 'bg-indigo-100 border-l-4 border-indigo-600 font-semibold' : ''
+                className={`px-4 py-3 cursor-pointer text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${
+                  objetivoSel === o.id ? 'bg-indigo-100 dark:bg-indigo-900/40 border-l-4 border-indigo-600 font-semibold' : ''
                 }`}
               >
-                <span className="inline-block font-mono text-indigo-700 text-xs bg-indigo-50 rounded px-1.5 py-0.5 mr-2">{o.codigo}</span>
-                <span className="text-gray-700 line-clamp-2">{o.descricao}</span>
+                <span className="inline-block font-mono text-indigo-700 dark:text-indigo-400 text-xs bg-indigo-50 dark:bg-indigo-900/30 rounded px-1.5 py-0.5 mr-2">{o.codigo}</span>
+                <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{o.descricao}</span>
               </li>
             ))}
             {!diretrizSel && (
@@ -392,7 +385,7 @@ export default function DOMI() {
         </div>
 
         {/* Coluna Metas */}
-        <div className="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden flex flex-col">
           <div className="bg-teal-700 text-white px-4 py-3 text-sm font-semibold flex items-center justify-between">
             <span>
               Metas
@@ -400,34 +393,34 @@ export default function DOMI() {
             </span>
             {metas.length > 0 && <span className="text-teal-200 text-xs">{metas.length} metas</span>}
           </div>
-          <ul className="flex-1 divide-y divide-gray-100 overflow-y-auto max-h-[32rem]">
+          <ul className="flex-1 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[32rem]">
             {metas.map(m => {
               const reg = statusPorMeta[m.id]
               return (
                 <li
                   key={m.id}
                   onClick={() => setMetaSel(m)}
-                  className="px-4 py-3 cursor-pointer hover:bg-teal-50 transition-colors group"
+                  className="px-4 py-3 cursor-pointer hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors group"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <span className="inline-block font-mono text-teal-700 text-xs bg-teal-50 rounded px-1.5 py-0.5 mr-1.5">{m.codigo}</span>
-                      <span className="text-sm text-gray-700 line-clamp-2">{m.descricao}</span>
+                      <span className="inline-block font-mono text-teal-700 dark:text-teal-400 text-xs bg-teal-50 dark:bg-teal-900/30 rounded px-1.5 py-0.5 mr-1.5">{m.codigo}</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{m.descricao}</span>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
                       {!reg && cicloAtual && (
-                        <span className="text-xs bg-gray-100 text-gray-500 rounded px-1.5 py-0.5">Pendente</span>
+                        <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded px-1.5 py-0.5">Pendente</span>
                       )}
                       {reg && !reg.validado_coord && (
-                        <span className="text-xs bg-yellow-100 text-yellow-700 rounded px-1.5 py-0.5">Aguard. Coord.</span>
+                        <span className="text-xs bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 rounded px-1.5 py-0.5">Aguard. Coord.</span>
                       )}
                       {reg && reg.validado_coord && !reg.validado_asplan && (
-                        <span className="text-xs bg-blue-100 text-blue-700 rounded px-1.5 py-0.5">Aguard. ASPLAN</span>
+                        <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded px-1.5 py-0.5">Aguard. ASPLAN</span>
                       )}
                       {reg && reg.validado_asplan && (
-                        <span className="text-xs bg-green-100 text-green-700 rounded px-1.5 py-0.5">✓ Validado</span>
+                        <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5">✓ Validado</span>
                       )}
-                      <span className="text-xs text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-xs text-teal-600 dark:text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity">
                         Abrir →
                       </span>
                     </div>
@@ -445,7 +438,6 @@ export default function DOMI() {
         </div>
       </div>
 
-      {/* Modal da meta */}
       {metaSel && (
         <ModalMeta
           meta={metaSel}

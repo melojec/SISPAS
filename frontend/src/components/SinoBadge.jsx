@@ -45,7 +45,7 @@ export default function SinoBadge() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setAberto(v => !v)}
-        className="relative p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+        className="relative p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
         title="Notificações"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -59,19 +59,19 @@ export default function SinoBadge() {
       </button>
 
       {aberto && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
-            <span className="text-sm font-semibold text-gray-700">Notificações</span>
+        <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Notificações</span>
             {naoLidas > 0 && (
               <button
                 onClick={() => marcarTodas.mutate()}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Marcar todas como lidas
               </button>
             )}
           </div>
-          <ul className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+          <ul className="max-h-80 overflow-y-auto divide-y divide-gray-50 dark:divide-gray-700">
             {notificacoes.length === 0 && (
               <li className="px-4 py-6 text-sm text-gray-400 text-center">Nenhuma notificação</li>
             )}
@@ -80,15 +80,17 @@ export default function SinoBadge() {
                 key={n.id}
                 onClick={() => !n.lida && marcarLida.mutate(n.id)}
                 className={`px-4 py-3 flex gap-3 cursor-pointer transition-colors ${
-                  n.lida ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 hover:bg-blue-100'
+                  n.lida
+                    ? 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50'
                 }`}
               >
                 <span className="text-base mt-0.5 shrink-0">{ICONE[n.tipo] ?? '🔔'}</span>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm leading-snug ${n.lida ? 'text-gray-500' : 'text-gray-800 font-medium'}`}>
+                  <p className={`text-sm leading-snug ${n.lida ? 'text-gray-500 dark:text-gray-400' : 'text-gray-800 dark:text-gray-100 font-medium'}`}>
                     {n.mensagem}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                     {new Date(n.criada_em).toLocaleString('pt-BR')}
                   </p>
                 </div>
