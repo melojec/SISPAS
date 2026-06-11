@@ -11,6 +11,10 @@ Substitui planilhas eletrônicas no registro/acompanhamento quadrimestral de met
 - Deploy: Nginx + Gunicorn + Supervisor (Ubuntu Server 22.04)
 - PDF: WeasyPrint | XLSX: openpyxl
 
+## Repositório
+- GitHub: https://github.com/melojec/SISPAS
+- Superuser local: admin@sesa.ma.gov.br
+
 ## Estrutura do backend (sispas/backend/)
 - `config/` — settings, urls, wsgi/asgi
 - `core/` — Area, Diretriz, Objetivo, Meta, Atividade
@@ -24,37 +28,79 @@ Substitui planilhas eletrônicas no registro/acompanhamento quadrimestral de met
 Administrador > ASPLAN > Coordenador > Usuário > Visualizador
 
 ## Estrutura do frontend (sispas/frontend/src/)
-### Páginas no router (App.jsx)
-- Login, Dashboard, DOMI, Ciclos, Usuarios, Auditoria, Relatorios
-
-### Componentes
-- Layout, Sidebar, ProtectedRoute
-
-### Serviços/Store
-- `services/api.js` — cliente axios
+- `pages/` — Login, Dashboard, DOMI, Ciclos, Usuarios, Auditoria, Relatorios
+- `components/` — Layout, Sidebar, ProtectedRoute
+- `services/api.js` — cliente axios com interceptors JWT
 - `store/authStore.js` — Zustand com fetchMe/login/logout
 
-## Módulo DOMI (principal do sistema)
-Página única com 3 colunas: Diretrizes → Objetivos → Metas.
-Ao clicar em uma meta abre o ModalMeta que permite:
-- Ver indicador, valores planejados (PES, Ano, Q1, Q2, Q3)
-- Preencher execução financeira das atividades por quadrimestre
-- Registrar: quantidade realizada, problemas, ações e análise
-- Ver status de validação (Pendente / Aguard. Coord. / Aguard. ASPLAN / Validado)
-- Edição bloqueada após validação ASPLAN ou ciclo fechado
+## Módulo DOMI (principal)
+Navegação em 3 colunas: Diretrizes → Objetivos → Metas.
+Modal da meta: indicador, valores planejados (PES/Ano/Q1/Q2/Q3), execução financeira por atividade,
+registro qualitativo (realizado, problemas, ações, análise), status de validação.
+Edição bloqueada após validação ASPLAN ou ciclo fechado.
 
-## O que já foi feito
-- [x] Setup: venv, Django, apps, settings, banco MariaDB
-- [x] Models, serializers, views e urls em todos os apps
-- [x] Ordenação natural de códigos (1.1.1 → 1.1.2 → ... → 1.1.10) via RawSQL
-- [x] Banco populado com dados reais da planilha Base PAS.xlsx
+---
+
+## Progresso por etapa (Plano de Desenvolvimento)
+
+### ETAPA 1 — Configuração do ambiente local ✅ COMPLETA
+- [x] Git init + .gitignore
+- [x] Venv Python criado em sispas/backend/
+- [x] Dependências Django instaladas (requirements.txt)
+- [x] Projeto Django + apps criados (core, monitoramento, usuarios, auditoria, relatorios)
+- [x] Banco local MariaDB configurado (sispas_dev)
+- [x] settings.py completo (banco, JWT, CORS, DRF, .env)
+
+### ETAPA 2 — Backend: modelos e API ✅ COMPLETA
+- [x] Models: Diretriz, Objetivo, Meta, Atividade (core)
+- [x] Models: Ciclo, RegistroQuadrimestral, ExecucaoFinanceira (monitoramento)
+- [x] Models: Usuario customizado (AbstractBaseUser), LogAuditoria
+- [x] Migrations geradas e aplicadas
+- [x] Serializers para todos os models
+- [x] ViewSets + DefaultRouter (CRUD completo)
+- [x] Autenticação JWT (endpoints /api/token/ e /api/token/refresh/)
+- [x] Permissões por perfil: IsASPLAN, IsCoordenador, IsUsuarioDeArea, IsUsuarioAtivo
+- [x] Endpoints de exportação PDF (WeasyPrint) e XLSX (openpyxl)
+- [x] Auditoria via AuditoriaMiddleware (LogAuditoria)
+- [x] Banco populado com dados reais (Base PAS.xlsx via importar_pas.py)
 - [x] Django Admin configurado (ordem: Diretrizes, Objetivos, Metas, Indicadores)
-- [x] Superuser: admin@sesa.ma.gov.br
-- [x] Frontend: Login, Layout, Sidebar, ProtectedRoute, Dashboard
-- [x] Módulo DOMI completo (navegação + modal de registro + execução financeira)
-- [x] Páginas: Ciclos, Usuarios, Auditoria, Relatorios (verificar implementação)
+- [x] Ordenação natural de códigos (1.1.1 → 1.1.2 → ... → 1.1.10) via RawSQL
 
-## Pendências
-- Verificar conteúdo real das páginas Ciclos, Usuarios, Auditoria, Relatorios e Dashboard
-- Testes unitários
-- Preparação para deploy no servidor SESA-MA
+### ETAPA 3 — Frontend React 🔄 EM ANDAMENTO
+- [x] Projeto React + Vite criado
+- [x] TailwindCSS, React Router, Zustand, React Query configurados
+- [x] Proxy /api → Django em desenvolvimento (vite.config.js)
+- [x] api.js com interceptors JWT (inject token + refresh automático)
+- [x] authStore (Zustand): login, logout, fetchMe
+- [x] ProtectedRoute com controle por perfil
+- [x] Login
+- [x] Layout + Sidebar
+- [x] DOMI (Diretrizes, Objetivos, Metas, Indicadores + Registro) ← módulo principal
+- [ ] Dashboard — existe o arquivo, verificar se está completo
+- [ ] Ciclos — existe o arquivo, verificar se está completo
+- [ ] Usuários — existe o arquivo, verificar se está completo
+- [ ] Auditoria — existe o arquivo, verificar se está completo
+- [ ] Relatórios — existe o arquivo, verificar se está completo
+- [ ] Notificações — não iniciado
+- [ ] Build de produção (npm run build)
+
+### ETAPA 4 — Testes ❌ NÃO INICIADA
+- [ ] pytest + pytest-django (backend)
+- [ ] Testes de serializers, permissões, regras de negócio
+- [ ] Playwright (E2E frontend)
+
+### ETAPA 5 — Deploy ❌ NÃO INICIADA
+- [ ] Preparar servidor Ubuntu
+- [ ] Clonar projeto + instalar dependências
+- [ ] Banco de produção + migrations
+- [ ] Variáveis de ambiente produção
+- [ ] Gunicorn via Supervisor
+- [ ] Nginx (proxy reverso + servir frontend)
+- [ ] Build final + go-live
+
+---
+
+## Próximo foco
+Verificar e completar as páginas existentes da Etapa 3:
+Dashboard, Ciclos, Usuarios, Auditoria, Relatorios.
+Depois: Notificações → Testes → Deploy.
