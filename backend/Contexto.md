@@ -1,7 +1,7 @@
 # SISPAS — Contexto do projeto
 
 ## O que é
-Sistema de acompanhamento do PAS (Programação Anual de Saúde) da SESA-MA.
+Sistema de acompanhamento do PAS (Programação Anual de Saúde) da SES-MA.
 Substitui planilhas eletrônicas no registro/acompanhamento quadrimestral de metas e atividades.
 
 ## Stack

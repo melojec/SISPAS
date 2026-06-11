@@ -119,4 +119,4 @@ CORS_ALLOWED_ORIGINS=http://localhost:5173
 
 ---
 
-Desenvolvido para a SESA-MA · 2026
+Desenvolvido para a SES-MA · 2026

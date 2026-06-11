@@ -16,10 +16,10 @@ export default function Sidebar() {
   const links = NAV.filter(n => !n.perfis || n.perfis.includes(user?.perfil))
 
   return (
-    <aside className="w-64 min-h-screen bg-blue-950 text-white flex flex-col">
+    <aside className="w-64 min-h-screen bg-blue-950 dark:bg-[#252525] text-white flex flex-col">
       <div className="px-6 py-5 border-b border-blue-800">
         <h1 className="text-xl font-bold tracking-wide">SISPAS</h1>
-        <p className="text-xs text-blue-300 mt-1">SESA-MA</p>
+        <p className="text-xs text-blue-300 mt-1">SES-MA</p>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1">
