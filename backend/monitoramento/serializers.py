@@ -17,13 +17,15 @@ class CicloSerializer(serializers.ModelSerializer):
 class RegistroQuadrimestralSerializer(serializers.ModelSerializer):
     meta_codigo = serializers.CharField(source='meta.codigo', read_only=True)
     meta_descricao = serializers.CharField(source='meta.descricao', read_only=True)
+    meta_previsto = serializers.DecimalField(source='meta.previsto_exercicio', max_digits=15, decimal_places=2, read_only=True)
+    meta_unidade = serializers.CharField(source='meta.unidade', read_only=True)
     ciclo_display = serializers.CharField(source='ciclo.__str__', read_only=True)
     criado_por_nome = serializers.CharField(source='criado_por.nome', read_only=True)
 
     class Meta:
         model = RegistroQuadrimestral
         fields = [
-            'id', 'meta', 'meta_codigo', 'meta_descricao',
+            'id', 'meta', 'meta_codigo', 'meta_descricao', 'meta_previsto', 'meta_unidade',
             'ciclo', 'ciclo_display',
             'realizado', 'problema', 'acao', 'analise',
             'validado_coord', 'validado_asplan',
