@@ -9,12 +9,13 @@ from .serializers import (
 )
 from usuarios.permissions import IsASPLAN, IsUsuarioAtivo
 
-# Ordenação natural para códigos separados por ponto (ex: 1.1.10 vem após 1.1.9)
-_NAT = [
-    RawSQL("CAST(SUBSTRING_INDEX(codigo, '.', 1) AS UNSIGNED)", []),
-    RawSQL("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(codigo, '.', 2), '.', -1) AS UNSIGNED)", []),
-    RawSQL("CAST(SUBSTRING_INDEX(codigo, '.', -1) AS UNSIGNED)", []),
-]
+def _nat(table):
+    """Ordenação natural qualificada com nome da tabela para evitar ambiguidade em JOINs."""
+    return [
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', -1) AS UNSIGNED)", []),
+    ]
 
 
 class AreaViewSet(viewsets.ModelViewSet):
@@ -31,7 +32,7 @@ class AreaViewSet(viewsets.ModelViewSet):
 
 
 class DiretrizViewSet(viewsets.ModelViewSet):
-    queryset = Diretriz.objects.order_by(*_NAT)
+    queryset = Diretriz.objects.order_by(*_nat('diretriz'))
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['ano', 'situacao']
     search_fields = ['codigo', 'descricao']
@@ -49,7 +50,7 @@ class DiretrizViewSet(viewsets.ModelViewSet):
 
 
 class ObjetivoViewSet(viewsets.ModelViewSet):
-    queryset = Objetivo.objects.select_related('diretriz').order_by(*_NAT)
+    queryset = Objetivo.objects.select_related('diretriz').order_by(*_nat('objetivo'))
     serializer_class = ObjetivoSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['diretriz']
@@ -63,7 +64,7 @@ class ObjetivoViewSet(viewsets.ModelViewSet):
 
 
 class MetaViewSet(viewsets.ModelViewSet):
-    queryset = Meta.objects.select_related('objetivo', 'area').order_by(*_NAT)
+    queryset = Meta.objects.select_related('objetivo', 'area').order_by(*_nat('meta'))
     serializer_class = MetaSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['objetivo', 'area', 'objetivo__diretriz']

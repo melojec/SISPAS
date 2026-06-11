@@ -3,11 +3,13 @@ from django.contrib.admin import AdminSite
 from django.db.models.expressions import RawSQL
 from .models import Area, Diretriz, Objetivo, Meta, Atividade
 
-_NAT = [
-    RawSQL("CAST(SUBSTRING_INDEX(codigo, '.', 1) AS UNSIGNED)", []),
-    RawSQL("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(codigo, '.', 2), '.', -1) AS UNSIGNED)", []),
-    RawSQL("CAST(SUBSTRING_INDEX(codigo, '.', -1) AS UNSIGNED)", []),
-]
+def _nat(table):
+    """Ordenação natural qualificada com nome da tabela para evitar ambiguidade em JOINs."""
+    return [
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', -1) AS UNSIGNED)", []),
+    ]
 
 
 class AtividadeInline(admin.TabularInline):
@@ -46,8 +48,8 @@ class DiretrizAdmin(admin.ModelAdmin):
     search_fields = ['codigo', 'descricao']
     inlines = [ObjetivoInline]
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).order_by(*_NAT)
+    def get_ordering(self, request):
+        return _nat('diretriz')
 
 
 @admin.register(Objetivo)
@@ -57,8 +59,8 @@ class ObjetivoAdmin(admin.ModelAdmin):
     search_fields = ['codigo', 'descricao']
     inlines = [MetaInline]
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).order_by(*_NAT)
+    def get_ordering(self, request):
+        return _nat('objetivo')
 
 
 @admin.register(Meta)
@@ -75,8 +77,8 @@ class MetaAdmin(admin.ModelAdmin):
         ]}),
     ]
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).order_by(*_NAT)
+    def get_ordering(self, request):
+        return _nat('meta')
 
 
 @admin.register(Atividade)

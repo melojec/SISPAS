@@ -64,7 +64,8 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - [x] Auditoria via AuditoriaMiddleware (LogAuditoria)
 - [x] Banco populado com dados reais (Base PAS.xlsx via importar_pas.py)
 - [x] Django Admin configurado (ordem: Diretrizes, Objetivos, Metas, Indicadores)
-- [x] Ordenação natural de códigos (1.1.1 → 1.1.2 → ... → 1.1.10) via RawSQL
+- [x] Ordenação natural de códigos (1.1.1 → 1.1.2 → ... → 1.1.10) via RawSQL com prefixo de tabela (`_nat(table)`) para evitar ambiguidade em JOINs
+- [x] URL do Admin alterada para `/admsispas/`
 
 ### ETAPA 3 — Frontend React 🔄 EM ANDAMENTO
 - [x] Projeto React + Vite criado
@@ -99,6 +100,10 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - [ ] Build final + go-live
 
 ---
+
+## Notas técnicas importantes
+- `_nat(table)` em `core/admin.py` e `core/views.py`: ordenação natural qualificada com nome da tabela. Necessário porque `select_related` gera JOINs entre tabelas que todas têm coluna `codigo`, tornando referência sem prefixo ambígua no MariaDB.
+- No Admin, usar `get_ordering()` (não `get_queryset`) para ordenação — o `ChangeList` sobrescreve o `order_by` do queryset com o resultado de `get_ordering`.
 
 ## Próximo foco
 Verificar e completar as páginas existentes da Etapa 3:
