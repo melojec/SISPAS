@@ -1,7 +1,7 @@
 # SISPAS
 
 **Sistema de Monitoramento da Programação Anual de Saúde**
-Secretaria de Estado da Saúde do Maranhão — SESA-MA
+Secretaria de Estado da Saúde do Maranhão — SES-MA
 
 ---
 
