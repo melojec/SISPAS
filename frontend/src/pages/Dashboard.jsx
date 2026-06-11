@@ -28,12 +28,11 @@ export default function Dashboard() {
     enabled: !!cicloAtual,
   })
 
-  const { data: metas = [] } = useQuery({
+  const { data: totalMetas = 0 } = useQuery({
     queryKey: ['metas-count'],
-    queryFn: () => api.get('/metas/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/metas/?page_size=1').then(r => r.data.count ?? 0),
   })
 
-  const totalMetas = metas.length
   const totalRegistros = registros.length
   const validados = registros.filter(r => r.validado_asplan).length
   const pendentes = totalRegistros - validados
