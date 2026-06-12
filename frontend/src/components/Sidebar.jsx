@@ -18,8 +18,8 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-blue-950 dark:bg-[#252525] text-white flex flex-col">
-      <div className="px-4 py-4 border-b border-blue-800 flex flex-col items-center text-center gap-2">
-        <img src={logo} alt="SISPAS" className="h-25 w-auto" />
+      <div className="px-4 py-4 border-b border-blue-800 flex items-center gap-3">
+        <img src={logo} alt="SISPAS" className="h-25 w-auto shrink-0" />
         <p className="text-[10px] text-blue-300 leading-snug">Sistema de Monitoramento da Programação Anual de Saúde</p>
       </div>
 
@@ -42,7 +42,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="px-4 py-4 border-t border-blue-800">
-        <p className="text-xs text-blue-300 truncate">{user?.nome}</p>
+        <p className="text-xs text-blue-300 truncate font-semibold">Bem-vindo, {user?.nome}</p>
         <p className="text-xs text-blue-400">{user?.perfil_display}</p>
         <button
           onClick={logout}

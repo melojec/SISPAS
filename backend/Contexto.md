@@ -9,11 +9,11 @@ Substitui planilhas eletrônicas no registro/acompanhamento quadrimestral de met
 - Frontend: React 18 + Vite + TailwindCSS + Zustand + React Query + Axios
 - Banco: MariaDB 10.6
 - Deploy: Nginx + Gunicorn + Supervisor (Ubuntu Server 22.04)
-- PDF: WeasyPrint | XLSX: openpyxl
+- PDF: xhtml2pdf (WeasyPrint rejeitado — sem GTK no Windows) | XLSX: openpyxl
 
 ## Repositório
 - GitHub: https://github.com/melojec/SISPAS
-- Superuser local: admin@sesa.ma.gov.br
+- Superuser local: admin@admin.com
 
 ## Estrutura do backend (sispas/backend/)
 - `config/` — settings, urls, wsgi/asgi
@@ -35,9 +35,10 @@ Administrador > ASPLAN > Coordenador > Usuário > Visualizador
 
 ## Módulo DOMI (principal)
 Navegação em 3 colunas: Diretrizes → Objetivos → Metas.
-Modal da meta: indicador, valores planejados (PES/Ano/Q1/Q2/Q3), execução financeira por atividade,
-registro qualitativo (realizado, problemas, ações, análise), status de validação.
-Edição bloqueada após validação ASPLAN ou ciclo fechado.
+Modal da meta: indicador, valores planejados (PES 4 anos + PAS ano corrente), realizado por quadrimestre
+(Q1/Q2/Q3 — apenas o quadrimestre do ciclo ativo é editável), registro qualitativo (problemas, ações,
+análise), status de validação. Edição bloqueada após validação ASPLAN ou ciclo fechado.
+Botão "Salvar em PDF" no header do modal exporta ficha individual da meta via blob download (JWT).
 
 ---
 
@@ -60,7 +61,8 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - [x] ViewSets + DefaultRouter (CRUD completo)
 - [x] Autenticação JWT (endpoints /api/token/ e /api/token/refresh/)
 - [x] Permissões por perfil: IsASPLAN, IsCoordenador, IsUsuarioDeArea, IsUsuarioAtivo
-- [x] Endpoints de exportação PDF (WeasyPrint) e XLSX (openpyxl)
+- [x] Endpoints de exportação PDF (xhtml2pdf) e XLSX (openpyxl)
+- [x] Endpoint de exportação PDF por meta individual (MetaPDFView — `GET /api/relatorios/meta/<id>/pdf/?ciclo=<id>`)
 - [x] Auditoria via AuditoriaMiddleware (LogAuditoria)
 - [x] Banco populado com dados reais (Base PAS.xlsx via importar_pas.py)
 - [x] Django Admin configurado (ordem: Diretrizes, Objetivos, Metas, Indicadores)
@@ -86,16 +88,16 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - [x] Dark mode em todas as páginas + toggle no header e login
 - [x] Identidade institucional: logotipo SVG (frontend/src/assets/logo.svg)
 
-### ETAPA 4 — Testes 🔄 EM ANDAMENTO
+### ETAPA 4 — Testes ✅ COMPLETA
 - [x] pytest + pytest-django configurados (SQLite in-memory via config/settings_test.py)
 - [x] conftest.py com fixtures: api, area, admin, asplan, coordenador, usuario, visualizador
 - [x] Testes de model e API — usuarios (14 testes)
 - [x] Testes de model e API — core: Area, Diretriz, Meta (19 testes)
 - [x] Testes de model e API — monitoramento: Ciclo, Registro, Validações, ExecucaoFinanceira (20 testes)
 - [x] 53 testes passando, 0 falhas
-- [ ] Playwright (E2E frontend)
+- [x] Playwright (E2E frontend) — 22 testes passando (auth, dashboard, layout, domi)
 
-### ETAPA 5 — Deploy ❌ NÃO INICIADA
+### ETAPA 5 — Deploy 🔄 EM ANDAMENTO
 - [ ] Preparar servidor Ubuntu
 - [ ] Clonar projeto + instalar dependências
 - [ ] Banco de produção + migrations
@@ -112,7 +114,12 @@ Edição bloqueada após validação ASPLAN ou ciclo fechado.
 - `_nat(table)` detecta o banco via `settings.DATABASES['default']['ENGINE']`: usa SUBSTRING_INDEX no MySQL/MariaDB e fallback `['codigo']` no SQLite (testes).
 - Testes rodam com SQLite in-memory (`config/settings_test.py`) — não requer permissão de criação de banco no MariaDB de desenvolvimento.
 - Logotipo SVG institucional em `frontend/src/assets/logo.svg` — usado no Sidebar e na tela de Login.
+- PDF gerado com xhtml2pdf: não suporta CSS flex/grid (usar tabelas), não carrega arquivos locais via `file:///` (usar base64 data URI), SVG em `<img>` não renderiza (usar PNG).
+- Logotipo do PDF em `frontend/src/assets/pdf.png` — carregado como base64 no `MetaPDFView`.
+- Rodapé em todas as páginas via `@page { @frame footer { -pdf-frame-content: rodape } }`.
+- Exportações PDF/XLSX no frontend usam `api.get(..., {responseType: 'blob'})` — links `<a href>` diretos não enviam JWT.
+- Notificações: marcar como lida faz DELETE (apaga o registro), não PATCH.
+- Usuario customizado usa campo `ativo` (não `is_active`) para ativar/desativar contas.
 
 ## Próximo foco
-Etapa 4 — Playwright (E2E frontend).
-Depois: Etapa 5 — Deploy.
+Etapa 5 — Deploy (Ubuntu Server 22.04 + Nginx + Gunicorn + Supervisor + MariaDB produção).

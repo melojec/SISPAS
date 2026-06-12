@@ -17,7 +17,7 @@ function GraficoMetas({ registros, totalMetas }) {
   const [filtro, setFiltro] = useState('preenchidos')
 
   const { data: todasMetas = [] } = useQuery({
-    queryKey: ['metas-todas'],
+    queryKey: ['metas-todas-v2'],
     queryFn: async () => {
       const results = []
       let page = 1
@@ -166,13 +166,6 @@ export default function Dashboard() {
 
       <GraficoMetas registros={registros} totalMetas={totalMetas} cicloAtual={cicloAtual} />
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Bem-vindo, {user?.nome}</h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Perfil: <span className="font-medium text-blue-900 dark:text-blue-400">{user?.perfil_display}</span>
-          {user?.area_nome && <> · Área: <span className="font-medium dark:text-gray-300">{user.area_nome}</span></>}
-        </p>
-      </div>
     </div>
   )
 }

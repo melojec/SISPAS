@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 10px; color: #111; background: white; }
+
+  @page {
+    margin: 12mm 16mm 18mm 16mm;
+    @frame footer {
+      -pdf-frame-content: rodape;
+      bottom: 5mm;
+      left: 16mm;
+      right: 16mm;
+      height: 10mm;
+    }
+  }
+
+  #rodape { border-top: 1px solid #e5e7eb; padding-top: 6px;
+    font-size: 8px; color: #9ca3af; text-align: center; }
+
+  /* ── Cabeçalho (todas as páginas) ── */
+  .ph { width: 100%; border-bottom: 2px solid #172554; padding-bottom: 20mm; margin-bottom: 14px; }
+  .ph-logo { width: 80px; vertical-align: middle; padding-right: 0px; }
+  .ph-text { vertical-align: middle; }
+  .ph-title { font-size: 14px; font-weight: bold; color: #172554; line-height: 1.1; }
+  .ph-sub { font-size: 9px; color: #6b7280; margin-top: 0; }
+  .ph-right { text-align: right; font-size: 9px; color: #374151; vertical-align: middle; white-space: nowrap; padding-left: 10px; }
+
+  /* ── Breadcrumb + Área ── */
+  .bc-tbl { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .bc-left { vertical-align: top; padding-right: 10px; font-size: 10px; color: #374151; line-height: 1.6; }
+  .bc-left strong { color: #172554; }
+  .bc-right { vertical-align: middle; width: 170px; border: 1px solid #172457;
+    text-align: center; padding: 6px 10px; }
+  .bc-area-lbl { font-size: 8px; color: #6b7280; text-transform: uppercase;
+    font-weight: bold; letter-spacing: 0.04em; margin-bottom: 2px; }
+  .bc-area-nome { font-size: 11px; font-weight: bold; color: #111; }
+
+  /* ── Box meta ── */
+  .meta-box { background: #172554; color: white; padding: 20px 14px; margin-bottom: 10px; }
+  .meta-box-text { font-size: 12px; font-weight: bold; line-height: 1.8; }
+
+  /* ── Indicador + Valores Planejados ── */
+  .iv-tbl { width: 100%; border-collapse: collapse; border: 0.5px solid #172457;
+    border-top: none; margin-bottom: 0; }
+  .iv-left { vertical-align: middle; padding: 7px 10px; width: 55%; }
+  .iv-left-text { font-size: 10px; color: #111; line-height: 1.6; }
+  .iv-right { vertical-align: top; padding: 6px 10px; border-left: 0.5px solid #172457;
+    text-align: center; background: #f8faff; }
+  .iv-right-lbl { font-size: 8px; font-weight: bold; text-transform: uppercase;
+    color: #6b7280; letter-spacing: 0.04em; margin-bottom: 5px; }
+  .plan-tbl { width: 100%; border-collapse: collapse; }
+  .plan-cell { width: 50%; text-align: center; padding: 3px 6px; }
+  .plan-lbl { font-size: 9px; color: #6b7280; }
+  .plan-val { font-size: 16px; font-weight: bold; color: #172554; }
+
+  /* ── Valores Realizados ── */
+  .vr-tbl { width: 100%; border-collapse: collapse;
+    border: 0.5px solid #172457; border-top: none; margin-bottom: 10px; }
+  .vr-label-cell { background: #eff6ff; vertical-align: middle;
+    padding: 6px 10px; font-size: 10px; font-weight: bold; color: #172554;
+    border-right: 0.5px solid #172457; width: 100px; }
+  .vr-cell { width: 33%; text-align: center; padding: 6px 4px;
+    border-right: 0.5px solid #172457; vertical-align: middle; }
+  .vr-cell:last-child { border-right: none; }
+  .vr-q-lbl { font-size: 9px; color: #374151; margin-bottom: 2px; }
+  .vr-q-val { font-size: 18px; font-weight: bold; color: #172554; }
+
+  /* ── Atividades ── */
+  .atv-header { background: #172554; color: white; text-align: center;
+    font-size: 11px; font-weight: bold; padding: 8px; margin-top: 10px; }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 10px; }
+    .tbl th { background: #A2B1D9; color: #172457; padding: 5px 8px;
+        font-size: 9px; font-weight: bold; border: 0.5px solid #dddfe9; text-align: center; }
+          .tbl th.left { text-align: left; }
+            .tbl td { padding: 6px 8px; border: 0.5px solid #dddfe9; vertical-align: middle;
+                text-align: center; line-height: 1.4; }
+                  .tbl td.left { text-align: left; }
+                    .tbl tr:nth-child(even) td { background: #f8faff; }
+
+  /* ── Análise Qualitativa (pág. 2) ── */
+  .aq-header { background: #172554; color: white; text-align: center;
+    font-size: 12px; font-weight: bold; padding: 8px; margin-bottom: 14px; }
+  .aq-field-lbl { background: #dbeafe; color: #1e3a5f; font-size: 10px;
+    font-weight: bold; padding: 5px 10px; margin-bottom: 8px; }
+  .aq-field-text { font-size: 10px; color: #111; line-height: 1.7;
+    text-align: justify; padding: 0 2px; margin-bottom: 16px; }
+  .aq-field-empty { font-size: 10px; color: #9ca3af; font-style: italic; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div id="rodape">SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente</div>
+
+<!-- == CABEÇALHO == -->
+<table class="ph" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="ph-logo">
+      <img src="{{ logo_path }}" width="70" height="70" />
+    </td>
+    <td class="ph-text">
+      <div class="ph-title">Ficha de Meta</div>
+      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
+    </td>
+    <td class="ph-right">
+      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
+      Gerado em: {{ data_geracao }}
+    </td>
+  </tr>
+</table>
+
+<!-- == BREADCRUMB + ÁREA == -->
+<table class="bc-tbl" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="bc-left">
+      <strong>{{ meta.objetivo.diretriz.codigo }}</strong> - {{ meta.objetivo.diretriz.descricao }}<br>
+      <strong>{{ meta.objetivo.codigo }}</strong> - {{ meta.objetivo.descricao }}
+    </td>
+    <td class="bc-right">
+      <div class="bc-area-lbl">Área Responsável</div>
+      <div class="bc-area-nome">{{ meta.area.sigla }} — {{ meta.area.nome }}</div>
+    </td>
+  </tr>
+</table>
+
+<!-- == META BOX == -->
+<div class="meta-box">
+  <div class="meta-box-text">{{ meta.codigo }} - {{ meta.descricao }}</div>
+</div>
+
+<!-- == INDICADOR + VALORES PLANEJADOS == -->
+<table class="iv-tbl" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="iv-left">
+      <div class="iv-left-text">
+        {% if meta.indicador %}<strong>Indicador:</strong> {{ meta.indicador }}<br>{% endif %}
+        {% if meta.unidade %}<strong>Unidade:</strong> {{ meta.unidade }}{% endif %}
+        {% if not meta.indicador and not meta.unidade %}<em style="color:#9ca3af;">Não informado</em>{% endif %}
+      </div>
+    </td>
+    <td class="iv-right">
+      <div class="iv-right-lbl">Valores Planejados</div>
+      <table class="plan-tbl" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="plan-cell">
+            <div class="plan-lbl">PES (4 anos)</div>
+            <div class="plan-val">{{ meta.previsto_ppa|floatformat:0 }}</div>
+          </td>
+          <td class="plan-cell" style="border-left:1px solid #e5e7eb;">
+            <div class="plan-lbl">PAS{% if ciclo %} (Ano {{ ciclo.ano }}){% endif %}</div>
+            <div class="plan-val">{{ meta.previsto_exercicio|floatformat:0 }}</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- == VALORES REALIZADOS == -->
+<table class="vr-tbl" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="vr-label-cell">Valores Realizados</td>
+    {% for vr in valores_realizados %}
+    <td class="vr-cell">
+      <div class="vr-q-lbl">{{ vr.label }}</div>
+      <div class="vr-q-val">{{ vr.valor|floatformat:0 }}</div>
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+
+<!-- == ATIVIDADES == -->
+{% if meta.atividades.all %}
+<div class="atv-header">Atividades</div>
+<table class="tbl">
+  <thead>
+    <tr>
+      <th class="left">Descrição</th>
+      <th style="width:130px;">Indicador da Atividade</th>
+      <th style="width:65px;">Unidade</th>
+      <th style="width:45px;">Meta</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in meta.atividades.all %}
+    <tr>
+      <td class="left">{{ a.descricao }}</td>
+      <td>{{ a.indicador|default:"—" }}</td>
+      <td>{{ a.unidade|default:"—" }}</td>
+      <td>{{ a.valor_previsto|floatformat:0 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<!-- == PÁG. 2 — ANÁLISE QUALITATIVA == -->
+<pdf:nextpage />
+
+<!-- == CABEÇALHO PÁG. 2 == -->
+<table class="ph" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="ph-logo">
+      <img src="{{ logo_path }}" width="70" height="70" />
+    </td>
+    <td class="ph-text">
+      <div class="ph-title">Ficha de Meta</div>
+      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
+    </td>
+    <td class="ph-right">
+      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
+      Gerado em: {{ data_geracao }}
+    </td>
+  </tr>
+</table>
+
+<div class="aq-header">Análise Qualitativa</div>
+
+<div class="aq-field-lbl">Problemas Encontrados no Quadrimestre</div>
+{% if registro_atual and registro_atual.problema %}
+  <div class="aq-field-text">{{ registro_atual.problema }}</div>
+{% else %}
+  <div class="aq-field-empty">Não informado</div>
+{% endif %}
+
+<div class="aq-field-lbl">Ações Realizadas para o Enfrentamento dos Problemas</div>
+{% if registro_atual and registro_atual.acao %}
+  <div class="aq-field-text">{{ registro_atual.acao }}</div>
+{% else %}
+  <div class="aq-field-empty">Não informado</div>
+{% endif %}
+
+<div class="aq-field-lbl">Análises e Considerações – Este texto irá diretamente para o DigiSUS</div>
+{% if registro_atual and registro_atual.analise %}
+  <div class="aq-field-text">{{ registro_atual.analise }}</div>
+{% else %}
+  <div class="aq-field-empty">Não informado</div>
+{% endif %}
+
+</body>
+</html>

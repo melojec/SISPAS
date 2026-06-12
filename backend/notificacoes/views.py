@@ -9,6 +9,7 @@ from .serializers import NotificacaoSerializer
 class NotificacaoViewSet(
     mixins.ListModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = NotificacaoSerializer
@@ -19,5 +20,5 @@ class NotificacaoViewSet(
 
     @action(detail=False, methods=['post'])
     def marcar_todas_lidas(self, request):
-        Notificacao.objects.filter(usuario=request.user, lida=False).update(lida=True)
+        Notificacao.objects.filter(usuario=request.user).delete()
         return Response({'status': 'ok'})

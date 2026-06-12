@@ -24,13 +24,13 @@ export default function SinoBadge() {
   const naoLidas = notificacoes.filter(n => !n.lida).length
 
   const marcarLida = useMutation({
-    mutationFn: (id) => api.patch(`/notificacoes/${id}/`, { lida: true }),
+    mutationFn: (id) => api.delete(`/notificacoes/${id}/`),
     onSuccess: () => qc.invalidateQueries(['notificacoes']),
   })
 
   const marcarTodas = useMutation({
     mutationFn: () => api.post('/notificacoes/marcar_todas_lidas/'),
-    onSuccess: () => qc.invalidateQueries(['notificacoes']),
+    onSuccess: () => { qc.invalidateQueries(['notificacoes']); setAberto(false) },
   })
 
   useEffect(() => {

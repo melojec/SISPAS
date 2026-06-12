@@ -87,12 +87,25 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
     enabled: !!ciclo,
   })
 
+  const { data: registrosAno = [] } = useQuery({
+    queryKey: ['registros-ano', meta.id, ano],
+    queryFn: () => api.get(`/registros/?meta=${meta.id}&ciclo__ano=${ano}`)
+      .then(r => r.data.results ?? r.data),
+    enabled: !!ano,
+  })
+
   const { data: ciclosAno = [] } = useQuery({
     queryKey: ['ciclos-ano', ano],
     queryFn: () => api.get(`/ciclos/?ano=${ano}`).then(r => r.data.results ?? r.data),
     enabled: !!ano,
   })
   const ciclosByQ = Object.fromEntries(ciclosAno.map(c => [c.quadrimestre, c]))
+  const registrosByQ = Object.fromEntries(
+    registrosAno.map(r => {
+      const cicloDoReg = ciclosAno.find(c => c.id === r.ciclo)
+      return cicloDoReg ? [cicloDoReg.quadrimestre, r] : null
+    }).filter(Boolean)
+  )
 
   const { data: execucoes = [] } = useQuery({
     queryKey: ['execucoes', meta.id, ano],
@@ -104,11 +117,13 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
   const buildDefaults = () => {
     const d = {
-      realizado: registroExistente?.realizado ?? 0,
       problema:  registroExistente?.problema ?? '',
       acao:      registroExistente?.acao ?? '',
       analise:   registroExistente?.analise ?? '',
     }
+    ;[1, 2, 3].forEach(q => {
+      d[`realizado_q${q}`] = registrosByQ[q]?.realizado ?? 0
+    })
     meta.atividades?.forEach(a => {
       [1, 2, 3].forEach(q => {
         const cId = ciclosByQ[q]?.id
@@ -124,7 +139,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
       const registroPayload = {
-        realizado: dados.realizado,
+        realizado: dados[`realizado_q${cicloQ}`] ?? 0,
         problema:  dados.problema,
         acao:      dados.acao,
         analise:   dados.analise,
@@ -152,9 +167,63 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
     },
     onSuccess: () => {
       qc.invalidateQueries(['registro', meta.id])
+      qc.invalidateQueries(['registros-ano', meta.id])
       qc.invalidateQueries(['execucoes', meta.id])
       qc.invalidateQueries(['registros-dashboard'])
       onSalvo()
+      onClose()
+    },
+  })
+
+  const [confirmarDelete, setConfirmarDelete] = useState(false)
+  const [loadingPDF, setLoadingPDF] = useState(false)
+  const [editandoPlanejado, setEditandoPlanejado] = useState(false)
+
+  const exportarMetaPDF = async () => {
+    setLoadingPDF(true)
+    try {
+      const params = ciclo ? `?ciclo=${ciclo.id}` : ''
+      const r = await api.get(`/relatorios/meta/${meta.id}/pdf/${params}`, { responseType: 'blob' })
+      const url = URL.createObjectURL(r.data)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `meta_${meta.codigo.replace(/\./g, '_')}.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+    } finally {
+      setLoadingPDF(false)
+    }
+  }
+  const [planejadoPPA, setPlanejadoPPA] = useState(meta.previsto_ppa ?? 0)
+  const [planejadoExercicio, setPlanejadoExercicio] = useState(meta.previsto_exercicio ?? 0)
+
+  const { user } = useAuthStore()
+  const podeEditarPlanejado = ['Administrador', 'ASPLAN'].includes(user?.perfil)
+
+  const salvarPlanejado = useMutation({
+    mutationFn: () => api.patch(`/metas/${meta.id}/`, {
+      previsto_ppa: planejadoPPA,
+      previsto_exercicio: planejadoExercicio,
+    }),
+    onSuccess: () => {
+      qc.invalidateQueries(['metas'])
+      qc.invalidateQueries(['metas-todas-v2'])
+      setEditandoPlanejado(false)
+    },
+  })
+
+  const deletarRegistro = useMutation({
+    mutationFn: async () => {
+      const deletes = execucoes.map(e => api.delete(`/execucoes/${e.id}/`))
+      await Promise.all(deletes)
+      await api.delete(`/registros/${registroExistente.id}/`)
+    },
+    onSuccess: () => {
+      qc.invalidateQueries(['registro', meta.id])
+      qc.invalidateQueries(['registros-ano', meta.id])
+      qc.invalidateQueries(['execucoes', meta.id])
+      qc.invalidateQueries(['registros-dashboard'])
+      qc.invalidateQueries(['registros-domi'])
       onClose()
     },
   })
@@ -184,6 +253,16 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 </svg>
                 Gráficos
               </button>
+              <button
+                onClick={exportarMetaPDF}
+                disabled={loadingPDF}
+                className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5 disabled:opacity-60"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                {loadingPDF ? 'Gerando...' : 'Salvar em PDF'}
+              </button>
               <button onClick={onClose} className="text-blue-300 hover:text-white text-xl leading-none">✕</button>
             </div>
           </div>
@@ -195,38 +274,121 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
         <div className="px-6 py-5 space-y-6">
 
-          {/* Indicador */}
-          {meta.indicador && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-3">
-              <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">Indicador da Meta</p>
-              <p className="text-sm text-gray-700 dark:text-gray-300">{meta.indicador}</p>
-              {meta.unidade && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Unidade: <strong>{meta.unidade}</strong></p>
-              )}
-            </div>
-          )}
+          {/* Indicador + Valores Planejados */}
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-3 flex items-start justify-between gap-6">
+                                <div className="flex-1 min-w-0">
+                                              <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">Indicador da Meta</p>
+                                                            {meta.indicador
+                                                                            ? <p className="text-sm text-gray-700 dark:text-gray-300">{meta.indicador}</p>
+                                                                                            : <p className="text-sm text-gray-400 dark:text-gray-500 italic">Não informado</p>
+                                                                                                          }
+                                                                                                                        {meta.unidade && (
+                                                                                                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Unidade: <strong>{meta.unidade}</strong></p>
+                                                                                                                                                      )}
+                                                                                                                                                                  </div>
 
-          {/* Valores planejados */}
+                                                                                                                                                                              <div className="shrink-0 text-right">
+                                                                                                                                                                                            <div className="flex items-center justify-end gap-2 mb-2">
+                                                                                                                                                                                                            <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide">Valores Planejados</p>
+                                                                                                                                                                                                                            {podeEditarPlanejado && !editandoPlanejado && (
+                                                                                                                                                                                                                                              <button
+                                                                                                                                                                                                                                                                  onClick={() => setEditandoPlanejado(true)}
+                                                                                                                                                                                                                                                                                      title="Atualizar valores planejados"
+                                                                                                                                                                                                                                                                                                          className="text-blue-400 hover:text-blue-700 dark:hover:text-blue-200 transition-colors"
+                                                                                                                                                                                                                                                                                                                            >
+                                                                                                                                                                                                                                                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                                                                                                                                                                                                                                                                                                                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H9v-2a2 2 0 01.586-1.414z" />
+                                                                                                                                                                                                                                                                                                                                                                                          </svg>
+                                                                                                                                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                            )}
+                                                                                                                                                                                                                                                                                                                                                                                                                                          </div>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        {editandoPlanejado ? (
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div className="flex flex-col gap-2 items-end">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <div className="flex gap-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div className="text-center">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">PES (4 anos)</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <input
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  type="number" step="1" min="0"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          value={planejadoPPA}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  onChange={e => setPlanejadoPPA(e.target.value)}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          onKeyDown={soNumeros}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  className="w-24 text-center border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div className="text-center">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">PAS {ano}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    type="number" step="1" min="0"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            value={planejadoExercicio}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    onChange={e => setPlanejadoExercicio(e.target.value)}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onKeyDown={soNumeros}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    className="w-24 text-center border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <div className="flex gap-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <button
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onClick={() => { setEditandoPlanejado(false); setPlanejadoPPA(meta.previsto_ppa ?? 0); setPlanejadoExercicio(meta.previsto_exercicio ?? 0) }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  className="text-xs px-3 py-1 border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      >Cancelar</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <button
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                onClick={() => salvarPlanejado.mutate()}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      disabled={salvarPlanejado.isPending}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            className="text-xs px-3 py-1 bg-blue-700 text-white rounded-lg hover:bg-blue-800 disabled:opacity-60"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                >{salvarPlanejado.isPending ? 'Salvando...' : 'Salvar'}</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {salvarPlanejado.isError && (
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p className="text-xs text-red-500">{salvarPlanejado.error?.response?.data?.detail || 'Erro ao salvar.'}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          )}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ) : (
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div className="flex gap-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          {[
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { label: 'PES (4 anos)', valor: meta.previsto_ppa },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  { label: `PAS ${ano}`,   valor: meta.previsto_exercicio },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ].map(({ label, valor }) => (
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div key={label} className="rounded-lg px-4 py-2 text-center border bg-white dark:bg-gray-700 border-blue-200 dark:border-blue-700">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-base font-bold mt-0.5 text-gray-800 dark:text-gray-100">{fmt(valor)}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ))}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        )}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </div>
+
+          {/* Realizado por quadrimestre */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Valores Planejados</p>
-            <div className="grid grid-cols-5 gap-2">
-              {[
-                { label: 'PES',      valor: meta.previsto_ppa },
-                { label: 'Ano',      valor: meta.previsto_exercicio },
-                { label: '1º Quad.', valor: meta.previsto_q1, destaque: cicloQ === 1 },
-                { label: '2º Quad.', valor: meta.previsto_q2, destaque: cicloQ === 2 },
-                { label: '3º Quad.', valor: meta.previsto_q3, destaque: cicloQ === 3 },
-              ].map(({ label, valor, destaque }) => (
-                <div key={label}
-                  className={`rounded-lg px-3 py-2 text-center border ${
-                    destaque
-                      ? 'bg-blue-900 text-white border-blue-900'
-                      : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
-                  }`}>
-                  <p className={`text-xs ${destaque ? 'text-blue-200' : 'text-gray-500 dark:text-gray-400'}`}>{label}</p>
-                  <p className={`text-base font-bold mt-0.5 ${destaque ? 'text-white' : 'text-gray-800 dark:text-gray-100'}`}>{fmt(valor)}</p>
-                </div>
-              ))}
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              Realizado por Quadrimestre <span className="font-normal normal-case">({meta.unidade || 'unidade'})</span>
+            </p>
+            <div className="grid grid-cols-3 gap-3 max-w-sm">
+              {[1, 2, 3].map(q => {
+                const isAtivo = cicloQ === q
+                const cicloQ_ = ciclosByQ[q]
+                const podePreencher = podeEditar && isAtivo && !!cicloQ_
+                return (
+                  <div key={q} className={`rounded-lg border px-3 py-2.5 text-center ${isAtivo ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700'}`}>
+                    <p className={`text-xs font-large mb-1.5 ${isAtivo ? 'text-blue-700 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'}`}>
+                      {q}º Quadrimestre
+                    </p>
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      disabled={!podePreencher}
+                      onKeyDown={soNumeros}
+                      className={`w-full text-center border rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors ${
+                        podePreencher
+                          ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                          : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                      }`}
+                      {...register(`realizado_q${q}`)}
+                    />
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -290,6 +452,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
           {/* Registro qualitativo + botões */}
           {ciclo ? (
+            <>
             <form onSubmit={handleSubmit(d => salvarTudo.mutate(d))}>
               <div className="border-t dark:border-gray-700 pt-5 space-y-4">
                 <div className="flex items-center justify-between">
@@ -304,23 +467,10 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Quantidade Realizada <span className="text-gray-400 font-normal">({meta.unidade || 'unidade'})</span>
-                  </label>
-                  <input
-                    type="number" step="1" min="0"
-                    disabled={!podeEditar}
-                    onKeyDown={soNumeros}
-                    className="w-40 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
-                    {...register('realizado')}
-                  />
-                </div>
-
                 {[
                   { name: 'problema', label: 'Problemas Encontrados no Quadrimestre' },
                   { name: 'acao',     label: 'Ações Realizadas para o Enfrentamento dos Problemas' },
-                  { name: 'analise',  label: 'Análises e Considerações' },
+                  { name: 'analise',  label: 'Análises e Considerações - Este texto irá diretamente para o DigiSUS' },
                 ].map(({ name, label }) => (
                   <div key={name}>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
@@ -339,7 +489,16 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                   </p>
                 )}
 
-                <div className="flex justify-end gap-3 pt-1">
+                <div className="flex items-center justify-between pt-1">
+                  <div>
+                    {podeEditar && registroExistente && (
+                      <button type="button" onClick={() => setConfirmarDelete(true)}
+                        className="px-4 py-2 text-sm text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                        Remover preenchimento
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex gap-3">
                   <button type="button" onClick={onClose}
                     className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                     Fechar
@@ -350,9 +509,43 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                       {isSubmitting ? 'Salvando...' : registroExistente ? 'Atualizar Registro' : 'Salvar Registro'}
                     </button>
                   )}
+                  </div>
                 </div>
               </div>
             </form>
+
+            {/* Confirmação de remoção */}
+            {confirmarDelete && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60]">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4 mx-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">Remover preenchimento?</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Esta ação apagará o registro e todos os dados de execução desta meta no ciclo atual.</p>
+                    </div>
+                  </div>
+                  {deletarRegistro.isError && (
+                    <p className="text-xs text-red-500">{deletarRegistro.error?.response?.data?.detail || 'Erro ao remover.'}</p>
+                  )}
+                  <div className="flex justify-end gap-3">
+                    <button onClick={() => setConfirmarDelete(false)}
+                      className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                      Cancelar
+                    </button>
+                    <button onClick={() => deletarRegistro.mutate()} disabled={deletarRegistro.isPending}
+                      className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-60 font-medium">
+                      {deletarRegistro.isPending ? 'Removendo...' : 'Sim, remover'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            </>
           ) : (
             <div className="border-t dark:border-gray-700 pt-4 text-sm text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl px-4 py-3">
               Nenhum ciclo aberto — preenchimento indisponível.
@@ -407,6 +600,50 @@ export default function DOMI() {
     enabled: !!cicloAtual && !!objetivoSel,
   })
 
+  const { data: todosObjetivos = [] } = useQuery({
+    queryKey: ['objetivos-todos'],
+    queryFn: () => api.get('/objetivos/?page_size=500').then(r => r.data.results ?? r.data),
+  })
+
+  const { data: todasMetas = [] } = useQuery({
+    queryKey: ['metas-todas-v2'],
+    queryFn: async () => {
+      const results = []
+      let page = 1
+      while (true) {
+        const r = await api.get(`/metas/?page=${page}&page_size=100`)
+        results.push(...(r.data.results ?? []))
+        if (!r.data.next) break
+        page++
+      }
+      return results
+    },
+  })
+
+  const { data: todosRegistros = [] } = useQuery({
+    queryKey: ['registros-dashboard', cicloAtual?.id],
+    queryFn: () => api.get(`/registros/?ciclo=${cicloAtual.id}&page_size=500`).then(r => r.data.results ?? r.data),
+    enabled: !!cicloAtual,
+  })
+
+  const objDiretrizMap = Object.fromEntries(todosObjetivos.map(o => [o.id, o.diretriz]))
+  const metasPreenchidas = new Set(todosRegistros.map(r => r.meta))
+
+  const progresso = (total, preenchidas) => {
+    if (!total) return null
+    return { preenchidas, total }
+  }
+
+  const progDiretriz = (diretrizId) => {
+    const metas = todasMetas.filter(m => Number(objDiretrizMap[m.objetivo]) === Number(diretrizId))
+    return progresso(metas.length, metas.filter(m => metasPreenchidas.has(m.id)).length)
+  }
+
+  const progObjetivo = (objetivoId) => {
+    const metas = todasMetas.filter(m => Number(m.objetivo) === Number(objetivoId))
+    return progresso(metas.length, metas.filter(m => metasPreenchidas.has(m.id)).length)
+  }
+
   const statusPorMeta = Object.fromEntries(registros.map(r => [r.meta, r]))
 
   const diretrizAtual = diretrizes.find(d => d.id === diretrizSel)
@@ -430,7 +667,9 @@ export default function DOMI() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden flex flex-col">
           <div className="bg-blue-900 text-white px-4 py-3 text-sm font-semibold">Diretrizes</div>
           <ul className="flex-1 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[32rem]">
-            {diretrizes.map(d => (
+            {diretrizes.map(d => {
+              const p = progDiretriz(d.id)
+              return (
               <li
                 key={d.id}
                 onClick={() => { setDiretrizSel(d.id); setObjetivoSel(null) }}
@@ -438,10 +677,20 @@ export default function DOMI() {
                   diretrizSel === d.id ? 'bg-blue-100 dark:bg-blue-900/40 border-l-4 border-blue-600 font-semibold' : ''
                 }`}
               >
-                <span className="inline-block font-mono text-blue-700 dark:text-blue-400 text-xs bg-blue-50 dark:bg-blue-900/30 rounded px-1.5 py-0.5 mr-2">{d.codigo}</span>
-                <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{d.descricao}</span>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="inline-block font-mono text-blue-700 dark:text-blue-400 text-xs bg-blue-50 dark:bg-blue-900/30 rounded px-1.5 py-0.5 mr-2">{d.codigo}</span>
+                    <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{d.descricao}</span>
+                  </div>
+                  {p && (
+                    <span className={`shrink-0 text-xs font-semibold px-1.5 py-0.5 rounded whitespace-nowrap ${p.preenchidas === p.total ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400' : p.preenchidas >= p.total / 2 ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400'}`}>
+                      {p.preenchidas} de {p.total}
+                    </span>
+                  )}
+                </div>
               </li>
-            ))}
+              )
+            })}
             {diretrizes.length === 0 && (
               <li className="px-4 py-8 text-sm text-gray-400 text-center">Nenhuma diretriz cadastrada</li>
             )}
@@ -450,23 +699,35 @@ export default function DOMI() {
 
         {/* Coluna Objetivos */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden flex flex-col">
-          <div className="bg-indigo-700 text-white px-4 py-3 text-sm font-semibold">
+          <div className="bg-[#e17100] text-white px-4 py-3 text-sm font-semibold">
             Objetivos
             {diretrizAtual && <span className="ml-2 text-indigo-200 font-normal text-xs">— Dir. {diretrizAtual.codigo}</span>}
           </div>
           <ul className="flex-1 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[32rem]">
-            {objetivos.map(o => (
+            {objetivos.map(o => {
+              const p = progObjetivo(o.id)
+              return (
               <li
                 key={o.id}
                 onClick={() => setObjetivoSel(o.id)}
-                className={`px-4 py-3 cursor-pointer text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${
-                  objetivoSel === o.id ? 'bg-indigo-100 dark:bg-indigo-900/40 border-l-4 border-indigo-600 font-semibold' : ''
+                className={`px-4 py-3 cursor-pointer text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors ${
+                  objetivoSel === o.id ? 'bg-orange-100 dark:bg-orange-900/40 border-l-4 border-[#e17100] font-semibold' : ''
                 }`}
               >
-                <span className="inline-block font-mono text-indigo-700 dark:text-indigo-400 text-xs bg-indigo-50 dark:bg-indigo-900/30 rounded px-1.5 py-0.5 mr-2">{o.codigo}</span>
-                <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{o.descricao}</span>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="inline-block font-mono text-[#e17100] dark:text-orange-400 text-xs bg-orange-50 dark:bg-orange-900/30 rounded px-1.5 py-0.5 mr-2">{o.codigo}</span>
+                    <span className="text-gray-700 dark:text-gray-300 line-clamp-2">{o.descricao}</span>
+                  </div>
+                  {p && (
+                    <span className={`shrink-0 text-xs font-semibold px-1.5 py-0.5 rounded whitespace-nowrap ${p.preenchidas === p.total ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400' : p.preenchidas >= p.total / 2 ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400' : 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400'}`}>
+                      {p.preenchidas} de {p.total}
+                    </span>
+                  )}
+                </div>
               </li>
-            ))}
+              )
+            })}
             {!diretrizSel && (
               <li className="px-4 py-8 text-sm text-gray-400 text-center">← Selecione uma diretriz</li>
             )}

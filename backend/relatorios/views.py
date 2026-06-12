@@ -1,12 +1,73 @@
 import io
+from datetime import date
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
+from core.models import Meta
 from monitoramento.models import RegistroQuadrimestral, Ciclo
 from usuarios.permissions import IsUsuarioAtivo
+
+
+class MetaPDFView(APIView):
+    permission_classes = [IsUsuarioAtivo]
+
+    def get(self, request, meta_id):
+        try:
+            meta = Meta.objects.select_related(
+                'area', 'objetivo', 'objetivo__diretriz'
+            ).prefetch_related('atividades').get(pk=meta_id)
+        except Meta.DoesNotExist:
+            raise NotFound('Meta não encontrada.')
+
+        ciclo_id = request.query_params.get('ciclo')
+        ciclo = Ciclo.objects.filter(pk=ciclo_id).first() if ciclo_id else None
+
+        registros_qs = RegistroQuadrimestral.objects.filter(
+            meta=meta
+        ).select_related('ciclo').order_by('ciclo__ano', 'ciclo__quadrimestre')
+
+        # Monta lista fixa de 3 quadrimestres com valor realizado (0 se sem registro)
+        reg_por_q = {r.ciclo.quadrimestre: r for r in registros_qs if r.ciclo}
+        labels_q = {1: '1º Quadrimestre', 2: '2º Quadrimestre', 3: '3º Quadrimestre'}
+        valores_realizados = [
+            {
+                'label': labels_q[q],
+                'valor': reg_por_q[q].realizado if q in reg_por_q else 0,
+                'registro': reg_por_q.get(q),
+            }
+            for q in [1, 2, 3]
+        ]
+
+        # Registro do ciclo atual para campos qualitativos
+        registro_atual = reg_por_q.get(ciclo.quadrimestre) if ciclo else None
+
+        import os, base64
+        logo_file = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'src', 'assets', 'pdf.png')
+        )
+        with open(logo_file, 'rb') as f:
+            logo_b64 = base64.b64encode(f.read()).decode()
+        logo_path = f'data:image/png;base64,{logo_b64}'
+
+        html_string = render_to_string('relatorios/meta_pdf.html', {
+            'meta': meta,
+            'ciclo': ciclo,
+            'valores_realizados': valores_realizados,
+            'registro_atual': registro_atual,
+            'logo_path': logo_path,
+            'data_geracao': date.today().strftime('%d/%m/%Y'),
+        })
+        from xhtml2pdf import pisa
+        buffer = io.BytesIO()
+        pisa.CreatePDF(html_string, dest=buffer)
+        buffer.seek(0)
+        nome = f'meta_{meta.codigo.replace(".", "_")}.pdf'
+        return HttpResponse(buffer.read(), content_type='application/pdf',
+                            headers={'Content-Disposition': f'attachment; filename="{nome}"'})
 
 
 class RelatorioPDFView(APIView):
@@ -29,9 +90,11 @@ class RelatorioPDFView(APIView):
             'registros': qs,
             'ciclo': ciclo,
         })
-        from weasyprint import HTML
-        pdf_file = HTML(string=html_string).write_pdf()
-        return HttpResponse(pdf_file, content_type='application/pdf',
+        from xhtml2pdf import pisa
+        buffer = io.BytesIO()
+        pisa.CreatePDF(html_string, dest=buffer)
+        buffer.seek(0)
+        return HttpResponse(buffer.read(), content_type='application/pdf',
                             headers={'Content-Disposition': 'attachment; filename="relatorio_pas.pdf"'})
 
 
