@@ -24,11 +24,12 @@ class MetaSerializer(serializers.ModelSerializer):
     atividades = AtividadeSerializer(many=True, read_only=True)
     area_nome = serializers.CharField(source='area.nome', read_only=True)
     objetivo_codigo = serializers.CharField(source='objetivo.codigo', read_only=True)
+    objetivo_diretriz = serializers.IntegerField(source='objetivo.diretriz_id', read_only=True)
 
     class Meta:
         model = Meta
         fields = [
-            'id', 'objetivo', 'objetivo_codigo', 'area', 'area_nome',
+            'id', 'objetivo', 'objetivo_codigo', 'objetivo_diretriz', 'area', 'area_nome',
             'codigo', 'descricao', 'indicador', 'unidade',
             'previsto_ppa', 'previsto_exercicio',
             'previsto_q1', 'previsto_q2', 'previsto_q3',

@@ -20,13 +20,15 @@
   #rodape { border-top: 1px solid #e5e7eb; padding-top: 6px;
     font-size: 8px; color: #9ca3af; text-align: center; }
 
-  /* ── Cabeçalho (todas as páginas) ── */
-  .ph { width: 100%; border-bottom: 2px solid #172554; padding-bottom: 20mm; margin-bottom: 20px; }
-  .ph-logo { width: 80px; vertical-align: middle; padding-right: 0px; }
-  .ph-text { vertical-align: middle; }
-  .ph-title { font-size: 14px; font-weight: bold; color: #172554; line-height: 1.1; }
-  .ph-sub { font-size: 9px; color: #6b7280; margin-top: 0; }
-  .ph-right { text-align: right; font-size: 9px; color: #374151; vertical-align: middle; white-space: nowrap; padding-left: 10px; }
+  /* ── Capa ── */
+  .capa-wrap { width: 100%; border-collapse: collapse; height: 240mm; }
+  .capa-td { vertical-align: middle; text-align: center; }
+  .capa-logo { margin-bottom: 20px; }
+  .capa-titulo { font-size: 22px; font-weight: bold; color: #172554; margin-bottom: 8px; }
+  .capa-sub { font-size: 12px; color: #374151; margin-bottom: 30px; line-height: 1.6; }
+  .capa-meta-box { display: inline-block; border: 1px solid #172554; padding: 10px 24px;
+    font-size: 11px; color: #172554; margin-bottom: 6px; }
+  .capa-data { font-size: 9px; color: #9ca3af; margin-top: 40px; }
 
   /* ── Breadcrumb + Área ── */
   .bc-tbl { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
@@ -40,7 +42,7 @@
 
   /* ── Box meta ── */
   .meta-box { background: #172554; color: white; padding: 3px 2px 2px; margin-bottom: 2px; }
-  .meta-box-text { font-size: 12px; font-weight: bold; line-height: 1.8; align-items: center; display: flex; justify-content: center; text-align: center;}
+  .meta-box-text {font-size: 12px; font-weight: bold; line-height: 1.8; align-items: center; display: flex; justify-content: center; text-align: center;}
 
   /* ── Indicador + Valores Planejados ── */
   .iv-tbl { width: 100%; border-collapse: collapse; border: 0.5px solid #172457;
@@ -72,15 +74,15 @@
   .atv-header { background: #172554; color: white; text-align: center;
     font-size: 11px; font-weight: bold; padding: 8px; margin-top: 10px; }
   .tbl { width: 100%; border-collapse: collapse; font-size: 10px; }
-    .tbl th { background: #A2B1D9; color: #172457; padding: 5px 8px;
-        font-size: 9px; font-weight: bold; border: 0.5px solid #dddfe9; text-align: center; }
-          .tbl th.left { text-align: left; }
-            .tbl td { padding: 6px 8px; border: 0.5px solid #dddfe9; vertical-align: middle;
-                text-align: center; line-height: 1.4; }
-                  .tbl td.left { text-align: left; }
-                    .tbl tr:nth-child(even) td { background: #f8faff; }
+  .tbl th { background: #A2B1D9; color: #172457; padding: 5px 8px;
+    font-size: 9px; font-weight: bold; border: 0.5px solid #dddfe9; text-align: center; }
+  .tbl th.left { text-align: left; }
+  .tbl td { padding: 6px 8px; border: 0.5px solid #dddfe9; vertical-align: middle;
+    text-align: center; line-height: 1.4; }
+  .tbl td.left { text-align: left; }
+  .tbl tr:nth-child(even) td { background: #f8faff; }
 
-  /* ── Análise Qualitativa (pág. 2) ── */
+  /* ── Análise Qualitativa (pág. 2 de cada meta) ── */
   .aq-header { background: #172554; color: white; text-align: center;
     font-size: 12px; font-weight: bold; padding: 8px; margin-bottom: 14px; }
   .aq-field-lbl { background: #dbeafe; color: #1e3a5f; font-size: 10px;
@@ -88,56 +90,74 @@
   .aq-field-text { font-size: 10px; color: #111; line-height: 1.7;
     text-align: justify; padding: 0 2px; margin-bottom: 16px; }
   .aq-field-empty { font-size: 10px; color: #9ca3af; font-style: italic; margin-bottom: 16px; }
+
+  /* ── Identificação no topo de cada ficha (substitui o cabeçalho) ── */
+  .ficha-id { font-size: 8px; color: #9ca3af; text-align: right; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <div id="rodape">SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente</div>
 
-<!-- == CABEÇALHO == -->
-<table class="ph" cellpadding="7" cellspacing="7">
+<!-- == CAPA == -->
+<table class="capa-wrap" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="ph-logo">
-      <img src="{{ logo_path }}" width="70" height="70" />
-    </td>
-    <td class="ph-text">
-      <div class="ph-title">Ficha de Meta</div>
-      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
-    </td>
-    <td class="ph-right">
-      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
-      Gerado em: {{ data_geracao }}
-    </td>
-  </tr>
-</table>
+      <td class="capa-td">
+            <div class="capa-logo">
+                    <img src="{{ logo_path }}" width="90" height="90" />
+                          </div>
+                                <div class="capa-titulo">Fichas de Metas</div>
+                                      <div class="capa-sub">
+                                              Sistema de Monitoramento da Programação Anual de Saúde — SES-MA<br>
+                                                      Secretaria de Estado da Saúde do Maranhão
+                                                            </div>
+                                                                  {% if ciclo %}
+                                                                        <div class="capa-meta-box">Ciclo: {{ ciclo }}</div><br>
+                                                                              {% endif %}
+                                                                                    {% if area_filtro %}
+                                                                                          <div class="capa-meta-box">Área: {{ area_filtro.sigla }} — {{ area_filtro.nome }}</div>
+                                                                                                {% endif %}
+                                                                                                      <div class="capa-data">Gerado em: {{ data_geracao }} · {{ total_metas }} meta{{ total_metas|pluralize:"s" }}</div>
+                                                                                                          </td>
+                                                                                                            </tr>
+                                                                                                            </table>-->>
 
-<!-- == BREADCRUMB + ÁREA == -->
+<!-- == FICHAS == -->
+{% for item in metas_data %}
+<pdf:nextpage />
+
+<!-- Pág. 1 da meta -->
+<div class="ficha-id">
+  {% if ciclo %}Ciclo: {{ ciclo }} · {% endif %}Gerado em: {{ data_geracao }}
+</div>
+
+<!-- Breadcrumb + Área -->
 <table class="bc-tbl" cellpadding="0" cellspacing="0">
   <tr>
     <td class="bc-left">
-      <strong>{{ meta.objetivo.diretriz.codigo }}</strong> - {{ meta.objetivo.diretriz.descricao }}<br>
-      <strong>{{ meta.objetivo.codigo }}</strong> - {{ meta.objetivo.descricao }}
+      <strong>{{ item.meta.objetivo.diretriz.codigo }}</strong> - {{ item.meta.objetivo.diretriz.descricao }}<br>
+      <strong>{{ item.meta.objetivo.codigo }}</strong> - {{ item.meta.objetivo.descricao }}
     </td>
     <td class="bc-right">
       <div class="bc-area-lbl">Área Responsável</div>
-      <div class="bc-area-nome">{{ meta.area.sigla }} — {{ meta.area.nome }}</div>
+      <div class="bc-area-nome">{{ item.meta.area.sigla }} — {{ item.meta.area.nome }}</div>
     </td>
   </tr>
 </table>
 
-<!-- == META BOX == -->
+<!-- Box da Meta -->
 <div class="meta-box">
-  <div class="meta-box-text">{{ meta.codigo }} - {{ meta.descricao }}</div>
+  <div class="meta-box-text">{{ item.meta.codigo }} - {{ item.meta.descricao }}</div>
 </div>
 
-<!-- == INDICADOR + VALORES PLANEJADOS == -->
+<!-- Indicador + Valores Planejados -->
 <table class="iv-tbl" cellpadding="0" cellspacing="0">
   <tr>
     <td class="iv-left">
       <div class="iv-left-text">
-        {% if meta.indicador %}<strong>Indicador:</strong> {{ meta.indicador }}<br>{% endif %}
-        {% if meta.unidade %}<strong>Unidade:</strong> {{ meta.unidade }}{% endif %}
-        {% if not meta.indicador and not meta.unidade %}<em style="color:#9ca3af;">Não informado</em>{% endif %}
+        {% if item.meta.indicador %}<strong>Indicador:</strong> {{ item.meta.indicador }}<br>{% endif %}
+        {% if item.meta.unidade %}<strong>Unidade:</strong> {{ item.meta.unidade }}{% endif %}
+        {% if not item.meta.indicador and not item.meta.unidade %}<em style="color:#9ca3af;">Não informado</em>{% endif %}
       </div>
     </td>
     <td class="iv-right">
@@ -146,11 +166,11 @@
         <tr>
           <td class="plan-cell">
             <div class="plan-lbl">PES (4 anos)</div>
-            <div class="plan-val">{{ meta.previsto_ppa|floatformat:0 }}</div>
+            <div class="plan-val">{{ item.meta.previsto_ppa|floatformat:0 }}</div>
           </td>
           <td class="plan-cell" style="border-left:1px solid #e5e7eb;">
             <div class="plan-lbl">PAS{% if ciclo %} (Ano {{ ciclo.ano }}){% endif %}</div>
-            <div class="plan-val">{{ meta.previsto_exercicio|floatformat:0 }}</div>
+            <div class="plan-val">{{ item.meta.previsto_exercicio|floatformat:0 }}</div>
           </td>
         </tr>
       </table>
@@ -158,11 +178,11 @@
   </tr>
 </table>
 
-<!-- == VALORES REALIZADOS == -->
+<!-- Valores Realizados -->
 <table class="vr-tbl" cellpadding="0" cellspacing="0">
   <tr>
     <td class="vr-label-cell">Valores Realizados</td>
-    {% for vr in valores_realizados %}
+    {% for vr in item.valores_realizados %}
     <td class="vr-cell">
       <div class="vr-q-lbl">{{ vr.label }}</div>
       <div class="vr-q-val">{{ vr.valor|floatformat:0 }}</div>
@@ -171,8 +191,8 @@
   </tr>
 </table>
 
-<!-- == ATIVIDADES == -->
-{% if meta.atividades.all %}
+<!-- Atividades -->
+{% if item.meta.atividades.all %}
 <div class="atv-header">Atividades</div>
 <table class="tbl">
   <thead>
@@ -184,7 +204,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for a in meta.atividades.all %}
+    {% for a in item.meta.atividades.all %}
     <tr>
       <td class="left">{{ a.descricao }}</td>
       <td>{{ a.indicador|default:"—" }}</td>
@@ -196,48 +216,37 @@
 </table>
 {% endif %}
 
-<!-- == PÁG. 2 — ANÁLISE QUALITATIVA == -->
+<!-- Pág. 2 da meta — Análise Qualitativa -->
 <pdf:nextpage />
 
-<!-- == CABEÇALHO PÁG. 2 == -->
-<table class="ph" cellpadding="0" cellspacing="0">
-  <tr>
-    <td class="ph-logo">
-      <img src="{{ logo_path }}" width="70" height="70" />
-    </td>
-    <td class="ph-text">
-      <div class="ph-title">Ficha de Meta</div>
-      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
-    </td>
-    <td class="ph-right">
-      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
-      Gerado em: {{ data_geracao }}
-    </td>
-  </tr>
-</table>
+<div class="ficha-id">
+  {% if ciclo %}Ciclo: {{ ciclo }} · {% endif %}Gerado em: {{ data_geracao }}
+</div>
 
-<div class="aq-header">Análise Qualitativa</div>
+<div class="aq-header">Análise Qualitativa — {{ item.meta.codigo }}</div>
 
 <div class="aq-field-lbl">Problemas Encontrados no Quadrimestre</div>
-{% if registro_atual and registro_atual.problema %}
-  <div class="aq-field-text">{{ registro_atual.problema }}</div>
+{% if item.registro_atual and item.registro_atual.problema %}
+  <div class="aq-field-text">{{ item.registro_atual.problema }}</div>
 {% else %}
   <div class="aq-field-empty">Não informado</div>
 {% endif %}
 
 <div class="aq-field-lbl">Ações Realizadas para o Enfrentamento dos Problemas</div>
-{% if registro_atual and registro_atual.acao %}
-  <div class="aq-field-text">{{ registro_atual.acao }}</div>
+{% if item.registro_atual and item.registro_atual.acao %}
+  <div class="aq-field-text">{{ item.registro_atual.acao }}</div>
 {% else %}
   <div class="aq-field-empty">Não informado</div>
 {% endif %}
 
 <div class="aq-field-lbl">Análises e Considerações – Este texto irá diretamente para o DigiSUS</div>
-{% if registro_atual and registro_atual.analise %}
-  <div class="aq-field-text">{{ registro_atual.analise }}</div>
+{% if item.registro_atual and item.registro_atual.analise %}
+  <div class="aq-field-text">{{ item.registro_atual.analise }}</div>
 {% else %}
   <div class="aq-field-empty">Não informado</div>
 {% endif %}
+
+{% endfor %}
 
 </body>
 </html>

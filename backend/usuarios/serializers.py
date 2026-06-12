@@ -16,7 +16,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
 
 class UsuarioCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=6)
+    password = serializers.CharField(write_only=True, min_length=6,
+        error_messages={'min_length': 'A senha deve ter pelo menos 6 caracteres.'})
 
     class Meta:
         model = Usuario

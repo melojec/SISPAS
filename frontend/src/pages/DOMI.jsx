@@ -166,9 +166,9 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       await Promise.all(saves)
     },
     onSuccess: () => {
-      qc.invalidateQueries(['registro', meta.id])
-      qc.invalidateQueries(['registros-ano', meta.id])
-      qc.invalidateQueries(['execucoes', meta.id])
+      qc.invalidateQueries({ queryKey: ['registro', meta.id], exact: false })
+      qc.invalidateQueries({ queryKey: ['registros-ano', meta.id], exact: false })
+      qc.invalidateQueries({ queryKey: ['execucoes', meta.id], exact: false })
       qc.invalidateQueries(['registros-dashboard'])
       onSalvo()
       onClose()
@@ -198,7 +198,19 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const [planejadoExercicio, setPlanejadoExercicio] = useState(meta.previsto_exercicio ?? 0)
 
   const { user } = useAuthStore()
-  const podeEditarPlanejado = ['Administrador', 'ASPLAN'].includes(user?.perfil)
+  const podeEditarPlanejado = ['administrador', 'asplan'].includes(user?.perfil)
+  const isAsplan = ['administrador', 'asplan'].includes(user?.perfil)
+  const isCoordenador = ['administrador', 'asplan', 'coordenador'].includes(user?.perfil)
+
+  const validarCoord = useMutation({
+    mutationFn: () => api.patch(`/registros/${registroExistente.id}/validar_coord/`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['registro', meta.id], exact: false }),
+  })
+
+  const validarAsplan = useMutation({
+    mutationFn: () => api.patch(`/registros/${registroExistente.id}/validar_asplan/`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['registro', meta.id], exact: false }),
+  })
 
   const salvarPlanejado = useMutation({
     mutationFn: () => api.patch(`/metas/${meta.id}/`, {
@@ -224,13 +236,16 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       qc.invalidateQueries(['execucoes', meta.id])
       qc.invalidateQueries(['registros-dashboard'])
       qc.invalidateQueries(['registros-domi'])
+      onSalvo('removido')
       onClose()
     },
   })
 
   const fmt = (v) => Number(v ?? 0).toLocaleString('pt-BR')
   const cicloQ = ciclo?.quadrimestre
+  const isAdmin = user?.perfil === 'administrador'
   const podeEditar = !registroExistente?.validado_asplan && ciclo?.esta_aberto
+  const podeRemover = podeEditar || isAdmin
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 p-4 overflow-y-auto">
@@ -307,7 +322,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div className="flex flex-col gap-2 items-end">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <div className="flex gap-2">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <div className="text-center">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">PES (4 anos)</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">PES 2024 - 2027</p>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <input
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   type="number" step="1" min="0"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           value={planejadoPPA}
@@ -345,7 +360,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ) : (
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div className="flex gap-2">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           {[
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { label: 'PES (4 anos)', valor: meta.previsto_ppa },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { label: 'PES 2024 - 2027', valor: meta.previsto_ppa },
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   { label: `PAS ${ano}`,   valor: meta.previsto_exercicio },
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ].map(({ label, valor }) => (
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div key={label} className="rounded-lg px-4 py-2 text-center border bg-white dark:bg-gray-700 border-blue-200 dark:border-blue-700">
@@ -459,12 +474,27 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                     Registro — {ciclo.ano} · {ciclo.quadrimestre_display}
                   </p>
-                  {registroExistente?.validado_asplan && (
-                    <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded px-2 py-0.5 font-medium">Validado pela ASPLAN</span>
-                  )}
-                  {registroExistente?.validado_coord && !registroExistente?.validado_asplan && (
-                    <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded px-2 py-0.5">Validado pelo Coordenador</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {registroExistente?.validado_asplan ? (
+                      <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded px-2 py-0.5 font-medium">✓ Validado pela ASPLAN</span>
+                    ) : isAsplan && registroExistente ? (
+                      <button type="button" onClick={() => validarAsplan.mutate()}
+                        disabled={validarAsplan.isPending}
+                        className="text-xs bg-green-600 hover:bg-green-700 text-white rounded px-3 py-1 font-medium transition-colors disabled:opacity-60">
+                        {validarAsplan.isPending ? 'Validando...' : 'Validar (ASPLAN)'}
+                      </button>
+                    ) : null}
+
+                    {registroExistente?.validado_coord ? (
+                      <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded px-2 py-0.5">✓ Coord. validou</span>
+                    ) : isCoordenador && registroExistente && !registroExistente?.validado_asplan ? (
+                      <button type="button" onClick={() => validarCoord.mutate()}
+                        disabled={validarCoord.isPending}
+                        className="text-xs bg-blue-600 hover:bg-blue-700 text-white rounded px-3 py-1 transition-colors disabled:opacity-60">
+                        {validarCoord.isPending ? 'Validando...' : 'Validar (Coord.)'}
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
 
                 {[
@@ -491,7 +521,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
                 <div className="flex items-center justify-between pt-1">
                   <div>
-                    {podeEditar && registroExistente && (
+                    {podeRemover && registroExistente && (
                       <button type="button" onClick={() => setConfirmarDelete(true)}
                         className="px-4 py-2 text-sm text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                         Remover preenchimento
@@ -562,11 +592,11 @@ export default function DOMI() {
   const [diretrizSel, setDiretrizSel] = useState(null)
   const [objetivoSel, setObjetivoSel] = useState(null)
   const [metaSel, setMetaSel] = useState(null)
-  const [toast, setToast] = useState(false)
+  const [toast, setToast] = useState(null) // null | 'salvo' | 'removido'
 
-  const mostrarToast = () => {
-    setToast(true)
-    setTimeout(() => setToast(false), 4000)
+  const mostrarToast = (tipo = 'salvo') => {
+    setToast(tipo)
+    setTimeout(() => setToast(null), 4000)
   }
 
   const { data: cicloAtual } = useQuery({
@@ -801,13 +831,25 @@ export default function DOMI() {
       )}
 
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg animate-fade-in">
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 text-white px-5 py-3 rounded-xl shadow-lg animate-fade-in ${toast === 'removido' ? 'bg-red-600' : 'bg-green-600'}`}>
           <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            {toast === 'removido'
+              ? <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              : <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            }
           </svg>
           <div>
-            <p className="text-sm font-semibold">Meta salva com sucesso!</p>
-            <p className="text-xs text-green-100">Os dados foram registrados no sistema.</p>
+            {toast === 'removido' ? (
+              <>
+                <p className="text-sm font-semibold">Preenchimento removido!</p>
+                <p className="text-xs text-red-100">O registro foi apagado do sistema.</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-semibold">Meta salva com sucesso!</p>
+                <p className="text-xs text-green-100">Os dados foram registrados no sistema.</p>
+              </>
+            )}
           </div>
         </div>
       )}

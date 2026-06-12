@@ -16,8 +16,8 @@ class AtividadeInline(admin.TabularInline):
     model = Atividade
     extra = 0
     fields = ['descricao', 'indicador', 'unidade', 'valor_previsto']
-    verbose_name = 'Indicador'
-    verbose_name_plural = 'Indicadores'
+    verbose_name = 'Atividade'
+    verbose_name_plural = 'Atividades'
 
 
 class MetaInline(admin.TabularInline):

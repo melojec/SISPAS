@@ -10,10 +10,20 @@ const inputCls = 'w-full border border-gray-300 dark:border-gray-600 dark:bg-gra
 function ModalUsuario({ usuario, areas, onClose }) {
   const qc = useQueryClient()
   const { register, handleSubmit } = useForm({ defaultValues: usuario ?? {} })
+  const [erro, setErro] = useState('')
 
   const salvar = useMutation({
-    mutationFn: (d) => usuario ? api.patch(`/usuarios/${usuario.id}/`, d) : api.post('/usuarios/', d),
+    mutationFn: (d) => {
+      const payload = { ...d, area: d.area || null }
+      return usuario ? api.patch(`/usuarios/${usuario.id}/`, payload) : api.post('/usuarios/', payload)
+    },
     onSuccess: () => { qc.invalidateQueries(['usuarios']); onClose() },
+    onError: (e) => {
+      const data = e.response?.data
+      if (data?.email) setErro('Este e-mail já está cadastrado.')
+      else if (data && typeof data === 'object') setErro(Object.values(data).flat().join(' '))
+      else setErro('Erro ao salvar. Tente novamente.')
+    },
   })
 
   return (
@@ -34,8 +44,8 @@ function ModalUsuario({ usuario, areas, onClose }) {
             </div>
             {!usuario && (
               <div className="col-span-2">
-                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Senha</label>
-                <input type="password" className={inputCls} {...register('password', { required: !usuario })} />
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Senha <span className="text-gray-400 font-normal">(mín. 6 caracteres)</span></label>
+                <input type="password" className={inputCls} {...register('password', { required: !usuario, minLength: { value: 6, message: 'Mínimo 6 caracteres.' } })} />
               </div>
             )}
             <div>
@@ -52,6 +62,7 @@ function ModalUsuario({ usuario, areas, onClose }) {
               </select>
             </div>
           </div>
+          {erro && <p className="text-xs text-red-500">{erro}</p>}
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose}
               className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">

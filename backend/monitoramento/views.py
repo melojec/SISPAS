@@ -51,7 +51,10 @@ class RegistroQuadrimestralViewSet(viewsets.ModelViewSet):
         from usuarios.models import Usuario
         if user.perfil in (Usuario.ADMINISTRADOR, Usuario.ASPLAN):
             return qs
-        return qs.filter(meta__area=user.area)
+        # Própria área: vê tudo. Fora da área: só ciclos fechados.
+        propria_area = qs.filter(meta__area=user.area)
+        outras_areas = qs.exclude(meta__area=user.area).filter(ciclo__situacao=Ciclo.FECHADO)
+        return propria_area | outras_areas
 
     def perform_create(self, serializer):
         registro = serializer.save(criado_por=self.request.user)

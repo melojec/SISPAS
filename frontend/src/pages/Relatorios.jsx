@@ -16,7 +16,7 @@ function baixarArquivo(blob, nomeArquivo) {
 export default function Relatorios() {
   const [cicloId, setCicloId] = useState('')
   const [areaId, setAreaId] = useState('')
-  const [loadingPDF, setLoadingPDF] = useState(false)
+  const [loadingFichas, setLoadingFichas] = useState(false)
   const [loadingXLSX, setLoadingXLSX] = useState(false)
   const [erro, setErro] = useState('')
 
@@ -35,13 +35,13 @@ export default function Relatorios() {
   if (areaId) params.append('area', areaId)
   const query = params.toString() ? `?${params}` : ''
 
-  const exportarPDF = async () => {
-    setErro(''); setLoadingPDF(true)
+  const exportarFichas = async () => {
+    setErro(''); setLoadingFichas(true)
     try {
-      const r = await api.get(`/relatorios/pdf/${query}`, { responseType: 'blob' })
-      baixarArquivo(r.data, 'relatorio_pas.pdf')
-    } catch { setErro('Erro ao gerar PDF.') }
-    finally { setLoadingPDF(false) }
+      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
+      baixarArquivo(r.data, 'fichas_metas.pdf')
+    } catch { setErro('Erro ao gerar PDF de fichas.') }
+    finally { setLoadingFichas(false) }
   }
 
   const exportarXLSX = async () => {
@@ -85,16 +85,16 @@ export default function Relatorios() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
-          onClick={exportarPDF}
-          disabled={loadingPDF}
-          className="flex items-center gap-4 bg-white dark:bg-gray-800 rounded-xl shadow p-6 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group text-left disabled:opacity-60"
+          onClick={exportarFichas}
+          disabled={loadingFichas}
+          className="flex items-center gap-4 bg-white dark:bg-gray-800 rounded-xl shadow p-6 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group text-left disabled:opacity-60"
         >
-          <div className="w-12 h-12 rounded-lg bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-2xl group-hover:bg-red-200 dark:group-hover:bg-red-900/60 transition-colors shrink-0">
-            📄
+          <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-2xl group-hover:bg-blue-200 dark:group-hover:bg-blue-900/60 transition-colors shrink-0">
+            📋
           </div>
           <div>
-            <p className="font-semibold text-gray-800 dark:text-gray-100">Exportar PDF</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{loadingPDF ? 'Gerando...' : 'Relatório da PAS formatado'}</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100">Exportar Fichas PDF</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{loadingFichas ? 'Gerando...' : 'Fichas individuais de todas as metas'}</p>
           </div>
         </button>
 

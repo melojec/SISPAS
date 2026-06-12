@@ -1,5 +1,7 @@
 import io
 from datetime import date
+from django.conf import settings
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from rest_framework.views import APIView
@@ -7,9 +9,20 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
-from core.models import Meta
+from core.models import Meta, Area
 from monitoramento.models import RegistroQuadrimestral, Ciclo
 from usuarios.permissions import IsUsuarioAtivo
+
+
+def _nat(table):
+    engine = settings.DATABASES['default']['ENGINE']
+    if 'sqlite' in engine:
+        return ['codigo']
+    return [
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', -1) AS UNSIGNED)", []),
+    ]
 
 
 class MetaPDFView(APIView):
@@ -68,6 +81,70 @@ class MetaPDFView(APIView):
         nome = f'meta_{meta.codigo.replace(".", "_")}.pdf'
         return HttpResponse(buffer.read(), content_type='application/pdf',
                             headers={'Content-Disposition': f'attachment; filename="{nome}"'})
+
+
+class TodasMetasPDFView(APIView):
+    permission_classes = [IsUsuarioAtivo]
+
+    def get(self, request):
+        ciclo_id = request.query_params.get('ciclo')
+        area_id = request.query_params.get('area')
+
+        ciclo = Ciclo.objects.filter(pk=ciclo_id).first() if ciclo_id else None
+        area_filtro = Area.objects.filter(pk=area_id).first() if area_id else None
+
+        metas_qs = Meta.objects.select_related(
+            'area', 'objetivo', 'objetivo__diretriz'
+        ).prefetch_related('atividades').order_by(*_nat('meta'))
+        if area_id:
+            metas_qs = metas_qs.filter(area_id=area_id)
+
+        labels_q = {1: '1º Quadrimestre', 2: '2º Quadrimestre', 3: '3º Quadrimestre'}
+
+        registros_all = RegistroQuadrimestral.objects.filter(
+            meta__in=metas_qs
+        ).select_related('ciclo').order_by('ciclo__ano', 'ciclo__quadrimestre')
+
+        regs_por_meta = {}
+        for r in registros_all:
+            regs_por_meta.setdefault(r.meta_id, {})[r.ciclo.quadrimestre] = r
+
+        metas_data = []
+        for meta in metas_qs:
+            reg_por_q = regs_por_meta.get(meta.pk, {})
+            valores_realizados = [
+                {'label': labels_q[q], 'valor': reg_por_q[q].realizado if q in reg_por_q else 0}
+                for q in [1, 2, 3]
+            ]
+            registro_atual = reg_por_q.get(ciclo.quadrimestre) if ciclo else None
+            metas_data.append({
+                'meta': meta,
+                'valores_realizados': valores_realizados,
+                'registro_atual': registro_atual,
+            })
+
+        import os, base64
+        logo_file = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'src', 'assets', 'pdf.png')
+        )
+        with open(logo_file, 'rb') as f:
+            logo_b64 = base64.b64encode(f.read()).decode()
+        logo_path = f'data:image/png;base64,{logo_b64}'
+
+        html_string = render_to_string('relatorios/todas_metas_pdf.html', {
+            'metas_data': metas_data,
+            'ciclo': ciclo,
+            'area_filtro': area_filtro,
+            'total_metas': len(metas_data),
+            'logo_path': logo_path,
+            'data_geracao': date.today().strftime('%d/%m/%Y'),
+        })
+        from xhtml2pdf import pisa
+        buffer = io.BytesIO()
+        pisa.CreatePDF(html_string, dest=buffer)
+        buffer.seek(0)
+        return HttpResponse(buffer.read(), content_type='application/pdf',
+                            headers={'Content-Disposition': 'attachment; filename="fichas_metas.pdf"'})
 
 
 class RelatorioPDFView(APIView):
