@@ -120,6 +120,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       problema:  registroExistente?.problema ?? '',
       acao:      registroExistente?.acao ?? '',
       analise:   registroExistente?.analise ?? '',
+      atividades_nao_planejadas: registroExistente?.atividades_nao_planejadas ?? '',
     }
     ;[1, 2, 3].forEach(q => {
       d[`realizado_q${q}`] = registrosByQ[q]?.realizado ?? 0
@@ -143,6 +144,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
         problema:  dados.problema,
         acao:      dados.acao,
         analise:   dados.analise,
+        atividades_nao_planejadas: dados.atividades_nao_planejadas,
       }
       if (registroExistente) {
         await api.patch(`/registros/${registroExistente.id}/`, registroPayload)
@@ -178,7 +180,6 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const [confirmarDelete, setConfirmarDelete] = useState(false)
   const [loadingPDF, setLoadingPDF] = useState(false)
   const [editandoPlanejado, setEditandoPlanejado] = useState(false)
-
   const exportarMetaPDF = async () => {
     setLoadingPDF(true)
     try {
@@ -465,6 +466,23 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
             </div>
           )}
 
+          {/* Atividades executadas e não planejadas */}
+          {ciclo && (
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                Atividades Executadas e Não Planejadas
+              </label>
+              <textarea
+                rows={4}
+                disabled={!podeEditar}
+                placeholder="Descreva as atividades que foram executadas mas não realizadas conforme o planejado."
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                {...register('atividades_nao_planejadas')}
+              />
+            </div>
+          )}
+
+
           {/* Registro qualitativo + botões */}
           {ciclo ? (
             <>
@@ -581,6 +599,130 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
               Nenhum ciclo aberto — preenchimento indisponível.
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Modal Análise de Indicadores ─────────────────────────────────────────────
+function ModalAnexoIndicadores({ onClose }) {
+  const qc = useQueryClient()
+  const [uploading, setUploading] = useState(false)
+  const [erro, setErro] = useState('')
+
+  const { data: anexos = [], isLoading } = useQuery({
+    queryKey: ['anexos-indicadores'],
+    queryFn: () => api.get('/anexos-indicadores/').then(r => r.data.results ?? r.data),
+  })
+
+  const enviar = async (file) => {
+    setUploading(true)
+    setErro('')
+    try {
+      const fd = new FormData()
+      fd.append('arquivo', file)
+      await api.post('/anexos-indicadores/', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      qc.invalidateQueries({ queryKey: ['anexos-indicadores'] })
+    } catch {
+      setErro('Erro ao enviar o arquivo. Tente novamente.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const remover = async (id) => {
+    try {
+      await api.delete(`/anexos-indicadores/${id}/`)
+      qc.invalidateQueries({ queryKey: ['anexos-indicadores'] })
+    } catch {
+      setErro('Erro ao remover o arquivo.')
+    }
+  }
+
+  const fmtData = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl my-10">
+        {/* Cabeçalho */}
+        <div className="bg-blue-950 text-white px-6 py-5 rounded-t-2xl flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-semibold">Análise de Indicadores</h2>
+            <p className="text-xs text-blue-300 mt-0.5">Arquivos .docx de análise</p>
+          </div>
+          <button onClick={onClose} className="text-blue-300 hover:text-white text-xl leading-none">✕</button>
+        </div>
+
+        <div className="px-6 py-5 space-y-5">
+          {/* Upload */}
+          <div>
+            <label className={`flex items-center justify-center gap-3 w-full py-5 rounded-xl border-2 border-dashed cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none border-gray-300 dark:border-gray-600' : 'border-blue-300 dark:border-blue-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              <span className="text-sm text-blue-700 dark:text-blue-400 font-medium">
+                {uploading ? 'Enviando...' : 'Clique para enviar um arquivo .docx'}
+              </span>
+              <input
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                className="sr-only"
+                disabled={uploading}
+                onChange={e => { if (e.target.files[0]) enviar(e.target.files[0]) }}
+              />
+            </label>
+            {erro && <p className="text-xs text-red-500 mt-2">{erro}</p>}
+          </div>
+
+          {/* Lista de arquivos */}
+          <div>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              Arquivos enviados
+            </p>
+            {isLoading ? (
+              <p className="text-sm text-gray-400 text-center py-6">Carregando...</p>
+            ) : anexos.length === 0 ? (
+              <p className="text-sm text-gray-400 italic text-center py-6">Nenhum arquivo enviado ainda.</p>
+            ) : (
+              <ul className="divide-y divide-gray-100 dark:divide-gray-700 rounded-xl border border-gray-100 dark:border-gray-700">
+                {anexos.map(a => (
+                  <li key={a.id} className="flex items-center gap-3 px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-blue-700 dark:text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{a.nome_original}</p>
+                      <p className="text-xs text-gray-400">{fmtData(a.enviado_em)} · {a.enviado_por_nome}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <a
+                        href={a.arquivo}
+                        download={a.nome_original}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-blue-900 hover:bg-blue-800 text-white transition-colors"
+                      >
+                        Baixar
+                      </a>
+                      <button
+                        onClick={() => remover(a.id)}
+                        className="text-xs px-3 py-1.5 rounded-lg border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex justify-end pt-1">
+            <button onClick={onClose} className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+              Fechar
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -820,6 +962,7 @@ export default function DOMI() {
           </ul>
         </div>
       </div>
+
 
       {metaSel && (
         <ModalMeta

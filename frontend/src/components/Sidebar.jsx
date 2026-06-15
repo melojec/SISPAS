@@ -5,7 +5,8 @@ import logo from '../assets/logo.svg'
 const NAV = [
   { to: '/',           label: 'Dashboard',  icone: '📊', perfis: null },
   { to: '/domi',       label: 'DOMI',       icone: '🗂️', perfis: null },
-  { to: '/relatorios', label: 'Relatórios', icone: '📄', perfis: null },
+  { to: '/relatorios',           label: 'Relatórios',           icone: '📄', perfis: null },
+  { to: '/analise-indicadores', label: 'Análise de Indicadores', icone: '📎', perfis: null },
   { to: '/ciclos',     label: 'Ciclos',     icone: '🔄', perfis: ['administrador','asplan'] },
   { to: '/usuarios',   label: 'Usuários',   icone: '👥', perfis: ['administrador'] },
   { to: '/auditoria',  label: 'Auditoria',  icone: '🔍', perfis: ['administrador','asplan'] },
@@ -42,7 +43,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="px-4 py-4 border-t border-blue-800">
-        <p className="text-xs text-blue-300 truncate font-semibold">Bem-vindo, {user?.nome}</p>
+        <p className="text-xs text-blue-300 truncate font-semibold">Bem-vindo, {user?.nome}!</p>
         <p className="text-xs text-blue-400">{user?.perfil_display}</p>
         <button
           onClick={logout}

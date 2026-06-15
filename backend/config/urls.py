@@ -1,5 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -14,4 +17,7 @@ urlpatterns = [
     path('api/', include('relatorios.urls')),
     path('api/', include('auditoria.urls')),
     path('api/', include('notificacoes.urls')),
-]
+    # Frontend (catch-all para React Router)
+    re_path(r'^(?!api/|admsispas/|media/|static/).*$',
+            TemplateView.as_view(template_name='frontend/index.html')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

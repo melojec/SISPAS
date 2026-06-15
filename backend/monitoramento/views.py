@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira
-from .serializers import CicloSerializer, RegistroQuadrimestralSerializer, ExecucaoFinanceiraSerializer
+from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores
+from .serializers import CicloSerializer, RegistroQuadrimestralSerializer, ExecucaoFinanceiraSerializer, AnexoIndicadoresSerializer
 from usuarios.permissions import IsASPLAN, IsCoordenador, IsUsuarioAtivo, IsUsuarioDeArea
 from notificacoes import services as notif
 
@@ -83,3 +83,14 @@ class ExecucaoFinanceiraViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['ciclo', 'atividade', 'atividade__meta', 'ciclo__ano']
     permission_classes = [IsUsuarioAtivo]
+
+
+class AnexoIndicadoresViewSet(viewsets.ModelViewSet):
+    queryset = AnexoIndicadores.objects.select_related('enviado_por').order_by('-enviado_em')
+    serializer_class = AnexoIndicadoresSerializer
+    permission_classes = [IsUsuarioAtivo]
+
+    def perform_create(self, serializer):
+        nome = self.request.FILES.get('arquivo', None)
+        nome_original = nome.name if nome else ''
+        serializer.save(enviado_por=self.request.user, nome_original=nome_original)

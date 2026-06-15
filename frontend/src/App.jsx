@@ -11,6 +11,7 @@ import Relatorios from './pages/Relatorios'
 import Ciclos from './pages/Ciclos'
 import Usuarios from './pages/Usuarios'
 import Auditoria from './pages/Auditoria'
+import AnexoIndicadores from './pages/AnexoIndicadores'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 1000 * 60 * 5 } },
@@ -33,6 +34,7 @@ function AppRoutes() {
         <Route path="usuarios" element={
           <ProtectedRoute perfis={['administrador']}><Usuarios /></ProtectedRoute>
         } />
+        <Route path="analise-indicadores" element={<AnexoIndicadores />} />
         <Route path="auditoria" element={
           <ProtectedRoute perfis={['administrador','asplan']}><Auditoria /></ProtectedRoute>
         } />

@@ -47,6 +47,7 @@ class RegistroQuadrimestral(models.Model):
     problema = models.TextField(blank=True)
     acao = models.TextField(blank=True)
     analise = models.TextField(blank=True)
+    atividades_nao_realizadas = models.TextField(blank=True)
     validado_coord = models.BooleanField(default=False)
     validado_asplan = models.BooleanField(default=False)
     criado_por = models.ForeignKey(
@@ -84,3 +85,24 @@ class ExecucaoFinanceira(models.Model):
 
     def __str__(self):
         return f'{self.atividade} | {self.ciclo}'
+
+
+class AnexoIndicadores(models.Model):
+    arquivo = models.FileField(upload_to='analise_indicadores/')
+    nome_original = models.CharField(max_length=255)
+    enviado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='anexos_indicadores',
+    )
+    enviado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Anexo de Análise de Indicadores'
+        verbose_name_plural = 'Anexos de Análise de Indicadores'
+        db_table = 'anexo_indicadores'
+        ordering = ['-enviado_em']
+
+    def __str__(self):
+        return self.nome_original

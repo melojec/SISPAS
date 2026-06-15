@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira
+from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores
 
 
 class CicloSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class RegistroQuadrimestralSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'meta', 'meta_codigo', 'meta_descricao', 'meta_previsto', 'meta_unidade',
             'ciclo', 'ciclo_display',
-            'realizado', 'problema', 'acao', 'analise',
+            'realizado', 'problema', 'acao', 'analise', 'atividades_nao_realizadas',
             'validado_coord', 'validado_asplan',
             'criado_por', 'criado_por_nome',
             'criado_em', 'atualizado_em',
@@ -57,3 +57,12 @@ class ExecucaoFinanceiraSerializer(serializers.ModelSerializer):
             'valor_realizado', 'atualizado_em',
         ]
         read_only_fields = ['atualizado_em']
+
+
+class AnexoIndicadoresSerializer(serializers.ModelSerializer):
+    enviado_por_nome = serializers.CharField(source='enviado_por.nome', read_only=True)
+
+    class Meta:
+        model = AnexoIndicadores
+        fields = ['id', 'arquivo', 'nome_original', 'enviado_por', 'enviado_por_nome', 'enviado_em']
+        read_only_fields = ['enviado_por', 'enviado_em']
