@@ -1,1 +1,1 @@
-web: cd backend && python manage.py migrate --settings=config.settings_prod && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+web: cd backend && python manage.py migrate --settings=config.settings_prod && python manage.py criar_admin --settings=config.settings_prod && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
