@@ -22,9 +22,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# CORS — permite o domínio do Railway
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
-CORS_ALLOW_ALL_ORIGINS = True  # simplifica para validação — restringir depois
+# CORS — libera tudo para validação
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Arquivos de media no próprio servidor (Railway tem disco efêmero — ok para validação)
 MEDIA_URL = '/media/'
