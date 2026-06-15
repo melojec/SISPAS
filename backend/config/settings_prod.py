@@ -18,9 +18,13 @@ DATABASES = {
 
 # Whitenoise serve os arquivos estáticos
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = []
+
+# Whitenoise também serve o frontend React
+WHITENOISE_ROOT = BASE_DIR / 'staticfiles' / 'frontend'
 
 # CORS — libera tudo para validação
 CORS_ALLOW_ALL_ORIGINS = True
