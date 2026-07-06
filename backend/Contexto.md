@@ -121,6 +121,7 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - [x] Campo `atividades_nao_realizadas` em RegistroQuadrimestral
 - [x] Model AnexoIndicadores + endpoint `/api/anexos-indicadores/`
 - [x] Comando `criar_admin` para setup automático no deploy
+- [x] Campo `pas_ano` em Ciclo (migration 0005) — associa ciclo à PAS do ano
 
 ### ETAPA 3 — Frontend React ✅ COMPLETA
 - [x] Projeto React + Vite criado
@@ -137,6 +138,8 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - [x] Ciclos, Usuários, Auditoria, Relatórios
 - [x] Notificações (sino no header, polling 30s)
 - [x] Dark mode em todas as páginas
+- [x] Modal de confirmação antes de salvar no DOMI: checklist de campos obrigatórios (DigiSUS) + atividades
+- [x] Dropdowns de Ano e PAS (ano) no formulário de Ciclos alimentados pelo banco
 
 ### ETAPA 4 — Testes ✅ COMPLETA
 - [x] pytest + pytest-django — 53 testes passando
@@ -164,6 +167,10 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - Query key `metas-todas-v2` é compartilhada entre Dashboard e DOMI — mudanças no serializer de Meta exigem bumpar essa key.
 - Upload de arquivos usa FormData + `Content-Type: multipart/form-data` (separado do save JSON principal).
 - Render free tier: servidor "dorme" após 15min sem uso — primeira requisição demora ~30s para acordar.
+- `importar_pas.py` usa `*_` no unpack das linhas para tolerar colunas extras na planilha; importa `indicador` e `unidade` das atividades.
+- Modal de confirmação do DOMI (`ModalConfirmacaoSalvar`): campos obrigatórios bloqueiam o save se vazios; atividades não preenchidas avisam que serão salvas como 0.
+- Ciclo.pas_ano: nullable, populado via dropdown no frontend; anos disponíveis = banco + ano atual ± 1.
 
 ## Próximo foco
-Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
+- Módulo de atualização da base via upload de planilha (xlsx)
+- Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
