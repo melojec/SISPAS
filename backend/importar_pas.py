@@ -61,7 +61,7 @@ ws = wb['Meta']
 metas = {}
 sem_objetivo = 0
 for row in ws.iter_rows(min_row=2, values_only=True):
-    num_dir, cod_obj, cod_meta, descricao, indicador, unidade, previsto_ppa, previsto_ano = row
+    num_dir, cod_obj, cod_meta, descricao, indicador, unidade, previsto_ppa, previsto_ano, *_ = row
     if not cod_meta:
         continue
     objetivo = objetivos.get(str(cod_obj))
@@ -90,7 +90,7 @@ ws = wb['Atividade']
 atividades_criadas = 0
 atividades_sem_meta = 0
 for row in ws.iter_rows(min_row=2, values_only=True):
-    _, _, _, _, cod_meta, _, cod_ativ, descricao, _, _, valor_meta = row
+    _, _, _, _, cod_meta, _, cod_ativ, descricao, indicador_at, unidade_at, valor_meta, *_ = row
     if not cod_ativ or not descricao:
         continue
     meta = metas.get(str(cod_meta))
@@ -104,7 +104,11 @@ for row in ws.iter_rows(min_row=2, values_only=True):
     _, criado = Atividade.objects.update_or_create(
         meta=meta,
         descricao=str(descricao),
-        defaults={'valor_previsto': valor}
+        defaults={
+            'valor_previsto': valor,
+            'indicador': str(indicador_at) if indicador_at else '',
+            'unidade': str(unidade_at) if unidade_at else '',
+        }
     )
     if criado:
         atividades_criadas += 1

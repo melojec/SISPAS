@@ -21,6 +21,7 @@ class Ciclo(models.Model):
 
     ano = models.PositiveSmallIntegerField()
     quadrimestre = models.PositiveSmallIntegerField(choices=QUADRIMESTRE_CHOICES)
+    pas_ano = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='PAS')
     dt_abertura = models.DateField()
     dt_encerramento = models.DateField()
     situacao = models.CharField(max_length=10, choices=SITUACAO_CHOICES, default=ABERTO)

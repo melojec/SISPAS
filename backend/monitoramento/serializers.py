@@ -10,7 +10,7 @@ class CicloSerializer(serializers.ModelSerializer):
         model = Ciclo
         fields = [
             'id', 'ano', 'quadrimestre', 'quadrimestre_display',
-            'dt_abertura', 'dt_encerramento', 'situacao', 'esta_aberto',
+            'pas_ano', 'dt_abertura', 'dt_encerramento', 'situacao', 'esta_aberto',
         ]
 
 

@@ -72,6 +72,84 @@ function GraficoProgresso({ meta, ciclo, onClose }) {
   )
 }
 
+function ModalConfirmacaoSalvar({ campos, onConfirmar, onCancelar, salvando }) {
+  const obrigatoriosVazios = campos.filter(c => c.obrigatorio && !c.preenchido)
+  const opcionaisVazios = campos.filter(c => !c.obrigatorio && !c.preenchido)
+  const podeConfirmar = obrigatoriosVazios.length === 0
+
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${podeConfirmar ? 'bg-blue-100 dark:bg-blue-900/40' : 'bg-amber-100 dark:bg-amber-900/40'}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`w-5 h-5 ${podeConfirmar ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800 dark:text-gray-100">Revisão antes de salvar</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Verifique o preenchimento dos campos</p>
+          </div>
+        </div>
+
+        <ul className="space-y-2">
+          {campos.map(c => (
+            <li key={c.nome} className="flex items-start gap-2.5">
+              {c.preenchido ? (
+                <span className="mt-0.5 w-4 h-4 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center shrink-0">
+                  <svg className="w-2.5 h-2.5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </span>
+              ) : c.obrigatorio ? (
+                <span className="mt-0.5 w-4 h-4 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
+                  <svg className="w-2.5 h-2.5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+              ) : (
+                <span className="mt-0.5 w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500"/>
+                </span>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm leading-tight ${c.preenchido ? 'text-gray-700 dark:text-gray-300' : c.obrigatorio ? 'text-red-700 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+                  {c.label}
+                  {c.obrigatorio && <span className="ml-1 text-xs text-red-500">*obrigatório</span>}
+                </p>
+                {!c.preenchido && !c.obrigatorio && (
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{c.avisoVazio ?? 'Não preenchido'}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {!podeConfirmar && (
+          <p className="text-xs bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg px-3 py-2">
+            Preencha os {obrigatoriosVazios.length} campo{obrigatoriosVazios.length > 1 ? 's' : ''} obrigatório{obrigatoriosVazios.length > 1 ? 's' : ''} antes de salvar.
+          </p>
+        )}
+
+        {podeConfirmar && opcionaisVazios.length > 0 && (
+          <p className="text-xs bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg px-3 py-2">
+            {opcionaisVazios.length} campo{opcionaisVazios.length > 1 ? 's' : ''} opcional{opcionaisVazios.length > 1 ? 'is' : ''} não preenchido{opcionaisVazios.length > 1 ? 's' : ''}. Deseja salvar mesmo assim?
+          </p>
+        )}
+
+        <div className="flex justify-end gap-3 pt-1">
+          <button onClick={onCancelar}
+            className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+            Voltar e editar
+          </button>
+          {podeConfirmar && (
+            <button onClick={onConfirmar} disabled={salvando}
+              className="px-5 py-2 text-sm bg-blue-900 text-white rounded-lg hover:bg-blue-800 disabled:opacity-60 font-medium">
+              {salvando ? 'Salvando...' : 'Confirmar e Salvar'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const qc = useQueryClient()
   const [verGrafico, setVerGrafico] = useState(false)
@@ -178,6 +256,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   })
 
   const [confirmarDelete, setConfirmarDelete] = useState(false)
+  const [pendenteSalvar, setPendenteSalvar] = useState(null)
   const [loadingPDF, setLoadingPDF] = useState(false)
   const [editandoPlanejado, setEditandoPlanejado] = useState(false)
   const exportarMetaPDF = async () => {
@@ -486,7 +565,25 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
           {/* Registro qualitativo + botões */}
           {ciclo ? (
             <>
-            <form onSubmit={handleSubmit(d => salvarTudo.mutate(d))}>
+            <form onSubmit={handleSubmit(d => {
+              const cicloQ_ = ciclo?.quadrimestre
+              const camposAtiv = (meta.atividades ?? []).map(a => ({
+                nome: `exec_${a.id}_q${cicloQ_}`,
+                label: a.descricao.length > 80 ? a.descricao.slice(0, 80) + '…' : a.descricao,
+                obrigatorio: false,
+                preenchido: parseFloat(d[`exec_${a.id}_q${cicloQ_}`] ?? 0) > 0,
+                avisoVazio: 'Não preenchida — será salva como 0',
+              }))
+              const campos = [
+                { nome: 'realizado', label: 'Realizado por Quadrimestre', obrigatorio: true, preenchido: parseFloat(d[`realizado_q${cicloQ_}`] ?? 0) > 0 },
+                { nome: 'problema', label: 'Problemas Encontrados no Quadrimestre', obrigatorio: true, preenchido: !!(d.problema?.trim()) },
+                { nome: 'acao', label: 'Ações Realizadas para o Enfrentamento dos Problemas', obrigatorio: true, preenchido: !!(d.acao?.trim()) },
+                { nome: 'analise', label: 'Análises e Considerações (DigiSUS)', obrigatorio: true, preenchido: !!(d.analise?.trim()) },
+                { nome: 'atividades_nao_planejadas', label: 'Atividades Executadas e Não Planejadas', obrigatorio: false, preenchido: !!(d.atividades_nao_planejadas?.trim()) },
+                ...camposAtiv,
+              ]
+              setPendenteSalvar({ dados: d, campos })
+            })}>
               <div className="border-t dark:border-gray-700 pt-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
@@ -518,10 +615,12 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 {[
                   { name: 'problema', label: 'Problemas Encontrados no Quadrimestre' },
                   { name: 'acao',     label: 'Ações Realizadas para o Enfrentamento dos Problemas' },
-                  { name: 'analise',  label: 'Análises e Considerações - Este texto irá diretamente para o DigiSUS' },
+                  { name: 'analise',  label: 'Análises e Considerações — Este texto irá diretamente para o DigiSUS' },
                 ].map(({ name, label }) => (
                   <div key={name}>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {label} <span className="text-red-500">*</span>
+                    </label>
                     <textarea
                       rows={3}
                       disabled={!podeEditar}
@@ -552,15 +651,27 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                     Fechar
                   </button>
                   {podeEditar && (
-                    <button type="submit" disabled={isSubmitting}
-                      className="px-5 py-2 text-sm bg-blue-900 text-white rounded-lg hover:bg-blue-800 disabled:opacity-60 font-medium">
-                      {isSubmitting ? 'Salvando...' : registroExistente ? 'Atualizar Registro' : 'Salvar Registro'}
+                    <button type="submit"
+                      className="px-5 py-2 text-sm bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-medium">
+                      {registroExistente ? 'Atualizar Registro' : 'Salvar Registro'}
                     </button>
                   )}
                   </div>
                 </div>
               </div>
             </form>
+
+            {/* Confirmação de preenchimento */}
+            {pendenteSalvar && (
+              <ModalConfirmacaoSalvar
+                campos={pendenteSalvar.campos}
+                salvando={salvarTudo.isPending}
+                onCancelar={() => setPendenteSalvar(null)}
+                onConfirmar={() => salvarTudo.mutate(pendenteSalvar.dados, {
+                  onSuccess: () => setPendenteSalvar(null),
+                })}
+              />
+            )}
 
             {/* Confirmação de remoção */}
             {confirmarDelete && (

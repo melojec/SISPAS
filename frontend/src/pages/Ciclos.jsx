@@ -13,6 +13,11 @@ export default function Ciclos() {
     queryFn: () => api.get('/ciclos/').then(r => r.data.results ?? r.data),
   })
 
+  const anoAtual = new Date().getFullYear()
+  const anosBase = [anoAtual - 1, anoAtual, anoAtual + 1]
+  const anosDisponiveis = [...new Set([...ciclos.map(c => c.ano), ...anosBase])].sort((a, b) => b - a)
+  const pasAnosDisponiveis = [...new Set([...ciclos.map(c => c.pas_ano).filter(Boolean), ...anosBase])].sort((a, b) => b - a)
+
   const criar = useMutation({
     mutationFn: (d) => api.post('/ciclos/', d),
     onSuccess: () => { qc.invalidateQueries(['ciclos']); reset(); setShowForm(false) },
@@ -42,7 +47,10 @@ export default function Ciclos() {
           className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
             <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Ano</label>
-            <input type="number" className={`${inputCls} mt-1`} {...register('ano', { required: true })} />
+            <select className={`${inputCls} mt-1`} {...register('ano', { required: true, valueAsNumber: true })}>
+              <option value="">Selecione</option>
+              {anosDisponiveis.map(a => <option key={a} value={a}>{a}</option>)}
+            </select>
           </div>
           <div>
             <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Quadrimestre</label>
@@ -59,6 +67,13 @@ export default function Ciclos() {
           <div>
             <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Encerramento</label>
             <input type="date" className={`${inputCls} mt-1`} {...register('dt_encerramento', { required: true })} />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">PAS (ano)</label>
+            <select className={`${inputCls} mt-1`} {...register('pas_ano', { valueAsNumber: true })}>
+              <option value="">Nenhuma</option>
+              {pasAnosDisponiveis.map(a => <option key={a} value={a}>{a}</option>)}
+            </select>
           </div>
           <div className="col-span-2 sm:col-span-4 flex justify-end gap-2">
             <button type="button" onClick={() => setShowForm(false)}
@@ -77,7 +92,7 @@ export default function Ciclos() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
             <tr>
-              {['Ciclo','Abertura','Encerramento','Situação','Ação'].map(h => (
+              {['Ciclo','PAS','Abertura','Encerramento','Situação','Ação'].map(h => (
                 <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400">{h}</th>
               ))}
             </tr>
@@ -86,6 +101,7 @@ export default function Ciclos() {
             {ciclos.map(c => (
               <tr key={c.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{c.ano} — {c.quadrimestre_display}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{c.pas_ano ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{c.dt_abertura}</td>
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{c.dt_encerramento}</td>
                 <td className="px-4 py-3">
