@@ -913,13 +913,13 @@ export default function DOMI() {
 
   const { data: objetivos = [] } = useQuery({
     queryKey: ['objetivos', diretrizSel],
-    queryFn: () => api.get(`/objetivos/?diretriz=${diretrizSel}`).then(r => r.data.results ?? r.data),
+    queryFn: () => api.get(`/objetivos/?diretriz=${diretrizSel}&page_size=200`).then(r => r.data.results ?? r.data),
     enabled: !!diretrizSel,
   })
 
   const { data: metas = [] } = useQuery({
     queryKey: ['metas', objetivoSel],
-    queryFn: () => api.get(`/metas/?objetivo=${objetivoSel}`).then(r => r.data.results ?? r.data),
+    queryFn: () => api.get(`/metas/?objetivo=${objetivoSel}&page_size=200`).then(r => r.data.results ?? r.data),
     enabled: !!objetivoSel,
   })
 
