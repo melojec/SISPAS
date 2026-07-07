@@ -35,8 +35,8 @@ Substitui planilhas eletrônicas no registro/acompanhamento quadrimestral de met
 Administrador > ASPLAN > Coordenador > Usuário > Visualizador
 
 ## Estrutura do frontend (sispas/frontend/src/)
-- `pages/` — Login, Dashboard, DOMI, Ciclos, Usuarios, Auditoria, Relatorios, AnexoIndicadores
-- `components/` — Layout, Sidebar, ProtectedRoute
+- `pages/` — Login, Dashboard, DOMI, Ciclos, Usuarios, Auditoria, Relatorios, AnexoIndicadores, ImportarPAS
+- `components/` — Layout, Sidebar, ProtectedRoute, RichTextEditor
 - `services/api.js` — cliente axios com interceptors JWT
 - `store/authStore.js` — Zustand com fetchMe/login/logout
 
@@ -48,18 +48,26 @@ Administrador > ASPLAN > Coordenador > Usuário > Visualizador
 - Ciclos → /ciclos (administrador, asplan)
 - Usuários → /usuarios (administrador)
 - Auditoria → /auditoria (administrador, asplan)
+- Importar PAS → /importar-pas (administrador)
 
 ## Módulo DOMI (principal)
 Navegação em 3 colunas: Diretrizes → Objetivos → Metas.
 Modal da meta: indicador, valores planejados (PES 4 anos + PAS ano corrente), realizado por quadrimestre
 (Q1/Q2/Q3 — apenas o quadrimestre do ciclo ativo é editável), registro qualitativo (problemas, ações,
-análise), campo "Atividades Executadas e Não Planejadas" (`atividades_nao_realizadas`), status de validação.
+análise), campo "Atividades Executadas e Não Planejadas" (`atividades_nao_planejadas`), status de validação.
 Edição bloqueada após validação ASPLAN ou ciclo fechado.
 Botão "Salvar em PDF" no header do modal exporta ficha individual da meta via blob download (JWT).
 Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis conforme perfil.
+Código da atividade exibido em badge `font-mono` ao lado da descrição.
+Ordenação das atividades: natural por código (x.x.x.y) via Python sort no MetaSerializer.
+Campos de execução: `type="text"` com `inputMode`, separador decimal vírgula, placeholder "-" (vazio = não preenchido; "0" = zero real).
+Unidade "Porcentagem": aceita decimais, armazena como número (ex: 15 = 15%), exibe com sufixo %.
+Unidade "Unidade": sem casas decimais.
+Modal de confirmação: altura fixa `max-h-[80vh]`, lista rolável.
+Campos de texto qualitativos (problema, acao, analise, atividades_nao_planejadas): editor rich text (Tiptap) com toolbar Bold/Italic/Underline/alinhamento/undo — sem tabelas, imagens ou anexos. Valores salvos como HTML.
 
 ## Módulo Dashboard
-- Cards: Total de Metas, Registros no Ciclo, Validados (ASPLAN), Pendentes
+- Cards: Total de Metas, Registros no Ciclo, Validados (ASPLAN), Validado (Coordenação)
 - Gráfico rosca: preenchidas × não preenchidas com percentual central
 - Tabela "Planejado × Realizado":
   - Filtros em grid: Diretriz, Objetivo, Busca por texto, checkbox Apenas preenchidas
@@ -114,14 +122,17 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - [x] Auditoria via AuditoriaMiddleware (LogAuditoria)
 - [x] Banco populado com dados reais (Base PAS.xlsx via importar_pas.py)
 - [x] Django Admin configurado
-- [x] Ordenação natural de códigos via RawSQL (_nat(table))
+- [x] Ordenação natural de códigos via RawSQL (_nat(table)) — suporta PostgreSQL (SPLIT_PART), MySQL (SUBSTRING_INDEX) e SQLite (fallback)
 - [x] URL do Admin alterada para `/admsispas/`
 - [x] Validações Coord/ASPLAN nos registros
 - [x] Visibilidade de registros por área/ciclo
-- [x] Campo `atividades_nao_realizadas` em RegistroQuadrimestral
+- [x] Campo `atividades_nao_planejadas` em RegistroQuadrimestral
 - [x] Model AnexoIndicadores + endpoint `/api/anexos-indicadores/`
 - [x] Comando `criar_admin` para setup automático no deploy
 - [x] Campo `pas_ano` em Ciclo (migration 0005) — associa ciclo à PAS do ano
+- [x] Campo `codigo` em Atividade (migration 0005_add_codigo_atividade)
+- [x] Endpoint `POST /api/importar-pas/` (ImportarPASView) — admin only, recebe arquivo xlsx + ano, popula Diretriz/Objetivo/Meta/Atividade via update_or_create por codigo
+- [x] Paginação DRF: PAGE_SIZE=500, PAGE_SIZE_QUERY_PARAM='page_size', MAX_PAGE_SIZE=1000
 
 ### ETAPA 3 — Frontend React ✅ COMPLETA
 - [x] Projeto React + Vite criado
@@ -140,6 +151,12 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - [x] Dark mode em todas as páginas
 - [x] Modal de confirmação antes de salvar no DOMI: checklist de campos obrigatórios (DigiSUS) + atividades
 - [x] Dropdowns de Ano e PAS (ano) no formulário de Ciclos alimentados pelo banco
+- [x] Página ImportarPAS (admin): upload Base PAS.xlsx + seleção de ano, exibe resultado criadas/atualizadas
+- [x] RichTextEditor (Tiptap) nos campos qualitativos do DOMI: Bold, Italic, Underline, alinhamento, undo/redo
+- [x] Separador decimal vírgula em todo o sistema; campos de Porcentagem aceitam decimais
+- [x] Placeholder "-" para campos não preenchidos; "0" salvo corretamente como zero
+- [x] Código da atividade exibido ao lado da descrição no DOMI
+- [x] Todas as queries com page_size=500 para evitar corte de dados
 
 ### ETAPA 4 — Testes ✅ COMPLETA
 - [x] pytest + pytest-django — 53 testes passando
@@ -157,7 +174,9 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 ---
 
 ## Notas técnicas importantes
-- `_nat(table)` em `core/admin.py` e `core/views.py`: ordenação natural qualificada com nome da tabela.
+- `_nat(table)` em `core/views.py`: ordenação natural por código pontilhado. Suporta PostgreSQL via `SPLIT_PART`, MySQL via `SUBSTRING_INDEX`, SQLite com fallback lexicográfico.
+- `MetaSerializer.get_atividades()`: ordena atividades via Python (`_nat_key`) pois o `order_by` do ViewSet não afeta relações aninhadas.
+- `_nat_key(codigo)`: split por `.`, converte cada parte para int (ou 0 se não-numérico).
 - Testes rodam com SQLite in-memory (`config/settings_test.py`).
 - PDF gerado com xhtml2pdf: não suporta CSS flex/grid (usar tabelas), não carrega arquivos locais via `file:///`.
 - Logotipo do PDF em `backend/relatorios/logo.png` — carregado como base64 no `MetaPDFView`.
@@ -167,10 +186,16 @@ Botões de validação: `Validar (Coord.)` e `Validar (ASPLAN)` — visíveis co
 - Query key `metas-todas-v2` é compartilhada entre Dashboard e DOMI — mudanças no serializer de Meta exigem bumpar essa key.
 - Upload de arquivos usa FormData + `Content-Type: multipart/form-data` (separado do save JSON principal).
 - Render free tier: servidor "dorme" após 15min sem uso — primeira requisição demora ~30s para acordar.
-- `importar_pas.py` usa `*_` no unpack das linhas para tolerar colunas extras na planilha; importa `indicador` e `unidade` das atividades.
-- Modal de confirmação do DOMI (`ModalConfirmacaoSalvar`): campos obrigatórios bloqueiam o save se vazios; atividades não preenchidas avisam que serão salvas como 0.
+- `importar_pas.py` e `ImportarPASView`: usam `update_or_create(meta=meta, codigo=str(cod_ativ), ...)` — chave é o código, não a descrição (descrições repetidas são atividades distintas).
+- `_to_float(value, unidade)`: porcentagem do Excel vem como fração (0.15); se unidade contém "porcentagem", multiplica por 100.
+- `fmtValor` / `fmtInput` no DOMI: unidade "Porcentagem" exibe sufixo %, unidade "Unidade" sem decimais, demais com até 4 casas, separador vírgula.
+- `salvarTudo` no DOMI: campos vazios (raw === '') são omitidos do payload (não salvos como 0); `parseDecimal` troca vírgula por ponto antes de enviar.
+- `statusPorMeta` calculado a partir de `todosRegistros` (query com page_size=500), não de query separada limitada.
+- Modal de confirmação do DOMI: `max-h-[80vh] flex flex-col` com área de lista scrollável.
+- Frontend build: sempre rodar `npm run build` e `git add -f backend/staticfiles/frontend/` antes do push — pasta está no .gitignore.
+- RichTextEditor: Tiptap com StarterKit (sem heading/codeBlock/blockquote/hr/code), Underline, TextAlign. Integrado via `Controller` do react-hook-form. Valores salvos como HTML no backend TextField.
 - Ciclo.pas_ano: nullable, populado via dropdown no frontend; anos disponíveis = banco + ano atual ± 1.
 
 ## Próximo foco
-- Módulo de atualização da base via upload de planilha (xlsx)
 - Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
+- Após reimportar a PAS pelo módulo ImportarPAS, verificar se atividades com descrição repetida (ex: 2.5.2) agora aparecem corretamente (correção aplicada na sessão atual).
