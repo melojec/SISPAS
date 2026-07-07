@@ -604,7 +604,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 rows={4}
                 disabled={!podeEditar}
                 placeholder="Descreva as atividades que foram executadas mas não realizadas conforme o planejado."
-                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-y disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 {...register('atividades_nao_planejadas')}
               />
             </div>
@@ -673,7 +673,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                     <textarea
                       rows={3}
                       disabled={!podeEditar}
-                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-y disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
                       {...register(name)}
                     />
                   </div>
