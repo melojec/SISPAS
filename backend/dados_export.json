@@ -1,0 +1,5069 @@
+[
+{
+  "model": "core.area",
+  "pk": 1,
+  "fields": {
+    "nome": "A Definir",
+    "sigla": "GERAL",
+    "ativa": true
+  }
+},
+{
+  "model": "core.diretriz",
+  "pk": 9,
+  "fields": {
+    "codigo": "1",
+    "descricao": "Garantir o acesso da população às ações e serviços da saúde como direito fundamental ao atendimento das necessidades de saúde, mediante o aprimoramento da política de atenção primária, vigilância em saúde e garantindo o acesso a medicamentos e insumos estratégicos no âmbito do SUS.",
+    "situacao": true,
+    "ano": 2026
+  }
+},
+{
+  "model": "core.diretriz",
+  "pk": 10,
+  "fields": {
+    "codigo": "2",
+    "descricao": "Fortalecimento da Assistência Especializada em Saúde, de Média e Alta Complexidade, de forma ascendente e regionalizada, contemplando as demandas específicas das regiões de saúde, aperfeiçoando o sistema de regulação, garantindo a oferta de serviços de saúde.",
+    "situacao": true,
+    "ano": 2026
+  }
+},
+{
+  "model": "core.diretriz",
+  "pk": 11,
+  "fields": {
+    "codigo": "3",
+    "descricao": "Fortalecer a Gestão Pública, por meio da gestão compartilhada nas regiões de saúde, com aprimoramento do planejamento estratégico e dos instrumentos de gestão, garantindo e fortalecendo as instâncias de controle social.",
+    "situacao": true,
+    "ano": 2026
+  }
+},
+{
+  "model": "core.diretriz",
+  "pk": 12,
+  "fields": {
+    "codigo": "4",
+    "descricao": "Garantir o financiamento público e sustentável ao Sistema Único de Saúde, melhorando o padrão de gastos e qualificando o financiamento tripartite em saúde.",
+    "situacao": true,
+    "ano": 2026
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 25,
+  "fields": {
+    "diretriz": 9,
+    "codigo": "1.1",
+    "descricao": "Fortalecer a Atenção Primária para apoiar o desenvolvimento de ações em saúde no estado."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 26,
+  "fields": {
+    "diretriz": 9,
+    "codigo": "1.2",
+    "descricao": "Aprimorar as ações de Vigilância em Saúde para promoção, prevenção e controle de doenças e agravos."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 27,
+  "fields": {
+    "diretriz": 9,
+    "codigo": "1.3",
+    "descricao": "Garantir aos usuários do SUS acesso aos medicamentos contemplados nos Componentes Básico, Especializado, Estratégico da Assistência Farmacêutica e dos programas da SES/MA."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 28,
+  "fields": {
+    "diretriz": 10,
+    "codigo": "2.1",
+    "descricao": "Garantir a integralidade da assistência dos serviços de média e alta complexidade aos usuários do SUS, por meio do fortalecimento das redes de atenção à saúde."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 29,
+  "fields": {
+    "diretriz": 10,
+    "codigo": "2.2",
+    "descricao": "Ampliar a doação e a captação de órgãos e tecidos, com a finalidade de ampliar a realização de transplantes no estado."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 30,
+  "fields": {
+    "diretriz": 10,
+    "codigo": "2.3",
+    "descricao": "Programar, executar e coordenar a política de sangue, seus componentes e derivados no estado do Maranhão no âmbito da hemoterapia e de hematologia clínica, incluindo suporte diagnostico e atendimentos multidisciplinares."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 31,
+  "fields": {
+    "diretriz": 10,
+    "codigo": "2.4",
+    "descricao": "Realizar assistência de combate ao cancer na média e alta complexidade."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 32,
+  "fields": {
+    "diretriz": 10,
+    "codigo": "2.5",
+    "descricao": "Ampliar e modernizar a infraestrutura de unidades de saúde, de acordo com perfil assistencial definido."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 33,
+  "fields": {
+    "diretriz": 11,
+    "codigo": "3.1",
+    "descricao": "Aprimorar o planejamento, o monitoramento e a avaliação da política de saúde, a nível estadual, e apoiar os municípios no âmbito da gestão do SUS."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 34,
+  "fields": {
+    "diretriz": 11,
+    "codigo": "3.2",
+    "descricao": "Dimensionar, valorizar e qualificar os trabalhadores/as do SUS no Maranhão, a partir da estruturação de uma política da gestão de trabalho e educação na saúde."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 35,
+  "fields": {
+    "diretriz": 11,
+    "codigo": "3.3",
+    "descricao": "Fortalecer os espaços de gestão compartilhada e descentralizada das ações da Secretaria Estadual de Saúde, visando à transparência e aprimorando o controle social."
+  }
+},
+{
+  "model": "core.objetivo",
+  "pk": 36,
+  "fields": {
+    "diretriz": 12,
+    "codigo": "4.1",
+    "descricao": "Garantir os investimentos em ações e serviços de saúde no Estado do Maranhão, ampliando o cofinanciamento, a captação de recursos e aumentando a eficiência, eficácia e efetividade da execução orçamentária e financeira"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 123,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.1",
+    "descricao": "Apoiar os municípios no desenvolvimento de ações de fortalecimento para Estratégia Saúde da Família",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "49.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 124,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.2",
+    "descricao": "Apoiar os municípios no desenvolvimento de ações voltadas para o fortalecimento da Política de Saúde Bucal.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "54.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 125,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.3",
+    "descricao": "Apoiar os municípios a desenvolverem ações de fortalecimento da Política de Saúde do Adulto e Idoso.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "52.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 126,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.4",
+    "descricao": "Apoiar Unidades Prisionais de Ressocialização a desenvolverem ações voltadas para a Política Nacional de Atenção Integral à Saúde de Pessoas Privadas de Liberdade (PNAISP).",
+    "indicador": "Nº de Unidades Prisionais apoiadas",
+    "unidade": "Número",
+    "previsto_ppa": "47.00",
+    "previsto_exercicio": "47.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 127,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.5",
+    "descricao": "Apoiar os municípios no desenvolvimento de ações de fortalecimento da Política de Saúde Integral da Mulher.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "56.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 128,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.6",
+    "descricao": "Apoiar os municípios no desenvolvimento de ações voltadas para o fortalecimento da Política de Saúde da Criança e do Adolescente.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "43.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 129,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.7",
+    "descricao": "Apoiar os municípios para implantação e implementação das ações e estratégias da Política Nacional de Alimentação e Nutrição (PNAN).",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "45.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 130,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.8",
+    "descricao": "Fortalecer os municípios na integração das ações da Atenção Primária com as populações vulneráveis seguindo o princípio da Equidade em Saúde.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "58.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 131,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.9",
+    "descricao": "Apoiar institucionalmente as gestões municipais no SUS, por meio da planificação da atenção à saúde e da oferta de assistência em situação de emergência de saúde pública.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "60.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 132,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.10",
+    "descricao": "Garantir apoio institucional aos municípios nas ações da Política de Saúde Mental, Álcool e outras drogas.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "46.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 133,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.11",
+    "descricao": "Reduzir em 60% a internação de longa permanência de pessoas com transtornos mentais em conflito com a lei.",
+    "indicador": "Nº de internações",
+    "unidade": "Número",
+    "previsto_ppa": "402.00",
+    "previsto_exercicio": "447.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 134,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.12",
+    "descricao": "Apoiar os municípios na implantação do Programa Farmácia Viva.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "55.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 135,
+  "fields": {
+    "objetivo": 25,
+    "area": 1,
+    "codigo": "1.1.13",
+    "descricao": "Fortalecer APS por meio de cooperação técnica entre estado e município.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "217.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 136,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.1",
+    "descricao": "Fortalecer as ações de promoção, prevenção e proteção à saúde em relação aos riscos ambientais nas três macrorregiões de saúde.",
+    "indicador": "Nº de Ações Realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "2889.00",
+    "previsto_exercicio": "753.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 137,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.2",
+    "descricao": "Fortalecer as ações de promoção, prevenção e proteção de Vigilância em Saúde do Trabalhador e da Trabalhadora nas três macrorregiões de saúde.",
+    "indicador": "Nº de Ações Realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "1350.00",
+    "previsto_exercicio": "350.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 138,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.3",
+    "descricao": "Fortalecer as ações de gerenciamento de risco em vigilância sanitária nas três macrorregiões de saúde.",
+    "indicador": "Nº de Ações Realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "100000.00",
+    "previsto_exercicio": "26000.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 139,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.4",
+    "descricao": "Desenvolver ações de vigilância laboratorial em saúde pública.",
+    "indicador": "Nº de Ações Realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "262.00",
+    "previsto_exercicio": "67.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 140,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.5",
+    "descricao": "Realizar exames de vigilância laboratorial em saúde pública.",
+    "indicador": "Nº de Exames Realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "753600.00",
+    "previsto_exercicio": "188400.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 141,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.6",
+    "descricao": "Realizar ações de apoio aos municípios no âmbito da Vigilância epidemiológica e Controle de Doenças.",
+    "indicador": "Nº de Ações Realizadas",
+    "unidade": "Número",
+    "previsto_ppa": "60595.00",
+    "previsto_exercicio": "16071.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 142,
+  "fields": {
+    "objetivo": 26,
+    "area": 1,
+    "codigo": "1.2.7",
+    "descricao": "Apoiar os municípios na redução das taxas de incidência de HIV, Sífilis, Hepatites Virais e outras ISTs.",
+    "indicador": "Nº de Municípios Beneficiados",
+    "unidade": "Número",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "55.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 143,
+  "fields": {
+    "objetivo": 27,
+    "area": 1,
+    "codigo": "1.3.1",
+    "descricao": "Ampliar o acesso aos medicamentos especializados e padronizados aos usuários.",
+    "indicador": "Nº de Atendimentos Realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "1370721.00",
+    "previsto_exercicio": "350000.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 144,
+  "fields": {
+    "objetivo": 27,
+    "area": 1,
+    "codigo": "1.3.2",
+    "descricao": "Garantir a distribuição de fórmulas especiais a crianças com alergia e/ou intolerância alimentar.",
+    "indicador": "Nº de Atendimentos Realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "45568.00",
+    "previsto_exercicio": "11529.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 145,
+  "fields": {
+    "objetivo": 27,
+    "area": 1,
+    "codigo": "1.3.3",
+    "descricao": "Avançar na descentralização da Farmácia Estadual de Medicamentos Especializados (FEME).",
+    "indicador": "Nº de Unidades Descentralizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "7.00",
+    "previsto_exercicio": "7.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 146,
+  "fields": {
+    "objetivo": 27,
+    "area": 1,
+    "codigo": "1.3.4",
+    "descricao": "Garantir o acesso aos medicamentos às pessoas privadas de liberdade.",
+    "indicador": "Nº de Atendimentos Realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "439120.00",
+    "previsto_exercicio": "114487.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 147,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.1",
+    "descricao": "Prestar o atendimento ambulatorial especializado aos usuários do SUS por intermédio dos serviços de saúde nas unidades próprias.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "109996043.00",
+    "previsto_exercicio": "27634453.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 148,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.2",
+    "descricao": "Prestar o atendimento hospitalar aos usuários do SUS por intermédio dos serviços de saúde nas unidades próprias.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "2244817.00",
+    "previsto_exercicio": "563968.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 149,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.3",
+    "descricao": "Garantir o atendimento Odontológico Ambulatorial, Hospitalar e de Urgência e Emergência.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "1437206.00",
+    "previsto_exercicio": "361071.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 150,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.4",
+    "descricao": "Otimizar o gerenciamento dos leitos hospitalares da rede própria.",
+    "indicador": "% de Leitos Monitorados",
+    "unidade": "Porcentagem",
+    "previsto_ppa": "0.85",
+    "previsto_exercicio": "0.75",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 151,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.5",
+    "descricao": "Qualificar os processos de regulação de acesso ambulatorial.",
+    "indicador": "% de solicitações atendidas",
+    "unidade": "Porcentagem",
+    "previsto_ppa": "1.00",
+    "previsto_exercicio": "0.90",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 152,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.6",
+    "descricao": "Qualificar os processos de regulação de acesso à internação hospitalar.",
+    "indicador": "% solicitações atendidas",
+    "unidade": "Porcentagem",
+    "previsto_ppa": "1.00",
+    "previsto_exercicio": "0.99",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 153,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.7",
+    "descricao": "Qualificar os processos de regulação de transporte interhospitalar.",
+    "indicador": "% de solicitações atendidas",
+    "unidade": "Porcentagem",
+    "previsto_ppa": "1.00",
+    "previsto_exercicio": "0.96",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 154,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.8",
+    "descricao": "Garantir o deslocamento e ajuda de custo aos pacientes para Tratamentos Fora do Domicílio (TFD) em outra unidade da federação.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "386800.00",
+    "previsto_exercicio": "96700.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 155,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.9",
+    "descricao": "Prestar o atendimento ambulatorial e hospitalar de média e alta complexidade aos usuários do SUS por intermédio dos estabelecimentos de saúde de natureza pública municipal e privadas contratualizadas.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "5491073.00",
+    "previsto_exercicio": "1404578.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 156,
+  "fields": {
+    "objetivo": 28,
+    "area": 1,
+    "codigo": "2.1.10",
+    "descricao": "Garantir apoio técnico aos municípios com Serviço de Atendimento Móvel de Urgência (SAMU) habilitados.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Unidade",
+    "previsto_ppa": "64.00",
+    "previsto_exercicio": "60.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 157,
+  "fields": {
+    "objetivo": 29,
+    "area": 1,
+    "codigo": "2.2.1",
+    "descricao": "Aumentar o número de notificações de morte encefálica e tecidos no estado.",
+    "indicador": "Nº de notificações",
+    "unidade": "Unidade",
+    "previsto_ppa": "858.00",
+    "previsto_exercicio": "223.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 158,
+  "fields": {
+    "objetivo": 29,
+    "area": 1,
+    "codigo": "2.2.2",
+    "descricao": "Aumentar o número de doadores efetivos para doação e captação de órgãos e tecidos",
+    "indicador": "Nº de doadores efetivos",
+    "unidade": "Unidade",
+    "previsto_ppa": "60.00",
+    "previsto_exercicio": "16.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 159,
+  "fields": {
+    "objetivo": 29,
+    "area": 1,
+    "codigo": "2.2.3",
+    "descricao": "Aumentar o número de transplantes de órgãos e tecidos efetivos no estado.",
+    "indicador": "Nº de transplantes efetivos no Estado",
+    "unidade": "Unidade",
+    "previsto_ppa": "133.00",
+    "previsto_exercicio": "35.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 160,
+  "fields": {
+    "objetivo": 30,
+    "area": 1,
+    "codigo": "2.3.1",
+    "descricao": "Ampliar os procedimentos destinados à obtenção do sangue, seus componentes e derivados.",
+    "indicador": "Nº de procedimentos hemoterápicos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "1905845.00",
+    "previsto_exercicio": "492500.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 161,
+  "fields": {
+    "objetivo": 30,
+    "area": 1,
+    "codigo": "2.3.2",
+    "descricao": "Ampliar o número de consultas médicas em atenção especializada.",
+    "indicador": "Nº de consultas médicas realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "117600.00",
+    "previsto_exercicio": "29200.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 162,
+  "fields": {
+    "objetivo": 30,
+    "area": 1,
+    "codigo": "2.3.3",
+    "descricao": "Ampliar o número de atendimentos multidisciplinares em atenção especializada.",
+    "indicador": "Nº de atendimentos multidisciplinares realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "118104.00",
+    "previsto_exercicio": "31200.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 163,
+  "fields": {
+    "objetivo": 30,
+    "area": 1,
+    "codigo": "2.3.4",
+    "descricao": "Aumentar o número de exames laboratoriais de triagem e suporte diagnóstico.",
+    "indicador": "Nº de exames laboratoriais",
+    "unidade": "Unidade",
+    "previsto_ppa": "6515325.00",
+    "previsto_exercicio": "1650000.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 164,
+  "fields": {
+    "objetivo": 31,
+    "area": 1,
+    "codigo": "2.4.1",
+    "descricao": "Ampliar o acesso aos serviços de diagnóstico do câncer.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "256151.00",
+    "previsto_exercicio": "64352.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 165,
+  "fields": {
+    "objetivo": 31,
+    "area": 1,
+    "codigo": "2.4.2",
+    "descricao": "Ampliar o acesso aos serviços de tratamento do câncer.",
+    "indicador": "Nº de procedimentos realizados",
+    "unidade": "Unidade",
+    "previsto_ppa": "265967.00",
+    "previsto_exercicio": "66822.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 166,
+  "fields": {
+    "objetivo": 32,
+    "area": 1,
+    "codigo": "2.5.1",
+    "descricao": "Ampliar a rede hospitalar e ambulatorial nas regiões.",
+    "indicador": "Nº de regiões atendidas",
+    "unidade": "Unidade",
+    "previsto_ppa": "19.00",
+    "previsto_exercicio": "4.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 167,
+  "fields": {
+    "objetivo": 32,
+    "area": 1,
+    "codigo": "2.5.2",
+    "descricao": "Garantir a aquisição de equipamentos hospitalares para as unidades de saúde da região.",
+    "indicador": "Nº de regiões atendidas",
+    "unidade": "Unidade",
+    "previsto_ppa": "19.00",
+    "previsto_exercicio": "19.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 168,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.1",
+    "descricao": "Fortalecer a cultura de planejamento nas gestões estadual e municipal do SUS.",
+    "indicador": "Nº de ações de planejamento realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "245.00",
+    "previsto_exercicio": "36.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 169,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.2",
+    "descricao": "Realizar ações para implantar o Planejamento Regional Integrado (PRI) no Maranhão.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "35.00",
+    "previsto_exercicio": "4.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 170,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.3",
+    "descricao": "Fortalecer as ações de Auditoria do SUS.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "2720.00",
+    "previsto_exercicio": "680.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 171,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.4",
+    "descricao": "Garantir o monitoramento das ações realizadas nas unidades de saúde.",
+    "indicador": "Nº de unidades de saúde monitoradas",
+    "unidade": "Unidade",
+    "previsto_ppa": "763.00",
+    "previsto_exercicio": "195.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 172,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.5",
+    "descricao": "Fortalecer as ações de Ouvidoria do SUS no estado.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "65.00",
+    "previsto_exercicio": "65.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 173,
+  "fields": {
+    "objetivo": 33,
+    "area": 1,
+    "codigo": "3.1.6",
+    "descricao": "Aprimorar a Gestão da Tecnologia da Informação, Comunicação e Inovação no SUS do Maranhão",
+    "indicador": "Nº de soluções digitais implantados",
+    "unidade": "Unidade",
+    "previsto_ppa": "28.00",
+    "previsto_exercicio": "7.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 174,
+  "fields": {
+    "objetivo": 34,
+    "area": 1,
+    "codigo": "3.2.1",
+    "descricao": "Qualificar trabalhadores/as, por meio de processos formativos técnicos, de aperfeiçoamento, de atualização, oficinas, simpósios, conferências, workshop, eventos científicos, cursos de curta duração.",
+    "indicador": "Nº de certificados emitidos",
+    "unidade": "Unidade",
+    "previsto_ppa": "23400.00",
+    "previsto_exercicio": "6955.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 175,
+  "fields": {
+    "objetivo": 34,
+    "area": 1,
+    "codigo": "3.2.2",
+    "descricao": "Qualificar trabalhadores/as, por meio de cursos de pós_x0002_graduação lato e stricto sensu, nas modalidades especialização, residência e mestrado.",
+    "indicador": "Nº de trabalhadores/a de profissionais qualificados",
+    "unidade": "Unidade",
+    "previsto_ppa": "1600.00",
+    "previsto_exercicio": "500.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 176,
+  "fields": {
+    "objetivo": 34,
+    "area": 1,
+    "codigo": "3.2.3",
+    "descricao": "Implementar as ações do Plano Estadual de Gestão do Trabalho e Educação na Saúde.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "6.00",
+    "previsto_exercicio": "3.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 177,
+  "fields": {
+    "objetivo": 35,
+    "area": 1,
+    "codigo": "3.3.1",
+    "descricao": "Realizar ações de apoio aos municípios nas Unidades Regionais de Saúde.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "1278.00",
+    "previsto_exercicio": "327.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 178,
+  "fields": {
+    "objetivo": 35,
+    "area": 1,
+    "codigo": "3.3.2",
+    "descricao": "Potencializar as ações do Conselho Estadual de Saúde.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "65.00",
+    "previsto_exercicio": "74.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 179,
+  "fields": {
+    "objetivo": 35,
+    "area": 1,
+    "codigo": "3.3.3",
+    "descricao": "Potencializar as ações do Conselho Estadual de Políticas sobre Drogas.",
+    "indicador": "Nº de ações realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "232.00",
+    "previsto_exercicio": "70.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 180,
+  "fields": {
+    "objetivo": 36,
+    "area": 1,
+    "codigo": "4.1.1",
+    "descricao": "Fortalecer o cofinanciamento da Atenção Primária em Saúde, por meio do Programa Cuidar de Todos.",
+    "indicador": "Nº de repasses concedidos",
+    "unidade": "Unidade",
+    "previsto_ppa": "164.00",
+    "previsto_exercicio": "38.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 181,
+  "fields": {
+    "objetivo": 36,
+    "area": 1,
+    "codigo": "4.1.2",
+    "descricao": "Garantir o repasse da Farmácia Básica aos municípios.",
+    "indicador": "Nº de municípios beneficiados",
+    "unidade": "Unidade",
+    "previsto_ppa": "217.00",
+    "previsto_exercicio": "217.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 182,
+  "fields": {
+    "objetivo": 36,
+    "area": 1,
+    "codigo": "4.1.3",
+    "descricao": "Ampliar a participação de Consórcios Públicos Interfederativos nas compras compartilhadas.",
+    "indicador": "Nº de compras realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "8.00",
+    "previsto_exercicio": "2.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.meta",
+  "pk": 183,
+  "fields": {
+    "objetivo": 36,
+    "area": 1,
+    "codigo": "4.1.4",
+    "descricao": "Garantir o repasse do Serviço Móvel de Urgência (SAMU) aos municípios.",
+    "indicador": "Nº de parcelas de repasse realizadas",
+    "unidade": "Unidade",
+    "previsto_ppa": "2784.00",
+    "previsto_exercicio": "720.00",
+    "previsto_q1": "0.00",
+    "previsto_q2": "0.00",
+    "previsto_q3": "0.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 633,
+  "fields": {
+    "meta": 123,
+    "descricao": "Realizar Apoio técnico por meio de monitoramento, visita técnica ou webconferência, objetivando incentivar os municípios a ampliarem a cobertura da Atenção Primária em Saúde (APS) no Estado, através da solicitação de novos credenciamentos de Programas, Projetos e Estratégias financiadas pelo Ministério da Saúde ",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "49.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 634,
+  "fields": {
+    "meta": 123,
+    "descricao": "Apoiar tecnicamente os municípios em relação aos Indicadores da APS, quanto ao registro das atividades realizadas ou subnotificadas no âmbito da Atenção Primária em Saúde, no Sistema E-SUS e Sistema de Informação da Atenção Primária em Saúde - SIAPS, através de web conferência e visita in loco",
+    "indicador": "Atividades Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 635,
+  "fields": {
+    "meta": 123,
+    "descricao": "Realizar monitoramento e avaliação através de oficinas presenciais e virtuais da Equipe Multiprofissional ¿ eMulti e Incentivo à Atividade Física ¿ IAF, credenciadas e homologadas, dos municípios. ",
+    "indicador": "Atividades Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 636,
+  "fields": {
+    "meta": 123,
+    "descricao": "Realizar Oficinas de execução e monitoramento do Projeto: Linhas de Cuidados em Práticas Integrativas na Dor Crônica e Saúde Mental. ",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 637,
+  "fields": {
+    "meta": 123,
+    "descricao": "Realizar apoio técnico através de visita técnica ou web conferência, objetivando monitorar e qualificar as ações de segurança do paciente na APS ",
+    "indicador": "Municípios Apoiados",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 638,
+  "fields": {
+    "meta": 123,
+    "descricao": "Realizar Reunião da Câmara Técnica Estadual da APS. ",
+    "indicador": "Reunião Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 639,
+  "fields": {
+    "meta": 124,
+    "descricao": "Realizar Encontro Estadual de Atenção à Saúde Bucal com foco no apoio às gestões municipais para a melhoria da qualidade da oferta de serviços odontológicos. ",
+    "indicador": "Encontro Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 640,
+  "fields": {
+    "meta": 124,
+    "descricao": "Realizar Oficinas Macrorregionais, in loco ou via web, sobre a importância da Ampliação da Cobertura de Saúde Bucal na Atenção Primária em Saúde e melhora dos indicadores de desempenho",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 641,
+  "fields": {
+    "meta": 124,
+    "descricao": "Apoiar tecnicamente os Municípios contemplados com Unidades Odontológicas Móveis (UOM) doadas pelo Ministério da Saúde (MS), em relação à situação de credenciamento/descredenciamento, cadastro, inconsistência, fluxos, Portarias, Notas Técnicas emitidas pelo Estado e MS.",
+    "indicador": "Municípios Apoiados",
+    "unidade": "Unidade",
+    "valor_previsto": "56.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 642,
+  "fields": {
+    "meta": 125,
+    "descricao": "Realizar Seminários de qualificação para Profissionais de Saúde, Coordenadores da Saúde do Homem e Agentes Comunitários de Saúde - ACS sobre o fortalecimento da Política Nacional da Saúde Integral do Homem com foco no Acesso e Acolhimento, Pré-Natal do Parceiro e Prevenção, Diagnóstico e Tratamento do Câncer de Pênis baseado na Linha de Cuidado do Homem Maranhense. ",
+    "indicador": "Seminários Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 643,
+  "fields": {
+    "meta": 125,
+    "descricao": "Realizar Qualificação para Profissionais da Atenção Primária em Saúde, Coordenadores da Saúde da Pessoa Idosa e ACS em Avaliação Multidimensional, Violência, Promoção da Saúde e Prevenção de Quedas da Pessoa Idosa",
+    "indicador": "Seminários Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 644,
+  "fields": {
+    "meta": 125,
+    "descricao": "Realizar Seminário de Qualificação para Profissionais da Atenção Primária em Saúde, para o Cuidado as Pessoas com Hipertensão Arterial Sistêmica e Diabetes Mellitus",
+    "indicador": "Seminários Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 645,
+  "fields": {
+    "meta": 125,
+    "descricao": "Realizar qualificação para implantação do Tratamento do Fumante para Profissionais de Saúde, Coordenadores da Atenção Primária em Saúde e ACS da Atenção Primária em Saúde.",
+    "indicador": "Seminários Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 646,
+  "fields": {
+    "meta": 125,
+    "descricao": "Realizar Encontro Avaliativo e Participativo do Controle do Tabagismo e Saúde do Homem, com apresentação de experiências exitosas no processo de trabalho no território.",
+    "indicador": "Encontro Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 647,
+  "fields": {
+    "meta": 126,
+    "descricao": "Realizar apoio técnico, através de webconferência e visitas técnicas, objetivando implantação das Equipes de Atenção Primária Prisional (EAPPS) com vistas fortalecer a Política Nacional de Atenção Integral à Saúde de Pessoas Privadas de Liberdade (PNAISP)",
+    "indicador": "Unidades Prisionais Apoiadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 648,
+  "fields": {
+    "meta": 126,
+    "descricao": "Realizar monitoramento e avaliação através de oficinas presenciais e virtuais das Equipes de Atenção Primária Prisional (EAPPS) credenciadas e homologadas e equipes de saúde da Secretaria de Estado de Administração Penitenciária - SEAP",
+    "indicador": "Unidades Prisionais Apoiadas",
+    "unidade": "Unidade",
+    "valor_previsto": "47.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 649,
+  "fields": {
+    "meta": 126,
+    "descricao": "Realizar Seminário de Qualificação para os Profissionais das Saúde e das Equipes de Atenção Primária Prisional (EAPPS) credenciadas e homologadas.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 650,
+  "fields": {
+    "meta": 127,
+    "descricao": "Qualificar os Profissionais na Prevenção e alcance dos Indicadores de Câncer de Colo do Útero e Mama na gestão do Sistema de Informação do Câncer - SISCAN e Monitoramento \"In loco\" das metas e Indicadores dos exames Citopatológicos, Mamografia.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 651,
+  "fields": {
+    "meta": 127,
+    "descricao": "Realizar oficinas da linha de cuidado para atendimento de mulheres em situação de violência e pactuar com os municípios o fluxo para atendimento de mulheres em situação de violência.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 652,
+  "fields": {
+    "meta": 127,
+    "descricao": "Realizar IV Seminário Estadual de saúde das mulheres e suas diversidades em todos os ciclos de vida. ",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 653,
+  "fields": {
+    "meta": 127,
+    "descricao": "Realizar II Encontro Estadual dos Comitês Regionais de Prevenção de Mortalidade Materna, Infantil e Fetal do Maranhão e Dia Nacional de Redução da Mortalidade Materna.",
+    "indicador": "Encontro Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 654,
+  "fields": {
+    "meta": 127,
+    "descricao": "Realizar oficinas de qualificação do pré-natal e puerpério.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 655,
+  "fields": {
+    "meta": 127,
+    "descricao": "Qualificar profissionais da Atenção Primária para inserção e retirada de Dispositivo Intrauterino - DIU e Implanon.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 656,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar Oficinas de Serviços amigáveis para Adolescentes na Atenção Primária em Saúde",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 657,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar oficinas de planejamento estratégico do Programa Saúde na Escola - PSE",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 658,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar 14 Avaliações de implementação da Iniciativa Hospital Amigo da Criança - IHAC",
+    "indicador": "Avaliações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "14.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 659,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar capacitações e apoio técnico para os municípios e para as maternidades regionais objetivando a implantação de todas as triagens neonatais",
+    "indicador": "Capacitações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 660,
+  "fields": {
+    "meta": 128,
+    "descricao": "Apoio institucional e qualificação das ações da Política Nacional de Atenção Integral à Saúde das Crianças - PNAISC com foco aos Cuidados com Recém-Nascido - RN, in loco nos municípios do MA por regional de saúde ",
+    "indicador": "Qualificações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 661,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar formações práticas do Projeto de Puericultura",
+    "indicador": "Formações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 662,
+  "fields": {
+    "meta": 128,
+    "descricao": "Realizar Oficinas para implementação da Ficha do Cuidado Compartilhado na Terceira Etapa do Método Canguru nas maternidades e na APS que acompanham o RN de alto risco ",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 663,
+  "fields": {
+    "meta": 129,
+    "descricao": "Elaborar II Informe Situacional dos Programas e das condições de alimentação e nutrição da população do Estado do Maranhão, e divulgar e orientar gestores e profissionais da Atenção Primária quanto a sua utilização como instrumento de gestão.",
+    "indicador": "Informes Elaborados",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 664,
+  "fields": {
+    "meta": 129,
+    "descricao": "Realizar ações de educação permanente, organização de processos de trabalho e de fluxo dos municípios para melhoria do acompanhamento do Programa Bolsa Família e Maranhão Livre da Fome no âmbito da saúde ",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 665,
+  "fields": {
+    "meta": 129,
+    "descricao": "Realizar o II Encontro estadual de Alimentação e Nutrição da Atenção Primaria em Saúde. ",
+    "indicador": "Encontros Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 666,
+  "fields": {
+    "meta": 129,
+    "descricao": "Realizar processos formativos em Vigilância Alimentar e Nutricional e dos Programas Nacionais de suplementação de Vitamina A e Ferro para construção e implementação de planos de ação e monitoramento dos indicadores. ",
+    "indicador": "Processos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 667,
+  "fields": {
+    "meta": 130,
+    "descricao": "Fortalecer as políticas de saúde para a população em situação de rua, albina, cigana e de imigrantes/refugiados através de escutas, oficinas e apoio institucional para profissionais da Atenção primária.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 668,
+  "fields": {
+    "meta": 130,
+    "descricao": "Apoiar tecnicamente as equipes de saúde da Estratégia Saúde da Família e Distritos Sanitários Especiais Indígenas ¿ DSEI na atenção à população indígena com foco na equidade, intersetorialidade e na interculturalidade por meio de oficinas regionalizadas ",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 669,
+  "fields": {
+    "meta": 130,
+    "descricao": "Qualificar a Política de Saúde Integral da População LGBTQI+ por meio de ações de saúde (oficinas, encontros e seminários, reuniões e apoio institucional).",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 670,
+  "fields": {
+    "meta": 130,
+    "descricao": "Implantar a Política Estadual de Atenção Integral a Saúde das Populações do Campo, da Floresta e das Águas ¿ PEAISPCFA de forma regionalizada. ",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 671,
+  "fields": {
+    "meta": 130,
+    "descricao": "Fortalecer a Política Estadual sobre População Negra, Comunidades Tradicionais e Quilombolas por meio de ações de saúde (rodas de conversa, webnário, encontros orientativos e suporte ao Comitê Estadual da População Negra na execução de suas ações e estratégias). ",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 672,
+  "fields": {
+    "meta": 131,
+    "descricao": "Realizar Oficinas Tutoriais de Qualificação sobre a Linha de Cuidado Materno-Infantil e Condições Crônicas, no âmbito do Planifica Maranhão, contemplando as macrorregiões Norte, Leste e Sul, em parceria com os departamentos da SES/MA.",
+    "indicador": "Regiões Apoiadas",
+    "unidade": "Unidade",
+    "valor_previsto": "19.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 673,
+  "fields": {
+    "meta": 131,
+    "descricao": "Promover Oficinas Tutoriais de Qualificação sobre a Linha de Cuidado Materno-Infantil e Condições Crônicas, no âmbito do Planifica Maranhão, com foco na população indígena, fortalecendo a Atenção Primária à Saúde e apoiando a organização das linhas de cuidado no território.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 674,
+  "fields": {
+    "meta": 131,
+    "descricao": "Realizar Curso de Formação de Tutores Estaduais do Planificação para que possam multiplicar nos municípios, orientando no processo de organização da rede de atenção à saúde",
+    "indicador": "Cursos de Formação Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 675,
+  "fields": {
+    "meta": 131,
+    "descricao": "Realizar Seminário Estadual de Boas Práticas do Planifica Maranhão, com o objetivo de Consolidar o compromisso estadual com a melhoria contínua da qualidade dos serviços, Fomentando a formação de uma rede colaborativa de aprendizagem entre municípios e regiões de saúde. ",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 676,
+  "fields": {
+    "meta": 131,
+    "descricao": "Fornecer assistência complementar na Atenção Primária com atendimentos qualificados e humanizados, fortalecendo a cobertura assistencial em comunidades quilombolas, territórios indígenas e populações em situação de vulnerabilidade ou emergência em saúde pública ",
+    "indicador": "Municípios Assistidos",
+    "unidade": "Unidade",
+    "valor_previsto": "60.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 677,
+  "fields": {
+    "meta": 131,
+    "descricao": "Fortalecer as ações do programa de governo na área da saúde: o Cuidar de Todos e beneficiar os municípios com o suporte da telemedicina, promovendo a eficiência e permitindo melhores desfechos clínicos aos usuários do SUS no Maranhão, permitindo que o primeiro contato, Atenção Primária, atue como filtro resolutivo, evitando o encaminhamento de demanda reprimida.",
+    "indicador": "Municípios Beneficiados",
+    "unidade": "Unidade",
+    "valor_previsto": "60.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 678,
+  "fields": {
+    "meta": 132,
+    "descricao": "Realizar Oficina Saúde Mental na Atenção Primária nas macrorregiões de saúde do estado. ",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 679,
+  "fields": {
+    "meta": 132,
+    "descricao": "Realizar Oficina: processos de trabalho na Redes de Atenção Psicossocial - RAPS nas macrorregiões de saúde do estado.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 680,
+  "fields": {
+    "meta": 132,
+    "descricao": "Realizar Oficina de Formação de Redutores de Danos nas macrorregionais de saúde Sul e Leste.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 681,
+  "fields": {
+    "meta": 132,
+    "descricao": "Realizar Seminário sobre a Política de Álcool e outras Drogas.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 682,
+  "fields": {
+    "meta": 132,
+    "descricao": "Realizar Seminário de Prevenção ao Suicídio.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 683,
+  "fields": {
+    "meta": 132,
+    "descricao": "Implantar e Implementar o Sistema de Registro Epidemiológico dos Usuários de Saúde Mental (SISMENTAL) nos Centros de Atenção Psicossocial - CAPS. ",
+    "indicador": "Municípios Beneficiados",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 684,
+  "fields": {
+    "meta": 133,
+    "descricao": "Articular a desinstitucionalização de pacientes em cumprimento de medida de segurança internados em hospitais/clínicas mediante ordem judicial para desinternação, através do retorno à família ou abrigamento.",
+    "indicador": "Pacientes Desinstitucionalizados",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 685,
+  "fields": {
+    "meta": 133,
+    "descricao": "Realizar Avaliações Biopsicossociais de pessoas com suspeita de transtornos mentais em Conflito com a Lei demandadas pelo sistema de justiça.",
+    "indicador": "Avaliações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "130.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 686,
+  "fields": {
+    "meta": 133,
+    "descricao": "Construir Planos Terapêuticos de Acompanhamento (PTA) de pessoas com transtornos mentais em conflito com a lei que cumprem medida de segurança.",
+    "indicador": "Planos Construídos",
+    "unidade": "Unidade",
+    "valor_previsto": "25.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 687,
+  "fields": {
+    "meta": 133,
+    "descricao": "Acompanhar pessoas com transtornos mentais que cumprem medidas terapêuticas, através de visitas aos pacientes e familiares.",
+    "indicador": "Pessoas Acompanhadas",
+    "unidade": "Unidade",
+    "valor_previsto": "150.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 688,
+  "fields": {
+    "meta": 134,
+    "descricao": "Realizar capacitações dos profissionais da Atenção Primária à Saúde sobre o manejo, cultivo, coleta, processamento, armazenamento e utilização de plantas medicinais e fitoterápicos.",
+    "indicador": "Capacitações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 689,
+  "fields": {
+    "meta": 134,
+    "descricao": "Realizar workshops para a promoção do conhecimento sobres Plantas Medicinais e Fitoterapia.",
+    "indicador": "Workshops realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 690,
+  "fields": {
+    "meta": 135,
+    "descricao": "Apoiar e monitorar os municípios e seus indicadores no âmbito do Programa Cuidar de Todos, por meio de oficinas, webnários, visitas in loco e fórum Macrorregional.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 691,
+  "fields": {
+    "meta": 135,
+    "descricao": "Realizar Seminário Estadual de premiação dos municípios com melhores resultados nos indicadores do Programa Cuidar de Todos.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 692,
+  "fields": {
+    "meta": 136,
+    "descricao": "Apoiar tecnicamente a implantação do Programa Vigilância em Saúde de Populações Expostas a Agrotóxicos - VSPEA, bem como elaboração do plano de ação nos municípios prioritários definidos pelo Estado e Ministério da Saúde",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "74.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 693,
+  "fields": {
+    "meta": 136,
+    "descricao": "Apoiar as gestões municipais a executarem as ações de controle, cadastro e vigilância da qualidade da água para ampliar o cumprimento da Diretriz Nacional do programa de Vigilância da Qualidade da Água para Consumo Humano (Vigiagua)",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "250.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 694,
+  "fields": {
+    "meta": 136,
+    "descricao": "Apoiar tecnicamente a implantação do Programa de Vigilância de Populações Expostas a Poluentes Atmosféricos - VIGIAR em municípios com maior número de focos de queimadas para identificação de populações mais vulneráveis e recomendação de medidas preventivas",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "73.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 695,
+  "fields": {
+    "meta": 136,
+    "descricao": "Elaborar e divulgar materiais técnicos para apoiar as gestões municipais na proteção da saúde da população potencialmente exposta a riscos ambientais na água, ar e solo",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 696,
+  "fields": {
+    "meta": 136,
+    "descricao": "Monitorar e analisar dados de notificações de doenças, agravos e indicadores relacionados à Vigilância em Saúde Ambiental para subsidiar a elaboração de materiais técnicos",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "326.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 697,
+  "fields": {
+    "meta": 136,
+    "descricao": "Realizar a qualificação de profissionais da saúde com foco em técnicos da Vigilância em Saúde Ambiental, Agentes comunitários de Saúde e Agentes de Combates de Endemias dos municípios por meio de atividades educativas.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "20.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 698,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar apoio matricial e institucional às instâncias da Rede Nacional de Atenção em Saúde do Trabalhador e da Trabalhadora (RENASTT), incluindo os Centros de Referência em Saúde do Trabalhador (Cerests) Regionais, Secretarias Municipais e Núcleos de Saúde do Trabalhador e da Trabalhadora, fortalecendo as ações dos municípios.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 699,
+  "fields": {
+    "meta": 137,
+    "descricao": "Desenvolver ações de Vigilância em Saúde do Trabalhador e da Trabalhadora com as populações vulneráveis (campo, floresta e água) em municípios prioritários.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 700,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar ações educativas e elaboração de materiais de Vigilância em Saúde do Trabalhador e da Trabalhadora (eventos, seminário, palestra, oficina, mobilização social, nota técnica, cartilha, boletins, dentre outras)",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 701,
+  "fields": {
+    "meta": 137,
+    "descricao": "Qualificar as equipes municipais de Atenção Primária à Saúde (APS) e vigilâncias municipais em notificação, acolhimento e prevenção de agravos relacionados ao trabalho",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 702,
+  "fields": {
+    "meta": 137,
+    "descricao": "Monitorar e analisar as notificações dos agravos e indicadores em saúde do trabalhador e da trabalhadora nos sistemas de informação (Sistema de Informação de Agravos de Notificação -SINAN, Sistema de Informação sobre Mortalidade - SIM, Programa de Qualificação da Ações de Vigilância em Saúde - PQA-VS, Sistema de Informações Ambulatoriais de Saúde - SIA e Qualifica CEREST)",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "94.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 703,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar apoio institucional no processo de implantação de Vigilância em Saúde do Trabalhador e da Trabalhadora Municipal (VISATT), na habilitação de Cerests Regionais e criação de núcleos em saúde do Trabalhador nas esferas municipais e regionais.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 704,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar ações de fiscalização e inspeções sanitárias em ambientes e processos de trabalho, visando à prevenção de acidentes, doenças ocupacionais e à promoção de ambientes laborais mais seguros.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "70.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 705,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar ações, presenciais ou remotas, de forma sistemática visando a sensibilização dos municípios silenciosos, com oferta de capacitações específicas, articulando com os conselhos de saúde e incentivando à implantação e fortalecimento dos fluxos de notificação dos agravos relacionados ao trabalho.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 706,
+  "fields": {
+    "meta": 137,
+    "descricao": "Realizar ações de vigilância em saúde do trabalhador com foco na prevenção e enfrentamento do trabalho em condições análogas à escravidão por macrorregião de saúde.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 707,
+  "fields": {
+    "meta": 137,
+    "descricao": "Promover ações de prevenção, preparação e resposta a desastres, com foco na proteção de trabalhadores rurais, da construção civil, pescadores e populações em situação de vulnerabilidade, por macrorregião de saúde",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 708,
+  "fields": {
+    "meta": 138,
+    "descricao": "Realizar ações de inspeção, fiscalização, supervisão, monitoramento e investigação em produtos e serviços de interesse sanitário.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2990.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 709,
+  "fields": {
+    "meta": 138,
+    "descricao": "Controlar, monitorar e distribuir receituários e outros registros relacionados a medicamentos de controle especial da Portaria MS 344/1998.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "22310.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 710,
+  "fields": {
+    "meta": 138,
+    "descricao": "Realizar, por meio de inspeção, fiscalização, supervisão, monitoramento, investigação e matriciamento, a notificação regular dos incidentes e eventos adversos de segurança do paciente nos serviços de saúde prioritários (Serviços com leito de Unidades de Tratamento Intensivo - UTI e hemodiálise).",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "89.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 711,
+  "fields": {
+    "meta": 138,
+    "descricao": "Realizar, por meio de inspeção, fiscalização, supervisão, monitoramento, investigação e matriciamento, a implementação do Programa de Prevenção e Controle de Infecção (PCIH) nos hospitais com leitos de UTI adulto, pediátrico e neonatal para o diagnóstico e notificação das Infecções Relacionadas a Assistência à Saúde (IRAS).",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "66.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 712,
+  "fields": {
+    "meta": 138,
+    "descricao": "Avaliar projetos arquitetônicos de interesse da Vigilância Sanitária.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "450.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 713,
+  "fields": {
+    "meta": 138,
+    "descricao": "Realizar ações setoriais e intersetoriais visando a regularização de produtos das agroindústrias familiares sujeitas à Vigilância Sanitária.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "40.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 714,
+  "fields": {
+    "meta": 138,
+    "descricao": "Implantar os núcleos de vigilância das unidades regionais de saúde para desenvolver as ações de Vigilância Sanitária, Ambiental e Saúde do Trabalhador.",
+    "indicador": "Núcleos Implantados",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 715,
+  "fields": {
+    "meta": 138,
+    "descricao": "Realizar ações educativas presenciais e virtuais de Vigilância Sanitária, mobilização social e educação em saúde nas macrorregionais de saúde.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 716,
+  "fields": {
+    "meta": 139,
+    "descricao": "Realizar visitas técnicas nos laboratórios que realizam exames de interesse em saúde pública, visando avaliar o processo de execução dos procedimentos de diagnóstico, para apoiar e fortalecer a vigilância laboratorial no estado.",
+    "indicador": "Visitas Técnicas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "29.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 717,
+  "fields": {
+    "meta": 139,
+    "descricao": "Realizar Seminários para a rede de laboratórios para atualização de conhecimento em vigilância laboratorial e processos de encaminhamento de amostras para diagnóstico, complementação diagnóstica e Avaliação Externa da Qualidade.",
+    "indicador": "Seminários Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 718,
+  "fields": {
+    "meta": 139,
+    "descricao": "Realizar capacitações no diagnóstico laboratorial da Hanseníase, Tuberculose, Malária, Doença de Chagas, Filariose, Esquistossomose, Leishmaniose, Coqueluche, Vírus Respiratório, Arboviroses, Infecções Sexualmente Transmissíveis para os profissionais que atuam nos laboratórios municipais.",
+    "indicador": "Capacitações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "28.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 719,
+  "fields": {
+    "meta": 139,
+    "descricao": "Realizar treinamentos no sistema de informação Gerenciador de Ambiente Laboratorial ¿ GAL para profissionais de saúde que atuam nas vigilâncias.",
+    "indicador": "Treinamentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 720,
+  "fields": {
+    "meta": 139,
+    "descricao": "Promover oficinas de qualificação para profissionais que atuarão como multiplicadores em vigilância laboratorial nas unidades regionalizadas do Instituto Oswaldo Cruz - Laboratório Central de Saúde Pública do Estado do Maranhão - IOC/LACEN-MA",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 721,
+  "fields": {
+    "meta": 140,
+    "descricao": "Realizar exames para diagnóstico e complementação diagnóstica de doenças e agravos de importância em saúde pública, e fornecer dados que subsidiem as ações de vigilância em saúde.",
+    "indicador": "Exames Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "121400.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 722,
+  "fields": {
+    "meta": 140,
+    "descricao": "Realizar análises laboratoriais de produtos e Meio Ambiente para a detecção ou prevenção de doenças e agravos relacionadas ao seu consumo ou exposição.",
+    "indicador": "Exames Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "47000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 723,
+  "fields": {
+    "meta": 140,
+    "descricao": "Monitorar a qualidade dos exames para diagnóstico de doenças de importância em saúde pública realizadas pelos laboratórios que atuam no âmbito estadual.",
+    "indicador": "Exames Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "20000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 724,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar ações mensais para garantir a distribuição de imunobiológicos para vacinação humana e animal, nas Unidades Regionais de Saúde e nos municípios da Região Metropolitana ",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "276.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 725,
+  "fields": {
+    "meta": 141,
+    "descricao": "Desenvolver ações de acompanhamento das atividades dos Comitês Técnicos municipais no desenvolvimento das ações das Atividades de Vacinação de Alta Qualidade (AVAQ).",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "217.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 726,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar Curso de sala de vacina voltado para o microplanejamento das AVAQ voltadas às equipes de saúde.",
+    "indicador": "Cursos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "212.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 727,
+  "fields": {
+    "meta": 141,
+    "descricao": "Apoiar os municípios na elaboração, execução e monitoramento dos Planos Municipais de Contingência para arboviroses.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "217.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 728,
+  "fields": {
+    "meta": 141,
+    "descricao": "Apoiar os municípios na elaboração, execução e monitoramento dos Planos Municipais de Contingência para vírus respiratórios (influenza, COVID-19 e outros).",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "217.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 729,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar a distribuição de hipoclorito com o objetivo de reduzir os registros de doenças diarreicas no estado, em consonância com as ações previstas no Plano de Prevenção e Controle das Doenças Diarreicas.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "276.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 730,
+  "fields": {
+    "meta": 141,
+    "descricao": "Apoiar na implementação de estratégias com foco no fortalecimento de ações de prevenção, diagnóstico, tratamento e monitoramento da doença, dentre os municípios do estado que apresentam as maiores taxas de incidência de tuberculose.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "20.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 731,
+  "fields": {
+    "meta": 141,
+    "descricao": "Apoiar na implantação de estratégias de busca ativa para suspeição da hanseníase nos municípios do estado que apresentam as menores taxas de detecção da doença.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "20.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 732,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar a distribuição de coleiras e monitorar o processo de encoleiramento de cães nos municípios prioritários pela Nota Técnica Nº 5/2021-CGZV/DEIDT/SVS/MS visando o controle das leishmanioses.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "20.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 733,
+  "fields": {
+    "meta": 141,
+    "descricao": "Executar ações dos Planos de prevenção e controle de doenças transmissíveis no estado",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "80.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 734,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar atendimentos de cães e gatos para prevenção de zoonoses por meio do Programa Cuidar de Todos \"Saúde Animal\"",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "10000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 735,
+  "fields": {
+    "meta": 141,
+    "descricao": "Elaborar Plano estadual contra Esporotricose",
+    "indicador": "Plano Elaborado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 736,
+  "fields": {
+    "meta": 141,
+    "descricao": "Elaborar Plano estadual contra Brucelose",
+    "indicador": "Plano Elaborado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 737,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar cursos de formação de codificação para profissionais de saúde",
+    "indicador": "Cursos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 738,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar formação para multiplicadores do curso de codificação",
+    "indicador": "Formações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 739,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar as necrópsias, por meio do Serviço de Verificação de Óbitos - SVO, para determinar a causa de morte natural ocorrido sem assistência médica, ou com assistência médica sem elucidação diagnóstica ou decorrente de doenças de interesse da saúde pública",
+    "indicador": "Necrópsias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3080.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 740,
+  "fields": {
+    "meta": 141,
+    "descricao": "Desenvolver estratégias para a ampliação da atuação municipal, de forma integrada, nas ações de vigilância, monitoramento e controle das doenças crônicas não transmissíveis e seus agravos",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 741,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar Encontro Estadual de Atenção as Doenças Crônicas não Transmissíveis (DCNT).",
+    "indicador": "Encontro Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 742,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar Seminário em alusão ao Dia Mundial de Conscientização Sobre Doença Falciforme.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 743,
+  "fields": {
+    "meta": 141,
+    "descricao": "Promover a adesão de unidades de saúde para implantação de Núcleos Hospitalares de Epidemiologia na Rede de Atenção à Saúde no estado ",
+    "indicador": "Núcleos",
+    "unidade": "Unidade",
+    "valor_previsto": "8.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 744,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar Workshop sobre Emergências em Saúde Pública",
+    "indicador": "Workshops",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 745,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar oficinas de Apoio à Elaboração dos Planos Municipais de Preparação, Vigilância e Resposta do Setor Saúde aos Desastres Naturais",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 746,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar treinamentos para Epidemiologia Aplicada aos Serviços de Saúde do SUS - EPISUS Fundamental",
+    "indicador": "Treinamentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "8.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 747,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar ações de monitoramento, avaliação in loco das ações de preparação, vigilância e resposta aos eventos de saúde pública e desastres naturais; promoção, prevenção e controle de doenças e agravos no estado.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "963.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 748,
+  "fields": {
+    "meta": 141,
+    "descricao": "Realizar ações de qualificação para os profissionais de saúde, em base de dados, melhoramento no preenchimento das declarações de óbito, doenças transmissíveis e não transmissíveis, investigação de surtos, imunização e prevenção de doenças",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "163.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 749,
+  "fields": {
+    "meta": 141,
+    "descricao": "Promover ações de mobilização social, seminários de saúde pública, congressos estaduais entre outros.",
+    "indicador": "Ações",
+    "unidade": "Unidade",
+    "valor_previsto": "250.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 750,
+  "fields": {
+    "meta": 142,
+    "descricao": "Promover oficinas regionalizadas sobre novas tecnologias em prevenção combinada do e vigilância epidemiológica do HIV/Aids, sífilis, Hepatites virais, Vírus-T linfotrópico humano do tipo 1 e 2 - HTLV, Mpox e outras Infecções Sexualmente Transmissíveis - IST e apoio institucional (visitas, monitoramento e outros).",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 751,
+  "fields": {
+    "meta": 142,
+    "descricao": "Promover a Certificação Estadual de Eliminação da Transmissão Vertical de HIV e/ou Sífilis e/ou Hepatite B e/ou HTLV, nos municípios com população maior ou igual a 100 mil habitantes, com meio de oficinas, encontro, apoio institucionais regionalizadas",
+    "indicador": "Encontros Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 752,
+  "fields": {
+    "meta": 142,
+    "descricao": "Apoiar a implantação, por meio de oficinas e visitas técnicas, dos Serviços Assistência Especializados (SAE), que atendem pessoas vivendo com HIV/Aids, sífilis, hepatites virais, em municípios prioritários nas políticas de ISTs/Aids e hepatites virais, nas macrorregiões.",
+    "indicador": "Municípios Apoiados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 753,
+  "fields": {
+    "meta": 142,
+    "descricao": "Realizar encontros para Produzir a Linha de cuidado das sífilis e das hepatites virais, por meio de oficinas, apoio institucionais e reuniões regionalizadas.",
+    "indicador": "Encontros Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "5.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 754,
+  "fields": {
+    "meta": 142,
+    "descricao": "Realizar o III Encontro Estadual com Municípios prioritários que recebem recursos federais/incentivo para as Políticas de ISTs/Aids e Hepatites Virais e sociedade civil.",
+    "indicador": "Encontros Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 755,
+  "fields": {
+    "meta": 142,
+    "descricao": "Apoiar e promover ações (seminários, capacitações, encontros e dentre outros) integradas com Organizações Não Governamentais (ONGs)",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 756,
+  "fields": {
+    "meta": 142,
+    "descricao": "Promover oficinas macrorregionais sobre novas tecnologias para o Diagnóstico do HIV, do Hepatite B - HBV, Hepatite C - HCV, SÍFILIS, Clamídia e Gonorreia (CT/NG) em parceria com o Laboratório Central de Saúde Pública do Maranhão - LACEN. ",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 757,
+  "fields": {
+    "meta": 142,
+    "descricao": "Promover e apoiar a ampliação de testagem point off care (Teste lipoarabinomanano de fluxo lateral na urina - LFLAM e Distribuição TR Antígeno Criptocócico - LFCrag) e o circuito rápido de aids avançada em parceira com o programa estadual de Tuberculose, através de apoio institucional (Oficinas e reuniões)",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 758,
+  "fields": {
+    "meta": 143,
+    "descricao": "Realizar os procedimentos para aquisição do elenco e quantitativo de medicamentos/Insumos para atender os pacientes cadastrados no Componente Especializado da Assistência Farmacêutica (CEAF) e Programas das SES-MA (Elenco estadual).",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "350000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 759,
+  "fields": {
+    "meta": 144,
+    "descricao": "Realizar os procedimentos para aquisição de insumos do elenco estadual e quantitativo de Fórmulas Alimentares Infantis para crianças com alergia e ou intolerância alimentar - Programa Leite Especial.",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "11529.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 760,
+  "fields": {
+    "meta": 145,
+    "descricao": " Descentralizar a Farmácia Estadual de Medicamentos Especializados - FEME para os municípios de Santa Inês e Presidente Dutra.",
+    "indicador": "Descentralizaçõe Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 761,
+  "fields": {
+    "meta": 146,
+    "descricao": "Aquisição de medicamentos do Componente Básico da Assistência Farmacêutica para pessoas privadas de liberdade, conforme estabelecido na portaria GM/MS nº 3.528, de 30 de outubro de 2018.",
+    "indicador": "Número de Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "114487.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 762,
+  "fields": {
+    "meta": 147,
+    "descricao": "Prestar atendimentos às usuárias que buscam os serviços nos Centros Especializados em Planejamento Reprodutivo.",
+    "indicador": "Atendimentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "3000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 763,
+  "fields": {
+    "meta": 147,
+    "descricao": "Prestar atendimentos às gestantes de alto risco que buscam os serviços de pré-natal ofertados pelos ambulatórios especializados hospitalares obstétrico e das policlínicas.",
+    "indicador": "Atendimentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "6500.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 764,
+  "fields": {
+    "meta": 147,
+    "descricao": "Prestar atendimentos aos egressos de unidades neonatais aos serviços de seguimento ao recém- nascidos (follow up) nos ambulatórios especializados hospitalares pediátrico e das policlínicas ",
+    "indicador": "Atendimentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "3900.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 765,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implementar Unidade de Pronto Atendimento - UPA na Regional de Açailândia.",
+    "indicador": "Unidade Implantada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 766,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar Protocolo de Acidente Vascular Cerebral - AVC nos Hospitais de Barreirinhas, Viana, Carutapera e Codó.",
+    "indicador": "Unidades com Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 767,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar Protocolo de Sepse nas UPAs de Coroatá, Imperatriz, São João dos Patos e Timon.",
+    "indicador": "Unidades com Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 768,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar Protocolo de Infarto Agudo do Miocárdio nas UPAs de Coroatá, Imperatriz, São João dos Patos, Codó e Timon.",
+    "indicador": "Unidades com Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 769,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar Oficinas Temáticas de cuidados de Urgência e Emergência.",
+    "indicador": "Oficina Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 770,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar Prontuário Eletrônico nas Unidades de Urgência e Emergência do estado.",
+    "indicador": "UPAs",
+    "unidade": "Unidade",
+    "valor_previsto": "11.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 771,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar protocolo de Saúde Mental na Rede de Urgência e Emergência do estado.",
+    "indicador": "Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 772,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar fluxo de Síndromes Gripais na Rede de Urgência e Emergência do estado.",
+    "indicador": "Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 773,
+  "fields": {
+    "meta": 147,
+    "descricao": "Inaugurar novas unidades de serviço especializado.",
+    "indicador": "Serviços",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 774,
+  "fields": {
+    "meta": 147,
+    "descricao": "Ampliar a oferta de exames complementares (fundoscopia, ecocardiograma e doppler de membros inferiores) em Policlínicas.",
+    "indicador": "Procedimentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "1200.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 775,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar oficinas de capacitação sobre Hipertensão Arterial Sistêmica - HAS e Diabetes Mellitus - DM para profissionais da Atenção Ambulatorial Especializada em parceria com a Atenção Primária em Saúde - APS.",
+    "indicador": "Oficinas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 776,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar protocolo clínico para o Programa de Hipertensão Arterial e Diabetes - Hiperdia no Espaço Diabético",
+    "indicador": "Protocolo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 777,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar fluxo assistencial para o Programa de Hipertensão Arterial e Diabetes - Hiperdia no Espaço Diabético",
+    "indicador": "Fluxo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 778,
+  "fields": {
+    "meta": 147,
+    "descricao": "Solicitar e monitorar a habilitação de 03 serviços de Terapia Renal Substitutiva - TRS",
+    "indicador": "Serviços Habilitados",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 779,
+  "fields": {
+    "meta": 147,
+    "descricao": "Solicitar e monitorar a habilitação de 03 Ambulatórios Especializados em Doença Renal Crônica - DRC.",
+    "indicador": "Ambulatórios Habilitados",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 780,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar encontro com todos os serviços da Linha de Cuidado da Pessoa com Doença Renal Crônica - DRC.",
+    "indicador": "Encontro Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 781,
+  "fields": {
+    "meta": 147,
+    "descricao": "Expandir o serviço de hemodiálise.",
+    "indicador": "Novas Vagas",
+    "unidade": "Unidade",
+    "valor_previsto": "858.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 782,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar oficina ortopédica na cidade operária para produção de órteses e próteses, ampliando o acesso e reduzindo o tempo de espera dos pacientes.",
+    "indicador": "Oficina Implantada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 783,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar serviço ambulatorial da fisioterapia pélvica no Centro Especializado em Reabilitação - CER Cidade Operária",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 784,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar serviço ambulatorial da fisioterapia pélvica infantil no Centro de Especialidades Ninar.",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 785,
+  "fields": {
+    "meta": 147,
+    "descricao": "Instituir protocolo estadual de acesso e regulação dos pacientes neurodivergentes para Fortalecer a Rede Estadual de Atenção à Criança Neurodivergente.",
+    "indicador": "Protocolo Instituído",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 786,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar capacitação de integração multiprofissional entre Unidade de Acolhimento - UA, Centro de Atenção Psicossocial - CAPS e Coordenação Estadual da Atenção Primária em Saúde - APS para pactuação de fluxos de continuidade do cuidado.",
+    "indicador": "Capacitações",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 787,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar seminário voltado para o fortalecimento da Rede de Cuidados à Pessoa com Deficiência (RCPD) e Rede de Atenção Psicossocial (RAPS) nas unidades da rede estadual.",
+    "indicador": "Seminário",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 788,
+  "fields": {
+    "meta": 147,
+    "descricao": "Elaborar cartilha estadual de prescrição de cadeira de rodas, garantindo qualidade, equidade e segurança ao usuário.",
+    "indicador": "Cartilha Elaborada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 789,
+  "fields": {
+    "meta": 147,
+    "descricao": "Realizar monitoramento da linha de cuidado de epidermólise bolhosa, por meio dos indicadores definidos no protocolo estadual.",
+    "indicador": "Relatórios Elaborados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 790,
+  "fields": {
+    "meta": 147,
+    "descricao": "Acompanhar o número de atendimentos do ambulatório de doenças raras no Hospital da Ilha.",
+    "indicador": "Consultas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "500.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 791,
+  "fields": {
+    "meta": 147,
+    "descricao": "Acompanhar o número de atendimentos no Ambulatório Especializado para Transplantes Renais - Instituto do Fígado - INFIG (Núcleo do Fígado)",
+    "indicador": "Consultas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "300.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 792,
+  "fields": {
+    "meta": 147,
+    "descricao": "Solicitar e monitorar a habilitação do serviço de cirurgia bariátrica",
+    "indicador": "Serviço Habilitado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 793,
+  "fields": {
+    "meta": 147,
+    "descricao": "Implantar a linha de cuidado para reversão e acompanhamento de pacientes com colostomia",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 794,
+  "fields": {
+    "meta": 147,
+    "descricao": "Monitorar o número de pacientes de hanseníase atendidos no serviço de telemedicina do Hospital Dr. Genésio Rego",
+    "indicador": "Pacientes Atendidos",
+    "unidade": "Unidade",
+    "valor_previsto": "192.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 795,
+  "fields": {
+    "meta": 148,
+    "descricao": "Implementar critérios de acompanhamento da estratégia QUALINEO (Qualificação do Cuidado Neonatal de Risco) em 08 unidades neonatais estaduais",
+    "indicador": "Critérios de acompanhamento implementado",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 796,
+  "fields": {
+    "meta": 148,
+    "descricao": "Realizar triagens neonatais nos estabelecimentos de saúde com serviços de parto e nascimento de gestão estadual.",
+    "indicador": "Testes de triagem realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "132000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 797,
+  "fields": {
+    "meta": 148,
+    "descricao": "Solicitar e monitorar a habilitação de leitos de UTI do Hospital Regional de Açailândia",
+    "indicador": "Leitos habilitados",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 798,
+  "fields": {
+    "meta": 148,
+    "descricao": "Solicitar e monitorar a habilitação de leitos de saúde mental do Hospital Dr. Genésio Rego e Aquiles Lisboa",
+    "indicador": "Leitos habilitados",
+    "unidade": "Unidade",
+    "valor_previsto": "16.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 799,
+  "fields": {
+    "meta": 148,
+    "descricao": "Solicitar e monitorar a habilitação de leitos de obstetrícia do Hospital Regional de Monção",
+    "indicador": "Leitos habilitados",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 800,
+  "fields": {
+    "meta": 148,
+    "descricao": "Realizar encontro estadual de Segurança do Paciente em setembro de 2026, reunindo profissionais de saúde das unidades da Rede Estadual de Saúde, para alinhamento de práticas, protocolos e estratégias de qualificação assistencial.",
+    "indicador": "Seminário realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 801,
+  "fields": {
+    "meta": 148,
+    "descricao": "Monitorar a execução da Meta 01 - Identificação do Paciente, do protocolo de Segurança do Paciente na rede hospitalar estadual",
+    "indicador": "Protocolo 1 implementado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 802,
+  "fields": {
+    "meta": 148,
+    "descricao": "Realizar 02 capacitações sobre Gerenciamento de Risco com as equipes do Núcleo de Segurança do Paciente das unidades hospitalares.",
+    "indicador": "Capacitações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 803,
+  "fields": {
+    "meta": 148,
+    "descricao": "Realizar 01 Simpósio Estadual em novembro sobre Qualidade nos Serviços de Saúde do Maranhão para discussões acerca de temáticas que perpassam o atendimento hospitalar.",
+    "indicador": "Simpósio Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 804,
+  "fields": {
+    "meta": 148,
+    "descricao": "Promover reconhecimento institucional de 100% das unidades estaduais que alcançarem alta conformidade na Avaliação Nacional das Práticas de Segurança do Paciente (Anvisa), incentivando a cultura de segurança ",
+    "indicador": "Unidades em alta conformidade reconhecidas",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 805,
+  "fields": {
+    "meta": 148,
+    "descricao": "Instituir a Comissão de Farmácia e Terapêutica da Secretaria de Estado da Saúde - CFT. ",
+    "indicador": "Comissão Instituída",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 806,
+  "fields": {
+    "meta": 148,
+    "descricao": "Incentivar a participação das unidades de saúde por meio do acompanhamento e da aplicação dos resultados dos projetos do Programa de Apoio ao Desenvolvimento Institucional do Sistema Único de Saúde - PROADI-SUS.",
+    "indicador": "Unidades beneficiadas",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 807,
+  "fields": {
+    "meta": 149,
+    "descricao": "Realizar a entrega de próteses dentárias nas Unidades de Especialidades Odontológicas - SORRIR",
+    "indicador": "Instalações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "5200.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 808,
+  "fields": {
+    "meta": 149,
+    "descricao": "Realizar procedimentos Odontológicos na Média e Alta complexidade.",
+    "indicador": "Procedimentos Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "750000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 809,
+  "fields": {
+    "meta": 149,
+    "descricao": "Realizar encontros com a gestão das Unidades de Especialidades Odontológicas - SORRIR, para avaliação de indicadores e definição de ações estratégicas para melhoria em saúde bucal.",
+    "indicador": "Encontros Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 810,
+  "fields": {
+    "meta": 149,
+    "descricao": "Realizar Biopsias para diagnóstico precoce dos pacientes de Bucomaxilofacial do Hospital Dr. Tarquínio Lopes Filho.",
+    "indicador": "Biopsias Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 811,
+  "fields": {
+    "meta": 149,
+    "descricao": "Implantar Núcleo de Segurança do Paciente (NSP) na Unidade de Especialidade Odontológicas - SORRIR do município de Caxias.",
+    "indicador": "Núcleo Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 812,
+  "fields": {
+    "meta": 149,
+    "descricao": "Implantar Serviço de Especialidades Odontológicas - SORRIR no município de Imperatriz.",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 813,
+  "fields": {
+    "meta": 149,
+    "descricao": "Implantar Serviço de Especialidades Odontológicas - SORRIR no município de Balsas",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 814,
+  "fields": {
+    "meta": 149,
+    "descricao": "Implantar Serviço de Especialidades Odontológicas - SORRIR no município de Barra do Corda.",
+    "indicador": "Serviço Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 815,
+  "fields": {
+    "meta": 150,
+    "descricao": "Apresentar relatório de monitoramento e análise dos indicadores gerenciais dos protocolos assistenciais estaduais (Sepse, Infarto Agudo do Miocárdio - IAM, Acidente Vascular Cerebral - AVC), com consolidação semestral dos resultados pelo setor de Qualidade e devolutiva às áreas técnicas responsáveis",
+    "indicador": "Relatórios Apresentados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 816,
+  "fields": {
+    "meta": 150,
+    "descricao": "Realizar 02 (dois) fóruns anuais para análise consolidada dos indicadores dos leitos de Unidade de Terapia Intensiva - UTI e Unidade de Cuidados Intensivos - UCI (leitos complementares) abrangendo 100% das unidades hospitalares estaduais que dispõem de leitos complementares, assegurando que todas as unidades atinjam, no mínimo, 80% de preenchimento dos dados, de forma a garantir a confiabilidade das informações.",
+    "indicador": "Fóruns Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 817,
+  "fields": {
+    "meta": 151,
+    "descricao": "Acompanhar a validação dos protocolos clínicos e de acesso e diretrizes terapêuticas para consultas e exames especializados.",
+    "indicador": "Protocolos Validados",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 818,
+  "fields": {
+    "meta": 151,
+    "descricao": "Capacitar profissionais envolvidos no processo de regulação",
+    "indicador": "Capacitações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 819,
+  "fields": {
+    "meta": 151,
+    "descricao": "Reduzir o percentual de absenteísmo nos procedimentos ambulatoriais nas unidades de saúde do estado.",
+    "indicador": "Percentual Reduzido",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.15"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 820,
+  "fields": {
+    "meta": 151,
+    "descricao": "Reduzir o tempo médio de espera para consultas e exames regulados, por meio de triagens das filas de espera, mutirões e ampliação da oferta no Plano de Trabalho das unidades de saúde do estado.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 821,
+  "fields": {
+    "meta": 151,
+    "descricao": "Implantar Núcleos de Apoio à Gestão - NAG nas macrorregiões.",
+    "indicador": "Núcleos Implantados",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 822,
+  "fields": {
+    "meta": 152,
+    "descricao": "Implantar fluxos de acesso e fichas padronizadas para sistematizar a solicitação de leitos de internação.",
+    "indicador": "Solicitações de Leitos Recebidas",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.95"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 823,
+  "fields": {
+    "meta": 152,
+    "descricao": "Qualificar as equipes dos Núcleos Internos de Regulação - NIR quanto aos processos regulatórios.",
+    "indicador": "Qualificações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 824,
+  "fields": {
+    "meta": 152,
+    "descricao": "Implantar painel de indicadores de internação hospitalar nos hospitais da rede estadual.",
+    "indicador": "Painel Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 825,
+  "fields": {
+    "meta": 153,
+    "descricao": "Qualificar condutores e equipes de apoio e suporte básico de vida, segurança e biossegurança.",
+    "indicador": "Equipes Qualificadas",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.80"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 826,
+  "fields": {
+    "meta": 153,
+    "descricao": "Qualificar quanto ao transporte seguro as equipes de regulação de transporte sanitário e terrestre.",
+    "indicador": "Oficinas de Qualificação realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 827,
+  "fields": {
+    "meta": 153,
+    "descricao": "Elaborar e implementar plano de manutenção preventiva da frota e equipamentos, incluindo oxigênio, monitores e ventiladores portáteis.",
+    "indicador": "Plano Elaborado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 828,
+  "fields": {
+    "meta": 154,
+    "descricao": "Disponibilizar diárias de ajuda de custo (alimentação e pernoite) para pacientes devidamente cadastrados no Tratamentos Fora do Domicílio - TFD, bem como para o acompanhante quando necessário.",
+    "indicador": "Diárias disponibilizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "75690.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 829,
+  "fields": {
+    "meta": 154,
+    "descricao": "Qualificar e apoiar as áreas técnicas nas 19 regiões de saúde, para resolutividade de processos de TFD.",
+    "indicador": "Regiões Apoiadas",
+    "unidade": "Unidade",
+    "valor_previsto": "19.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 830,
+  "fields": {
+    "meta": 154,
+    "descricao": "Incentivar a implantação do serviço social para consulta especializada nas regiões de saúde de forma a garantir o encaminhamento efetivo do paciente de TFD.",
+    "indicador": "Regiões beneficiadas",
+    "unidade": "Unidade",
+    "valor_previsto": "19.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 831,
+  "fields": {
+    "meta": 154,
+    "descricao": "Garantir a continuidade do acesso ao Tratamento Fora do Domicílio.",
+    "indicador": "Processos Formalizados e analisados",
+    "unidade": "Unidade",
+    "valor_previsto": "3000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 832,
+  "fields": {
+    "meta": 154,
+    "descricao": "Disponibilizar o deslocamento dos pacientes devidamente cadastrados no TFD, por meio de emissões de bilhetes aéreos e/ou terrestres, bem como para acompanhantes quando necessário.",
+    "indicador": "Bilhetes Disponibilizados",
+    "unidade": "Unidade",
+    "valor_previsto": "18000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 833,
+  "fields": {
+    "meta": 154,
+    "descricao": "Garantir benefícios de assistência funerária aos pacientes devidamente cadastrados no TFD, por meio do deslocamento aéreo e/ou terrestre, desembaraço de documentação para embarque, vestimentas, preparação do corpo e urna funerária.",
+    "indicador": "Assistências Fomentadas",
+    "unidade": "Unidade",
+    "valor_previsto": "10.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 834,
+  "fields": {
+    "meta": 155,
+    "descricao": "Contratualizar estabelecimentos de saúde de natureza pública, privada e/ou conveniadas, que realizam atendimentos às pessoas que demandam os serviços de assistência de média e alta complexidade ambulatorial e hospitalar de forma complementar à rede de Saúde estadual.",
+    "indicador": "Estabelecimentos contratualizados",
+    "unidade": "Unidade",
+    "valor_previsto": "56.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 835,
+  "fields": {
+    "meta": 155,
+    "descricao": "Acompanhar a produção mensal do atendimento ambulatorial e hospitalar de média e alta complexidade aos usuários do SUS por intermédio dos estabelecimentos de saúde de natureza privadas e filantrópica contratualizados",
+    "indicador": "Procedimentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "267980.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 836,
+  "fields": {
+    "meta": 155,
+    "descricao": "Avaliar e monitorar a produção apresentada pelos Serviços de Oncologia Centro de Assistência de Alta Complexidade em Oncologia - CACON e Unidade de Alta Complexidade em Oncologia - UNACON Contratualizadas.",
+    "indicador": "Procedimentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "295622.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 837,
+  "fields": {
+    "meta": 155,
+    "descricao": "Monitorar a execução das metas físicas realizadas pelas Associações de Pais e Amigos dos Excepcionais (APAE) contratualizadas. ",
+    "indicador": "Procedimentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "513324.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 838,
+  "fields": {
+    "meta": 155,
+    "descricao": "Avaliar e monitorar metas estabelecidas para as Unidades de Saúde especializadas em Terapia Renal Substitutiva (TRS) contratualizados.",
+    "indicador": "Procedimentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "327652.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 839,
+  "fields": {
+    "meta": 156,
+    "descricao": "Acompanhar e monitorar a melhoria e continuidade das bases descentralizadas dos Serviços Móvel de Urgência e Emergência habilitados pelo Ministério da Saúde e aprovados pelo Estado. ",
+    "indicador": "SAMUs implantados",
+    "unidade": "Porcentagem",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 840,
+  "fields": {
+    "meta": 156,
+    "descricao": "Acompanhar os relatórios quadrimestrais de atividades e funcionamento das Centrais de Regulação das Urgências (CRU) e Bases Descentralizadas dos Serviços Móvel de Urgência e Emergência aprovados pelo Estado.",
+    "indicador": "Relatórios acompanhados",
+    "unidade": "Unidade",
+    "valor_previsto": "60.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 841,
+  "fields": {
+    "meta": 157,
+    "descricao": "Capacitar profissionais para identificação de pacientes em suspeita de morte encefálica",
+    "indicador": "Profissionais Capacitados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 842,
+  "fields": {
+    "meta": 157,
+    "descricao": "Fortalecer as atividades realizadas pelas Comissões Intra-Hospitalares de Doação de Órgãos e Tecidos para Transplantes - CIHDOTTS",
+    "indicador": "CIHDOTTS fortalecidas",
+    "unidade": "Unidade",
+    "valor_previsto": "24.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 843,
+  "fields": {
+    "meta": 157,
+    "descricao": "Monitorar a realização das buscas ativas de pacientes em suspeita de morte encefálica realizadas pelas Organizações de Procura de Órgãos - OPOs e CIHDOTTS",
+    "indicador": "Buscas ativas monitoradas",
+    "unidade": "Unidade",
+    "valor_previsto": "2880.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 844,
+  "fields": {
+    "meta": 158,
+    "descricao": "Qualificar profissionais para o cuidado de pacientes em morte encefálica e suas famílias.",
+    "indicador": "Profissionais capacitados",
+    "unidade": "Unidade",
+    "valor_previsto": "250.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 845,
+  "fields": {
+    "meta": 158,
+    "descricao": "Implantar a Organização de Procura de Órgãos - OPO em Presidente Dutra",
+    "indicador": "OPO implantada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 846,
+  "fields": {
+    "meta": 158,
+    "descricao": "Promover ações educativas para a população em geral sobre doação e transplantes de órgãos e tecidos.",
+    "indicador": "Atividades Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 847,
+  "fields": {
+    "meta": 159,
+    "descricao": "Aumentar em 30% o número de transplante de córnea da meta prevista em 2024.",
+    "indicador": "Transplantes Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "325.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 848,
+  "fields": {
+    "meta": 159,
+    "descricao": "Aumentar em 30% o número de transplante de órgãos sólidos da meta de 35 prevista para o ano",
+    "indicador": "Transplantes Realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "47.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 849,
+  "fields": {
+    "meta": 159,
+    "descricao": "Monitorar os Centros Transplantadores no que se refere às consultas ambulatoriais pré e pós transplante.",
+    "indicador": "Centros Monitorados",
+    "unidade": "Unidade",
+    "valor_previsto": "11.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 850,
+  "fields": {
+    "meta": 159,
+    "descricao": "Aperfeiçoar médicos das equipes transplantadoras para o aproveitamento de órgãos",
+    "indicador": "Profissionais capacitados",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 851,
+  "fields": {
+    "meta": 160,
+    "descricao": "Captar e fazer triagem de candidatos a doação de sangue",
+    "indicador": "Candidatos",
+    "unidade": "Unidade",
+    "valor_previsto": "128906.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 852,
+  "fields": {
+    "meta": 160,
+    "descricao": "Coletar Bolsas de Sangue",
+    "indicador": "Bolsas",
+    "unidade": "Unidade",
+    "valor_previsto": "102345.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 853,
+  "fields": {
+    "meta": 160,
+    "descricao": "Fracionar o sangue para a produção de hemocomponentes",
+    "indicador": "Hemocomponentes",
+    "unidade": "Unidade",
+    "valor_previsto": "236075.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 854,
+  "fields": {
+    "meta": 160,
+    "descricao": "Ampliar o número de procedimentos hemoterápicos por meio de implantação de Hemonúcleo de Colinas.",
+    "indicador": "Procedimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "12000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 855,
+  "fields": {
+    "meta": 160,
+    "descricao": "Ampliar o número de procedimentos hemoterápicos por meio de implantação do Hemonúcleo de Chapadinha.",
+    "indicador": "Procedimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "12000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 856,
+  "fields": {
+    "meta": 160,
+    "descricao": "Ampliar o número de procedimentos hemoterápicos por meio de implantação do Hemonúcleo de Grajaú.",
+    "indicador": "Procedimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "12000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 857,
+  "fields": {
+    "meta": 160,
+    "descricao": "Ampliar o número de procedimentos hemoterápicos por meio de implantação do Hemonúcleo de Presidente Dutra",
+    "indicador": "Procedimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "12000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 858,
+  "fields": {
+    "meta": 160,
+    "descricao": "Qualificar o atendimento aos doadores e pacientes com a implantação de sistema de senhas.",
+    "indicador": "Sistema",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 859,
+  "fields": {
+    "meta": 160,
+    "descricao": "Qualificar o atendimento aos doadores e pacientes com a implantação de Painéis Eletrônicos de Atendimento na Coleta e Ambulatório",
+    "indicador": "Painéis",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 860,
+  "fields": {
+    "meta": 161,
+    "descricao": "Realizar consultas hematológicas",
+    "indicador": "Consultas",
+    "unidade": "Unidade",
+    "valor_previsto": "18922.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 861,
+  "fields": {
+    "meta": 161,
+    "descricao": "Realizar consultas pediátricas",
+    "indicador": "Consultas",
+    "unidade": "Unidade",
+    "valor_previsto": "4899.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 862,
+  "fields": {
+    "meta": 161,
+    "descricao": "Realizar consultas em clínica médica ",
+    "indicador": "Consultas",
+    "unidade": "Unidade",
+    "valor_previsto": "9220.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 863,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos de serviço social a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "23615.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 864,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos odontológicos a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "8998.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 865,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos psicológicos a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "1306.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 866,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos farmacêuticos a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "11609.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 867,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos fisioterapêuticos a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "4604.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 868,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos de nutrição a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "2521.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 869,
+  "fields": {
+    "meta": 162,
+    "descricao": "Realizar atendimentos do enfermeiro a pessoas com hemopatias",
+    "indicador": "Atendimentos",
+    "unidade": "Unidade",
+    "valor_previsto": "6775.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 870,
+  "fields": {
+    "meta": 163,
+    "descricao": "Realizar teste sorológicos em amostra de doadores e pessoas com hemopatias",
+    "indicador": "Testes",
+    "unidade": "Unidade",
+    "valor_previsto": "847438.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 871,
+  "fields": {
+    "meta": 163,
+    "descricao": "Realizar exames imunohematológicos em amostra de doadores e pessoas com hemopatias",
+    "indicador": "Exames",
+    "unidade": "Unidade",
+    "valor_previsto": "479936.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 872,
+  "fields": {
+    "meta": 163,
+    "descricao": "Realizar exames hematológicos em amostra de doadores e pessoas com hemopatias",
+    "indicador": "Exames",
+    "unidade": "Unidade",
+    "valor_previsto": "194466.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 873,
+  "fields": {
+    "meta": 163,
+    "descricao": "Realizar exames bioquímicos em amostra de pessoas com hemopatias",
+    "indicador": "Exames",
+    "unidade": "Unidade",
+    "valor_previsto": "138614.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 874,
+  "fields": {
+    "meta": 163,
+    "descricao": "Realizar exames microbiológicos em amostra de doadores",
+    "indicador": "Exames",
+    "unidade": "Unidade",
+    "valor_previsto": "8924.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 875,
+  "fields": {
+    "meta": 164,
+    "descricao": "Implantar o serviço Navegador Oncológico nas unidades Hospital Tarquínio Lopes Filho e Everaldo Ferreira Aragão ",
+    "indicador": "Unidades com serviço implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 876,
+  "fields": {
+    "meta": 165,
+    "descricao": "Realizar mutirões de cirurgias oncológicas.",
+    "indicador": "Cirurgias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "1000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 877,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliar e modernizar Hospital Materno Infantil de Imperatriz",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 878,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Centro de Hemodiálise Colinas",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 879,
+  "fields": {
+    "meta": 166,
+    "descricao": "Reformar UTI Genésio Rêgo",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 880,
+  "fields": {
+    "meta": 166,
+    "descricao": "Reformar CME e Clínica Médica Aquiles Lisboa",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 881,
+  "fields": {
+    "meta": 166,
+    "descricao": "Reformar Hospital de Referência de Doenças Tropicais- Presidente Vargas",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 882,
+  "fields": {
+    "meta": 166,
+    "descricao": "Adequar a estrutura física do Centro de Especialidades Ninar atendendo pessoas com deficiência física, intelectual e síndromes raras",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 883,
+  "fields": {
+    "meta": 166,
+    "descricao": "Reestruturar o espaço físico do Programa Leite Especial na Unidade de atendimento Hospital Infantil Dr. Juvêncio Matos",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 884,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Centro de Hemodiálise de Viana",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 885,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Centro de Hemodiálise de Lago da Pedra",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 886,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Centro de Hemodiálise de Santa Luzia do Paruá",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 887,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Centro de Hemodiálise de Barra do Corda",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 888,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Policlínica de Coelho Neto",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 889,
+  "fields": {
+    "meta": 166,
+    "descricao": "Implantar Oficina Ortopédica - ECR.",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 890,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliação/Reforma UPA Parque Vitória",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 891,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliação/Reforma UPA Paço do Lumiar",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 892,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliação/Reforma UPA Araçagy",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 893,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliação/Reforma UPA Bacanga",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 894,
+  "fields": {
+    "meta": 166,
+    "descricao": "Ampliação/Reforma UPA Vinhais",
+    "indicador": "Obra Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 895,
+  "fields": {
+    "meta": 167,
+    "descricao": "Adquirir itens para inauguração do banco de leite do Hospital Alarico Nunes Pacheco - Timon",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 896,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar unidades de saúde, contemplando-as com equipamentos, mobiliários e instrumentais atualizados, visando a substituição de itens inservíveis.",
+    "indicador": "Unidades Equipadas",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 897,
+  "fields": {
+    "meta": 167,
+    "descricao": "Adquirir equipamentos novos para reforma/modernização da UTI do Hospital Genésio Rego",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 898,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar o Hospital de Referência de Doenças Tropicais - Presidente Vargas.",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 899,
+  "fields": {
+    "meta": 167,
+    "descricao": "Adquirir materiais para o retorno de serviços obstétricos no Hospital Regional de Monção",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 900,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar a Agência Transfusional de Presidente Vargas",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 901,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar as Agencias Transfusionais e Hemonúcleos",
+    "indicador": "Hemonúcleos e Agências Transfusionais equipadas",
+    "unidade": "Unidade",
+    "valor_previsto": "26.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 902,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar hospitais de alta complexidade ou serviços especializados equipados.",
+    "indicador": "Hospital Equipado",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 903,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar o Hospital da Região Tocantina",
+    "indicador": "Hospital Equipado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 904,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar novas UTIs no Hospital da Ilha",
+    "indicador": "UTIs Equipadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 905,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar o setor de hemodinâmica do Hospital da Ilha",
+    "indicador": "Setor Equipado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 906,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar o bunker de radioterapia",
+    "indicador": "Bunker Equipado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 907,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar nova UPA do João Paulo",
+    "indicador": "UPA equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 908,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernização da UTI da UPA de Presidente Dutra",
+    "indicador": "UPA equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 909,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar unidades de saúde, contemplando-as com equipamentos, mobiliários e instrumentais atualizados, visando a substituição de itens inservíveis",
+    "indicador": "Unidades Equipadas",
+    "unidade": "Unidade",
+    "valor_previsto": "15.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 910,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar a Oficina Ortopédica.",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 911,
+  "fields": {
+    "meta": 167,
+    "descricao": "Modernizar o Centro de Especialidades Ninar.",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 912,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Policlínica de Coelho Neto",
+    "indicador": "Unidade equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 913,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar SORRIR de Balsas",
+    "indicador": "Unidade equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 914,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar SORRIR de Barra do Corda",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 915,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar SORRIR de Imperatriz",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 916,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Centro de Hemodiálise de Viana",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 917,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Centro de Hemodiálise de Colinas",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 918,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Centro de Hemodiálise de Lago da Pedra",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 919,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Centro de Hemodiálise de Santa Luzia do Paruá ",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 920,
+  "fields": {
+    "meta": 167,
+    "descricao": "Equipar Centro de Hemodiálise de Barra do Corda",
+    "indicador": "Unidade Equipada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 921,
+  "fields": {
+    "meta": 168,
+    "descricao": "Promover capacitação das regionais de saúde sobre os Instrumentos de Planejamento do SUS.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "8.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 922,
+  "fields": {
+    "meta": 168,
+    "descricao": "Realizar oficinas de apoio aos municípios para elaboração e monitoramento dos Instrumentos de Planejamento.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "8.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 923,
+  "fields": {
+    "meta": 168,
+    "descricao": "Realizar oficinas do projeto de Fortalecimento da Função Gestora da SES na Consolidação do SUS - FortaleceSES",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 924,
+  "fields": {
+    "meta": 168,
+    "descricao": "Realizar oficina para construção da Programação Anual de Saúde de 2027.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 925,
+  "fields": {
+    "meta": 168,
+    "descricao": "Realizar Seminário de Planejamento Estratégico na Saúde.",
+    "indicador": "Seminário Realizado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 926,
+  "fields": {
+    "meta": 169,
+    "descricao": "Realizar oficinas de parametrização, fluxo de referência e programação das ações e serviços de saúde.",
+    "indicador": "Ações macrorregionais realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 927,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar auditoria de Conformidade das AIHs e APACs",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 928,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar auditoria das Unidades de Saúde da Rede Estadual",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "723.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 929,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar auditoria de Políticas Públicas em Áreas Temáticas",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 930,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar apoio a Implantação do Componente Municipal de Auditoria",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 931,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar auditoria de Apuração de Denúncias",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "11.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 932,
+  "fields": {
+    "meta": 170,
+    "descricao": "Realizar monitoramento das Recomendações de Auditoria",
+    "indicador": "Auditorias realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "12.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 933,
+  "fields": {
+    "meta": 171,
+    "descricao": "Realizar visita técnica para inclusão e atualização do Cadastro Nacional de Estabelecimentos de Saúdes - CNES das Unidades de Saúde de Média e Alta Complexidade",
+    "indicador": "Visitas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "37.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 934,
+  "fields": {
+    "meta": 171,
+    "descricao": "Realizar acompanhamento das Ações e Serviços da Rede de Atenção às Urgências (Unidades de Pronto Atendimento - UPA, Serviço de Atendimento Móvel de Urgência - SAMU, Atenção Domiciliar, Hospitais de Porta de Entrada e Leitos de Retaguarda)",
+    "indicador": "Visitas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "64.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 935,
+  "fields": {
+    "meta": 171,
+    "descricao": "Realizar monitoramento, pelos gestores e fiscais de contratos, da execução das programações pactuadas e ações previstas nos contratos e convênios firmados pela Secretaria de Estado da Saúde com os estabelecimentos da Rede Privada e Filantrópica, que prestam serviços de média e alta complexidade",
+    "indicador": "Visitas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "94.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 936,
+  "fields": {
+    "meta": 171,
+    "descricao": "Verificar mensalmente o cumprimento das metas pactuadas para a prestação de serviços hospitalares nas Unidades de Saúde geridas por Organização Social ¿ OS e Empresa Maranhense de Serviços Hospitalares - EMSERH.",
+    "indicador": "Relatórios",
+    "unidade": "Unidade",
+    "valor_previsto": "1284.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 937,
+  "fields": {
+    "meta": 171,
+    "descricao": "Realizar o monitoramento mensal e verificar a evolução dos indicadores assistenciais previstos nos Planos de Trabalho firmados entre a Secretaria de Estado da Saúde, OS e EMSERH",
+    "indicador": "Indicadores assistenciais",
+    "unidade": "Unidade",
+    "valor_previsto": "15.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 938,
+  "fields": {
+    "meta": 171,
+    "descricao": "Verificar trimestralmente o cumprimento das metas de produção assistencial pactuadas nos Planos de Trabalho, de cada unidade de saúde, por meio dos Relatórios Gerenciais mensais emitidos pelas contratadas.",
+    "indicador": "Relatórios",
+    "unidade": "Unidade",
+    "valor_previsto": "321.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 939,
+  "fields": {
+    "meta": 172,
+    "descricao": "Apoiar a implantação de Ouvidorias do SUS no Estado.",
+    "indicador": "Municípios",
+    "unidade": "Unidade",
+    "valor_previsto": "48.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 940,
+  "fields": {
+    "meta": 172,
+    "descricao": "Capacitar as Regiões de Saúde de Codó, Timon, Zé Doca, Viana, Pres. Dutra, S. J. Patos, Barra do Corda e Pinheiro.",
+    "indicador": "Capacitações",
+    "unidade": "Unidade",
+    "valor_previsto": "8.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 941,
+  "fields": {
+    "meta": 172,
+    "descricao": "Visitas às Regiões de Saúde capacitadas em 2025 (Bacabal, Açailândia, Imperatriz, Itapecuru, Rosário, Balsas, Chapadinha, Santa Inês, Pedreiras e Caxias) para reuniões de monitoramento da Ouvidorias implantadas nessas Regiões.",
+    "indicador": "Viagens para reuniões de monitoramento",
+    "unidade": "Unidade",
+    "valor_previsto": "7.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 942,
+  "fields": {
+    "meta": 172,
+    "descricao": "Visita Técnica à 28 Unidades de Saúde, da capital, administradas pelo Estado para monitoramento dos pontos focais.",
+    "indicador": "Visitas",
+    "unidade": "Unidade",
+    "valor_previsto": "28.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 943,
+  "fields": {
+    "meta": 173,
+    "descricao": "Desenvolver painéis de dados, por meio de gestão colaborativa, para a plataforma Monitora Saúde, voltada para gestores, profissionais e cidadãos",
+    "indicador": "Painéis Desenvolvidos",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 944,
+  "fields": {
+    "meta": 173,
+    "descricao": "Desenvolver Sistema de Informação em Saúde - SIS, conforme demanda das áreas técnicas.",
+    "indicador": "Sistema Desenvolvido",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 945,
+  "fields": {
+    "meta": 173,
+    "descricao": "Elaborar e publicar documento institucional para assegurar proteção de dados pessoais nas plataformas digitais de Tecnologia da Informação e Comunicação (TIC) no SUS.",
+    "indicador": "Documento Elaborado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 946,
+  "fields": {
+    "meta": 173,
+    "descricao": "Fortalecer a Saúde Digital no Sistema Único de Saúde por meio de ações educativas voltadas aos profissionais de saúde e gestores.",
+    "indicador": "Ações Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "4.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 947,
+  "fields": {
+    "meta": 174,
+    "descricao": "Qualificar profissionais por meio de Oficinas de Metodologias Ativas.",
+    "indicador": "Profissionais Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "120.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 948,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar Congressos, Workshop, Simpósio e Conferências para integração de experiência exitosas entre municípios e Estado.",
+    "indicador": "Participantes Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "4195.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 949,
+  "fields": {
+    "meta": 174,
+    "descricao": "Ofertar cursos de formação, capacitação, qualificação e aperfeiçoamento, em diferentes modalidades (presencial, híbrida e autoinstrucional), destinados a trabalhadores da saúde, gestores e à sociedade civil organizada.",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "2000.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 950,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar Oficinas de Educação Permanente e Educação Popular em Saúde, voltadas a trabalhadores e trabalhadoras do SUS e à sociedade civil organizada para as Regionais de Saúde",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "120.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 951,
+  "fields": {
+    "meta": 174,
+    "descricao": "Capacitar trabalhadores da saúde quanto ao manuseio plataforma de ensino da Escola de Saúde Pública ",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "250.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 952,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar o IV Simpósio de Educação Permanente (NEP) da Rede Estadual.",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "150.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 953,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar o 2º Encontro das Instituições de Ensino conveniadas com a SES/MA. ",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 954,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar visitas de monitoramento e acompanhamento in loco dos campos de estágio da Rede Estadual",
+    "indicador": "Participantes qualificados e certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "70.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 955,
+  "fields": {
+    "meta": 174,
+    "descricao": "Realizar ofertas educacionais voltadas para preceptores, tutores e coordenadores de Residências em Saúde.",
+    "indicador": "Profissionais Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "50.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 956,
+  "fields": {
+    "meta": 175,
+    "descricao": "Qualificar Trabalhadores do SUS e da educação em autismo e outras neurodiversidades",
+    "indicador": "Participantes Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 957,
+  "fields": {
+    "meta": 175,
+    "descricao": "Qualificar trabalhadores do SUS em Gestão de Redes de Atenção à Saúde",
+    "indicador": "Participantes Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 958,
+  "fields": {
+    "meta": 175,
+    "descricao": "Qualificar trabalhadores do SUS em Vigilância em Saúde",
+    "indicador": "Participantes Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 959,
+  "fields": {
+    "meta": 175,
+    "descricao": "Qualificar profissionais da saúde na modalidade residências em saúde",
+    "indicador": "Participantes Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 960,
+  "fields": {
+    "meta": 175,
+    "descricao": "Qualificar trabalhadores do SUS em Gestão Hospitalar",
+    "indicador": "Participantes Qualificados e Certificados",
+    "unidade": "Unidade",
+    "valor_previsto": "100.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 961,
+  "fields": {
+    "meta": 176,
+    "descricao": "Realizar o censo da força de trabalho do SUS, no estado como um todo, através do mapeamento de trabalhadores e unidade de saúde, de acordo com os dados obtidos junto às fontes oficiais (IBGE, CNES e Receita Federal)",
+    "indicador": "Força de trabalho do SUS mapeada no estado",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.70"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 962,
+  "fields": {
+    "meta": 176,
+    "descricao": "Dimensionar a força de trabalho nas 11 UPAS da rede estadual",
+    "indicador": "Força de trabalho nas UPAs dimensionada",
+    "unidade": "Porcentagem",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 963,
+  "fields": {
+    "meta": 176,
+    "descricao": "Ampliar a atuação do Projeto QualiSES Cuidando de quem Cuida para as Unidades de Saúde da Rede Estadual, localizadas na capital",
+    "indicador": "Unidades da rede estadual de saúde localizadas na capital",
+    "unidade": "Porcentagem",
+    "valor_previsto": "0.30"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 964,
+  "fields": {
+    "meta": 177,
+    "descricao": "Apoiar a qualificação da planificação por meio de tutores regionais, fortalecendo a Atenção Primária à Saúde nos municípios maranhenses, com a realização de 5 oficinas tutoriais por região de saúde",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "90.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 965,
+  "fields": {
+    "meta": 177,
+    "descricao": "Capacitar os municípios e oferecer apoio técnico para o alcance dos indicadores do programa Cuidar de Todos, por meio da realização de 1 oficina de indicadores em cada região de saúde.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "18.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 966,
+  "fields": {
+    "meta": 177,
+    "descricao": "Realizar oficinas com gestores das Unidades Regionais de Saúde (URS) para acompanhamento e monitoramento dos resultados previstos e alcançados nos respectivos Planos de Trabalho.",
+    "indicador": "Oficinas Realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 967,
+  "fields": {
+    "meta": 177,
+    "descricao": "Apoiar a organização das reuniões plenárias das Comissões Intergestores Regionais (CIR), garantindo sua realização mensal em todas as regiões de saúde",
+    "indicador": "Reuniões realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "180.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 968,
+  "fields": {
+    "meta": 177,
+    "descricao": "Realizar, no mínimo, 6 reuniões anuais dos Comitês de Prevenção da Mortalidade Materna, Infantil e Fetal em cada região de saúde.",
+    "indicador": "Reuniões realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "108.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 969,
+  "fields": {
+    "meta": 177,
+    "descricao": "Realizar a distribuição de insumos e imunobiológicos destinados aos municípios de todas as regiões de saúde.",
+    "indicador": "Distribuições realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "180.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 970,
+  "fields": {
+    "meta": 177,
+    "descricao": "Desenvolver ações de qualificação e monitoramento para o fortalecimento da vigilância em saúde, abrangendo o controle de arboviroses e vírus respiratórios, a melhoria dos sistemas SIM, SINASC e SINAN, além da resposta a situações de emergência em saúde pública.",
+    "indicador": "Ações realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "650.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 971,
+  "fields": {
+    "meta": 178,
+    "descricao": "Realizar oficinas e Workshop de Comissões Intersetoriais de Saúde do Trabalhador e da Trabalhadora (CISTT) Municipais do Maranhão para a implantação/implementação de Comissões Intersetoriais de STT (Saúde do Trabalhador e da Trabalhadora) em Conselhos Municipais de Saúde).",
+    "indicador": "Ações realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "34.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 972,
+  "fields": {
+    "meta": 178,
+    "descricao": "Realizar Oficinas Participa+, plenárias, campanhas informativas e curso EaD para fortalecer o controle social no SUS.",
+    "indicador": "Ações realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "31.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 973,
+  "fields": {
+    "meta": 178,
+    "descricao": "Realizar visitas guiadas para fins de monitoramento da execução da Política Estadual de Saúde (ações, serviços de Saúde e a gestão do SUS).",
+    "indicador": "Ações realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "19.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 974,
+  "fields": {
+    "meta": 179,
+    "descricao": "Apoiar a criação de Conselhos Municipais sobre Drogas, com oficinas de educação permanente.",
+    "indicador": "Conselhos Apoiados",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 975,
+  "fields": {
+    "meta": 179,
+    "descricao": "Monitorar o Plano Estadual sobre Drogas",
+    "indicador": "Monitoramentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "6.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 976,
+  "fields": {
+    "meta": 179,
+    "descricao": "Monitorar os serviços da Rede de Atenção Psicossocial (RAPS) e comunidades terapêuticas",
+    "indicador": "Monitoramentos realizados",
+    "unidade": "Unidade",
+    "valor_previsto": "30.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 977,
+  "fields": {
+    "meta": 179,
+    "descricao": "Implantar o Sistema Estadual de Políticas Sobre Drogas.",
+    "indicador": "Sistema Implantado",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 978,
+  "fields": {
+    "meta": 179,
+    "descricao": "Realizar Pré-Conferências Macrorregionais sobre Drogas.",
+    "indicador": "Pré-conferências realizadas",
+    "unidade": "Unidade",
+    "valor_previsto": "3.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 979,
+  "fields": {
+    "meta": 179,
+    "descricao": "Realizar a Conferência Estadual de Políticas sobre Drogas.",
+    "indicador": "Conferência Realizada",
+    "unidade": "Unidade",
+    "valor_previsto": "1.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 980,
+  "fields": {
+    "meta": 180,
+    "descricao": "Premiar os municípios com o alcance dos melhores indicadores do Programa Cuidar de Todos.",
+    "indicador": "Municípios Premiados",
+    "unidade": "Unidade",
+    "valor_previsto": "38.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 981,
+  "fields": {
+    "meta": 181,
+    "descricao": "Transferência mensal de recurso financeiro da contrapartida estadual aos 217 municípios para aquisição dos medicamentos e insumos do componente básico da Assistência Farmacêutica conforme Portaria GM/MS nº 1.555 de 30/07/2013, Portaria nº 3.193/GM/MS de 09/12/2019 e Pactuação na comissão intergestores Bipartite CIB/MA, conforme resolução nº 96/2014 de 23 de maio de 2014.",
+    "indicador": "Municípios",
+    "unidade": "Unidade",
+    "valor_previsto": "217.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 982,
+  "fields": {
+    "meta": 182,
+    "descricao": "Realizar duas compras compartilhadas de medicamentos pelo Consórcio Brasil Central",
+    "indicador": "Compras",
+    "unidade": "Unidade",
+    "valor_previsto": "2.00"
+  }
+},
+{
+  "model": "core.atividade",
+  "pk": 983,
+  "fields": {
+    "meta": 183,
+    "descricao": "Realizar transferência de recursos financeiros da Contrapartida Estadual para custeio do componente SAMU 192, aprovado pelo Estado e habilitado pelo Ministério da Saúde, em consonância a Portaria de Consolidação nº 3, de 28 de setembro de 2017 e Portaria nº 958, de 17 de Julho de 2023, que define que as despesas de custeio mensal do componente SAMU 192 são de responsabilidade compartilhada, de forma tripartite, entre a União, os estados, o Distrito Federal e os municípios.",
+    "indicador": "Parcelas mensais de repasse financeiro",
+    "unidade": "Unidade",
+    "valor_previsto": "60.00"
+  }
+},
+{
+  "model": "monitoramento.ciclo",
+  "pk": 5,
+  "fields": {
+    "ano": 2026,
+    "quadrimestre": 2,
+    "pas_ano": null,
+    "dt_abertura": "2026-05-01",
+    "dt_encerramento": "2026-08-31",
+    "situacao": "aberto"
+  }
+}
+]
