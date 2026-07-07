@@ -17,7 +17,7 @@ class DiretrizSerializer(serializers.ModelSerializer):
 class AtividadeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Atividade
-        fields = ['id', 'meta', 'descricao', 'indicador', 'unidade', 'valor_previsto']
+        fields = ['id', 'meta', 'codigo', 'descricao', 'indicador', 'unidade', 'valor_previsto']
 
 
 class MetaSerializer(serializers.ModelSerializer):

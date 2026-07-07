@@ -507,7 +507,10 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                     {meta.atividades.map(a => (
                       <tr key={a.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <td className="px-4 py-3 text-gray-700 dark:text-gray-300 leading-snug">{a.descricao}</td>
+                        <td className="px-4 py-3 text-gray-700 dark:text-gray-300 leading-snug">
+                          {a.codigo && <span className="text-xs font-mono text-gray-400 dark:text-gray-500 mr-2">{a.codigo}</span>}
+                          {a.descricao}
+                        </td>
                         <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs leading-snug">{a.indicador || '—'}</td>
                         <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{a.unidade || '—'}</td>
                         <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{fmt(a.valor_previsto)}</td>
