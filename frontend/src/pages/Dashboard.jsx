@@ -379,9 +379,18 @@ export default function Dashboard() {
 
   const { data: registros = [] } = useQuery({
     queryKey: ['registros-dashboard', cicloAtual?.id],
-    queryFn: () => cicloAtual
-      ? api.get(`/registros/?ciclo=${cicloAtual.id}`).then(r => r.data.results ?? r.data)
-      : [],
+    queryFn: async () => {
+      if (!cicloAtual) return []
+      const results = []
+      let page = 1
+      while (true) {
+        const r = await api.get(`/registros/?ciclo=${cicloAtual.id}&page=${page}&page_size=100`)
+        results.push(...(r.data.results ?? []))
+        if (!r.data.next) break
+        page++
+      }
+      return results
+    },
     enabled: !!cicloAtual,
   })
 
