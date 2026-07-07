@@ -923,10 +923,10 @@ export default function DOMI() {
     enabled: !!objetivoSel,
   })
 
-  const { data: registros = [] } = useQuery({
+  const { data: registrosDomi = [] } = useQuery({
     queryKey: ['registros-domi', objetivoSel, cicloAtual?.id],
     queryFn: () => cicloAtual && objetivoSel
-      ? api.get(`/registros/?ciclo=${cicloAtual.id}&meta__objetivo=${objetivoSel}`)
+      ? api.get(`/registros/?ciclo=${cicloAtual.id}&meta__objetivo=${objetivoSel}&page_size=200`)
           .then(r => r.data.results ?? r.data)
       : [],
     enabled: !!cicloAtual && !!objetivoSel,
@@ -976,7 +976,7 @@ export default function DOMI() {
     return progresso(metas.length, metas.filter(m => metasPreenchidas.has(m.id)).length)
   }
 
-  const statusPorMeta = Object.fromEntries(registros.map(r => [r.meta, r]))
+  const statusPorMeta = Object.fromEntries(todosRegistros.map(r => [r.meta, r]))
 
   const diretrizAtual = diretrizes.find(d => d.id === diretrizSel)
   const objetivoAtual = objetivos.find(o => o.id === objetivoSel)
