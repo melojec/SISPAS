@@ -8,8 +8,9 @@ const NAV = [
   { to: '/relatorios',           label: 'Relatórios',           icone: '📄', perfis: null },
   { to: '/analise-indicadores', label: 'Análise de Indicadores', icone: '📎', perfis: null },
   { to: '/ciclos',     label: 'Ciclos',     icone: '🔄', perfis: ['administrador','asplan'] },
-  { to: '/usuarios',   label: 'Usuários',   icone: '👥', perfis: ['administrador'] },
+  { to: '/usuarios',    label: 'Usuários',    icone: '👥', perfis: ['administrador'] },
   { to: '/auditoria',  label: 'Auditoria',  icone: '🔍', perfis: ['administrador','asplan'] },
+  { to: '/importar-pas', label: 'Importar PAS', icone: '📥', perfis: ['administrador'] },
 ]
 
 export default function Sidebar() {
