@@ -6,10 +6,28 @@ import api from '../services/api'
 import useAuthStore from '../store/authStore'
 
 // ── Modal de preenchimento da meta ────────────────────────────────────────────
+const isPorcentagem = (unidade) =>
+  (unidade || '').toLowerCase().includes('porcentagem') || (unidade || '').trim() === '%'
+
 const soNumeros = (e) => {
   if (['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return
   if (!/^\d$/.test(e.key)) e.preventDefault()
 }
+
+const soNumerosDecimal = (e) => {
+  if (['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return
+  if (!/[\d,]/.test(e.key)) e.preventDefault()
+}
+
+// Formata número para exibição: usa vírgula como separador decimal, sufixo % se porcentagem
+const fmtValor = (v, unidade) => {
+  const n = Number(v ?? 0)
+  const str = n.toLocaleString('pt-BR', { maximumFractionDigits: 4 })
+  return isPorcentagem(unidade) ? `${str}%` : str
+}
+
+// Converte string com vírgula para float
+const parseDecimal = (s) => parseFloat(String(s ?? '').replace(',', '.'))
 
 function GraficoProgresso({ meta, ciclo, onClose }) {
   const { data: registro } = useQuery({
@@ -226,7 +244,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
       const registroPayload = {
-        realizado: dados[`realizado_q${cicloQ}`] !== '' ? parseFloat(dados[`realizado_q${cicloQ}`]) : 0,
+        realizado: dados[`realizado_q${cicloQ}`] !== '' ? parseDecimal(dados[`realizado_q${cicloQ}`]) : 0,
         problema:  dados.problema,
         acao:      dados.acao,
         analise:   dados.analise,
@@ -247,7 +265,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
           if (raw === '' || raw === undefined || raw === null) {
             // campo não tocado — não cria nem altera
           } else {
-            const valor = parseFloat(raw)
+            const valor = parseDecimal(raw)
             if (existente) {
               saves.push(api.patch(`/execucoes/${existente.id}/`, { valor_realizado: valor }))
             } else {
@@ -334,7 +352,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
     },
   })
 
-  const fmt = (v) => Number(v ?? 0).toLocaleString('pt-BR')
+  const fmt = (v, unidade) => fmtValor(v, unidade)
   const cicloQ = ciclo?.quadrimestre
   const isAdmin = user?.perfil === 'administrador'
   const podeEditar = !registroExistente?.validado_asplan && ciclo?.esta_aberto
@@ -458,7 +476,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ].map(({ label, valor }) => (
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div key={label} className="rounded-lg px-4 py-2 text-center border bg-white dark:bg-gray-700 border-blue-200 dark:border-blue-700">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-base font-bold mt-0.5 text-gray-800 dark:text-gray-100">{fmt(valor)}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p className="text-base font-bold mt-0.5 text-gray-800 dark:text-gray-100">{fmt(valor, meta.unidade)}</p>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </div>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ))}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </div>
@@ -482,12 +500,11 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                       {q}º Quadrimestre
                     </p>
                     <input
-                      type="number"
-                      step="1"
-                      min="0"
+                      type="text"
+                      inputMode={isPorcentagem(meta.unidade) ? 'decimal' : 'numeric'}
                       disabled={!podePreencher}
                       placeholder="-"
-                      onKeyDown={soNumeros}
+                      onKeyDown={isPorcentagem(meta.unidade) ? soNumerosDecimal : soNumeros}
                       className={`w-full text-center border rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors ${
                         podePreencher
                           ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
@@ -527,7 +544,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                         </td>
                         <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs leading-snug">{a.indicador || '—'}</td>
                         <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{a.unidade || '—'}</td>
-                        <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{fmt(a.valor_previsto)}</td>
+                        <td className="px-3 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">{fmt(a.valor_previsto, a.unidade)}</td>
                         {[1, 2, 3].map(q => {
                           const cicloQ_ = ciclosByQ[q]
                           const isAtivo = cicloQ === q
@@ -539,9 +556,8 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                               className={`px-3 py-3 text-center ${isAtivo ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                             >
                               <input
-                                type="number"
-                                step="1"
-                                min="0"
+                                type="text"
+                                inputMode={isPorcentagem(a.unidade) ? 'decimal' : 'numeric'}
                                 disabled={!podePreencher}
                                 className={`w-20 text-center border rounded-lg px-2 py-1.5 text-sm transition-colors ${
                                   isAtivo && cicloQ_
@@ -549,7 +565,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                     : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
                                 }`}
                                 placeholder="-"
-                                onKeyDown={soNumeros}
+                                onKeyDown={isPorcentagem(a.unidade) ? soNumerosDecimal : soNumeros}
                                 {...register(`exec_${a.id}_q${q}`)}
                               />
                             </td>
