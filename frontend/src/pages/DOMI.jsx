@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import api from '../services/api'
 import useAuthStore from '../store/authStore'
+import RichTextEditor from '../components/RichTextEditor'
 
 // ── Modal de preenchimento da meta ────────────────────────────────────────────
 const isPorcentagem = (unidade) =>
@@ -254,7 +255,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
     return d
   }
 
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm({ values: buildDefaults() })
+  const { register, handleSubmit, control, formState: { isSubmitting } } = useForm({ values: buildDefaults() })
 
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
@@ -600,12 +601,17 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
               <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                 Atividades Executadas e Não Planejadas
               </label>
-              <textarea
-                rows={4}
-                disabled={!podeEditar}
-                placeholder="Descreva as atividades que foram executadas mas não realizadas conforme o planejado."
-                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-y disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                {...register('atividades_nao_planejadas')}
+              <Controller
+                name="atividades_nao_planejadas"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={!podeEditar}
+                    placeholder="Descreva as atividades que foram executadas mas não realizadas conforme o planejado."
+                  />
+                )}
               />
             </div>
           )}
@@ -670,11 +676,16 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {label} <span className="text-red-500">*</span>
                     </label>
-                    <textarea
-                      rows={3}
-                      disabled={!podeEditar}
-                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-y disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400"
-                      {...register(name)}
+                    <Controller
+                      name={name}
+                      control={control}
+                      render={({ field }) => (
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                          disabled={!podeEditar}
+                        />
+                      )}
                     />
                   </div>
                 ))}
