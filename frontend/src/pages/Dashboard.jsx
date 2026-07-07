@@ -392,7 +392,7 @@ export default function Dashboard() {
 
   const totalRegistros = registros.length
   const validados = registros.filter(r => r.validado_asplan).length
-  const pendentes = totalRegistros - validados
+  const validadosCoord = registros.filter(r => r.validado_coord).length
 
   return (
     <div className="space-y-6">
@@ -407,7 +407,7 @@ export default function Dashboard() {
         <StatCard label="Total de Metas"      valor={totalMetas}      cor="bg-blue-900" />
         <StatCard label="Registros no Ciclo"  valor={totalRegistros}  cor="bg-indigo-700" />
         <StatCard label="Validados (ASPLAN)"  valor={validados}       cor="bg-green-700" />
-        <StatCard label="Pendentes"           valor={pendentes}       cor="bg-amber-600" />
+        <StatCard label="Validado (Coordenação)" valor={validadosCoord} cor="bg-amber-600" />
       </div>
 
       <GraficoMetas registros={registros} totalMetas={totalMetas} todasMetas={todasMetas} />
