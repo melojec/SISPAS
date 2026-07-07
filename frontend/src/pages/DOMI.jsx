@@ -9,6 +9,9 @@ import useAuthStore from '../store/authStore'
 const isPorcentagem = (unidade) =>
   (unidade || '').toLowerCase().includes('porcentagem') || (unidade || '').trim() === '%'
 
+const isUnidade = (unidade) =>
+  (unidade || '').toLowerCase().trim() === 'unidade'
+
 const soNumeros = (e) => {
   if (['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return
   if (!/^\d$/.test(e.key)) e.preventDefault()
@@ -19,11 +22,21 @@ const soNumerosDecimal = (e) => {
   if (!/[\d,]/.test(e.key)) e.preventDefault()
 }
 
-// Formata número para exibição: usa vírgula como separador decimal, sufixo % se porcentagem
+// Formata número para exibição com vírgula; sem decimais se unidade = "Unidade"; sufixo % se porcentagem
 const fmtValor = (v, unidade) => {
   const n = Number(v ?? 0)
-  const str = n.toLocaleString('pt-BR', { maximumFractionDigits: 4 })
+  const decimais = isUnidade(unidade) ? 0 : 4
+  const str = n.toLocaleString('pt-BR', { maximumFractionDigits: decimais })
   return isPorcentagem(unidade) ? `${str}%` : str
+}
+
+// Formata valor para usar como valor inicial de input (vírgula; sem zeros desnecessários)
+const fmtInput = (v, unidade) => {
+  if (v === undefined || v === null || v === '') return ''
+  const n = Number(v)
+  if (isNaN(n)) return ''
+  const decimais = isUnidade(unidade) ? 0 : 4
+  return n.toLocaleString('pt-BR', { maximumFractionDigits: decimais })
 }
 
 // Converte string com vírgula para float
@@ -225,14 +238,16 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       atividades_nao_planejadas: registroExistente?.atividades_nao_planejadas ?? '',
     }
     ;[1, 2, 3].forEach(q => {
-      d[`realizado_q${q}`] = registrosByQ[q] !== undefined ? String(registrosByQ[q].realizado) : ''
+      d[`realizado_q${q}`] = registrosByQ[q] !== undefined
+        ? fmtInput(registrosByQ[q].realizado, meta.unidade)
+        : ''
     })
     meta.atividades?.forEach(a => {
       [1, 2, 3].forEach(q => {
         const cId = ciclosByQ[q]?.id
         const key = `exec_${a.id}_q${q}`
         d[key] = cId && execMap[`${a.id}_${cId}`] !== undefined
-          ? String(execMap[`${a.id}_${cId}`].valor_realizado)
+          ? fmtInput(execMap[`${a.id}_${cId}`].valor_realizado, a.unidade)
           : ''
       })
     })
