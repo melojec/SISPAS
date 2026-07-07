@@ -207,13 +207,15 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       atividades_nao_planejadas: registroExistente?.atividades_nao_planejadas ?? '',
     }
     ;[1, 2, 3].forEach(q => {
-      d[`realizado_q${q}`] = registrosByQ[q]?.realizado ?? 0
+      d[`realizado_q${q}`] = registrosByQ[q] !== undefined ? String(registrosByQ[q].realizado) : ''
     })
     meta.atividades?.forEach(a => {
       [1, 2, 3].forEach(q => {
         const cId = ciclosByQ[q]?.id
         const key = `exec_${a.id}_q${q}`
-        d[key] = cId ? (execMap[`${a.id}_${cId}`]?.valor_realizado ?? 0) : 0
+        d[key] = cId && execMap[`${a.id}_${cId}`] !== undefined
+          ? String(execMap[`${a.id}_${cId}`].valor_realizado)
+          : ''
       })
     })
     return d
@@ -224,7 +226,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
       const registroPayload = {
-        realizado: dados[`realizado_q${cicloQ}`] ?? 0,
+        realizado: dados[`realizado_q${cicloQ}`] !== '' ? parseFloat(dados[`realizado_q${cicloQ}`]) : 0,
         problema:  dados.problema,
         acao:      dados.acao,
         analise:   dados.analise,
@@ -240,12 +242,17 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
         [1, 2, 3].forEach(q => {
           const cicloQ = ciclosByQ[q]
           if (!cicloQ) return
-          const valor = parseFloat(dados[`exec_${a.id}_q${q}`] ?? 0)
+          const raw = dados[`exec_${a.id}_q${q}`]
           const existente = execMap[`${a.id}_${cicloQ.id}`]
-          if (existente) {
-            saves.push(api.patch(`/execucoes/${existente.id}/`, { valor_realizado: valor }))
-          } else if (valor > 0) {
-            saves.push(api.post('/execucoes/', { atividade: a.id, ciclo: cicloQ.id, valor_realizado: valor }))
+          if (raw === '' || raw === undefined || raw === null) {
+            // campo não tocado — não cria nem altera
+          } else {
+            const valor = parseFloat(raw)
+            if (existente) {
+              saves.push(api.patch(`/execucoes/${existente.id}/`, { valor_realizado: valor }))
+            } else {
+              saves.push(api.post('/execucoes/', { atividade: a.id, ciclo: cicloQ.id, valor_realizado: valor }))
+            }
           }
         })
       })
@@ -479,6 +486,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                       step="1"
                       min="0"
                       disabled={!podePreencher}
+                      placeholder="-"
                       onKeyDown={soNumeros}
                       className={`w-full text-center border rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors ${
                         podePreencher
@@ -540,6 +548,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                     ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
                                     : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
                                 }`}
+                                placeholder="-"
                                 onKeyDown={soNumeros}
                                 {...register(`exec_${a.id}_q${q}`)}
                               />
@@ -580,11 +589,11 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 nome: `exec_${a.id}_q${cicloQ_}`,
                 label: a.descricao.length > 80 ? a.descricao.slice(0, 80) + '…' : a.descricao,
                 obrigatorio: false,
-                preenchido: parseFloat(d[`exec_${a.id}_q${cicloQ_}`] ?? 0) > 0,
-                avisoVazio: 'Não preenchida — será salva como 0',
+                preenchido: d[`exec_${a.id}_q${cicloQ_}`] !== '' && d[`exec_${a.id}_q${cicloQ_}`] !== undefined,
+                avisoVazio: 'Não preenchida — não será salva',
               }))
               const campos = [
-                { nome: 'realizado', label: 'Realizado por Quadrimestre', obrigatorio: true, preenchido: parseFloat(d[`realizado_q${cicloQ_}`] ?? 0) > 0 },
+                { nome: 'realizado', label: 'Realizado por Quadrimestre', obrigatorio: true, preenchido: d[`realizado_q${cicloQ_}`] !== '' && d[`realizado_q${cicloQ_}`] !== undefined },
                 { nome: 'problema', label: 'Problemas Encontrados no Quadrimestre', obrigatorio: true, preenchido: !!(d.problema?.trim()) },
                 { nome: 'acao', label: 'Ações Realizadas para o Enfrentamento dos Problemas', obrigatorio: true, preenchido: !!(d.acao?.trim()) },
                 { nome: 'analise', label: 'Análises e Considerações (DigiSUS)', obrigatorio: true, preenchido: !!(d.analise?.trim()) },
