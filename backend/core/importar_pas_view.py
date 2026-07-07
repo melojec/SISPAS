@@ -8,6 +8,19 @@ from usuarios.permissions import IsAdministrador
 from .models import Area, Diretriz, Objetivo, Meta, Atividade
 
 
+def _to_float(value, unidade=''):
+    """Converte valor numérico para float.
+    Células de porcentagem no Excel são armazenadas como fração (0.15 = 15%).
+    Se a unidade for Porcentagem, multiplica por 100."""
+    try:
+        v = float(value or 0)
+    except (ValueError, TypeError):
+        v = 0.0
+    if v != 0 and 'porcentagem' in str(unidade or '').lower():
+        v = round(v * 100, 10)
+    return v
+
+
 class ImportarPASView(APIView):
     parser_classes = [MultiPartParser]
     permission_classes = [IsAdministrador]
@@ -103,8 +116,8 @@ class ImportarPASView(APIView):
                     'descricao': descricao or '',
                     'indicador': indicador or '',
                     'unidade': unidade or '',
-                    'previsto_ppa': float(previsto_ppa or 0),
-                    'previsto_exercicio': float(previsto_ano or 0),
+                    'previsto_ppa': _to_float(previsto_ppa, unidade),
+                    'previsto_exercicio': _to_float(previsto_ano, unidade),
                 }
             )
             metas[str(cod_meta)] = m
@@ -124,10 +137,7 @@ class ImportarPASView(APIView):
             if not meta:
                 ignoradas_a += 1
                 continue
-            try:
-                valor = float(valor_meta) if valor_meta not in (None, 'NULL', '') else 0
-            except (ValueError, TypeError):
-                valor = 0
+            valor = _to_float(valor_meta if valor_meta not in (None, 'NULL', '') else 0, unidade_at)
             _, criado = Atividade.objects.update_or_create(
                 meta=meta,
                 descricao=str(descricao),

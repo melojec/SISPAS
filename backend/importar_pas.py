@@ -13,6 +13,16 @@ from datetime import date
 from core.models import Area, Diretriz, Objetivo, Meta, Atividade
 from monitoramento.models import Ciclo
 
+
+def _to_float(value, unidade=''):
+    try:
+        v = float(value or 0)
+    except (ValueError, TypeError):
+        v = 0.0
+    if v != 0 and 'porcentagem' in str(unidade or '').lower():
+        v = round(v * 100, 10)
+    return v
+
 ARQUIVO = '../Base PAS.xlsx'
 
 print('Abrindo planilha...')
@@ -76,8 +86,8 @@ for row in ws.iter_rows(min_row=2, values_only=True):
             'descricao': descricao or '',
             'indicador': indicador or '',
             'unidade': unidade or '',
-            'previsto_ppa': float(previsto_ppa or 0),
-            'previsto_exercicio': float(previsto_ano or 0),
+            'previsto_ppa': _to_float(previsto_ppa, unidade),
+            'previsto_exercicio': _to_float(previsto_ano, unidade),
         }
     )
     metas[str(cod_meta)] = m
@@ -97,10 +107,7 @@ for row in ws.iter_rows(min_row=2, values_only=True):
     if not meta:
         atividades_sem_meta += 1
         continue
-    try:
-        valor = float(valor_meta) if valor_meta not in (None, 'NULL', '') else 0
-    except (ValueError, TypeError):
-        valor = 0
+    valor = _to_float(valor_meta if valor_meta not in (None, 'NULL', '') else 0, unidade_at)
     _, criado = Atividade.objects.update_or_create(
         meta=meta,
         descricao=str(descricao),
