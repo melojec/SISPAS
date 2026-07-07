@@ -11,10 +11,20 @@ from .serializers import (
 from usuarios.permissions import IsASPLAN, IsUsuarioAtivo
 
 def _nat(table):
-    """Ordenação natural qualificada. Usa SUBSTRING_INDEX no MySQL/MariaDB; fallback simples no SQLite."""
+    """Ordenação natural por código numérico pontilhado (ex: 1.2.10).
+    MySQL/MariaDB: SUBSTRING_INDEX com backticks.
+    PostgreSQL: SPLIT_PART com aspas duplas.
+    SQLite: fallback lexicográfico."""
     engine = settings.DATABASES['default']['ENGINE']
     if 'sqlite' in engine:
         return ['codigo']
+    if 'postgresql' in engine or 'postgis' in engine:
+        return [
+            RawSQL(f'CAST(SPLIT_PART("{table}"."codigo", \'.\', 1) AS INTEGER)', []),
+            RawSQL(f'CAST(NULLIF(SPLIT_PART("{table}"."codigo", \'.\', 2), \'\') AS INTEGER)', []),
+            RawSQL(f'CAST(NULLIF(SPLIT_PART("{table}"."codigo", \'.\', 3), \'\') AS INTEGER)', []),
+        ]
+    # MySQL / MariaDB
     return [
         RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
         RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
