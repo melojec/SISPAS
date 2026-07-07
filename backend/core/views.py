@@ -92,7 +92,7 @@ class MetaViewSet(viewsets.ModelViewSet):
 
 
 class AtividadeViewSet(viewsets.ModelViewSet):
-    queryset = Atividade.objects.select_related('meta').order_by('id')
+    queryset = Atividade.objects.select_related('meta').order_by(*_nat('atividade'))
     serializer_class = AtividadeSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['meta']

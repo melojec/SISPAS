@@ -72,6 +72,7 @@ class Meta(models.Model):
 
 class Atividade(models.Model):
     meta = models.ForeignKey(Meta, on_delete=models.CASCADE, related_name='atividades')
+    codigo = models.CharField(max_length=20, blank=True, default='')
     descricao = models.TextField()
     indicador = models.TextField(blank=True)
     unidade = models.CharField(max_length=50, blank=True)

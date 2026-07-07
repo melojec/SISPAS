@@ -105,6 +105,7 @@ for row in ws.iter_rows(min_row=2, values_only=True):
         meta=meta,
         descricao=str(descricao),
         defaults={
+            'codigo': str(cod_ativ),
             'valor_previsto': valor,
             'indicador': str(indicador_at) if indicador_at else '',
             'unidade': str(unidade_at) if unidade_at else '',
