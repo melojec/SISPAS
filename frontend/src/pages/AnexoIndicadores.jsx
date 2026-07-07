@@ -9,7 +9,7 @@ export default function AnexoIndicadores() {
 
   const { data: anexos = [], isLoading } = useQuery({
     queryKey: ['anexos-indicadores'],
-    queryFn: () => api.get('/anexos-indicadores/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/anexos-indicadores/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const enviar = async (file) => {

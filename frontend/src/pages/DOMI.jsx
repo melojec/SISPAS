@@ -204,14 +204,14 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
   const { data: registrosAno = [] } = useQuery({
     queryKey: ['registros-ano', meta.id, ano],
-    queryFn: () => api.get(`/registros/?meta=${meta.id}&ciclo__ano=${ano}`)
+    queryFn: () => api.get(`/registros/?meta=${meta.id}&ciclo__ano=${ano}&page_size=500`)
       .then(r => r.data.results ?? r.data),
     enabled: !!ano,
   })
 
   const { data: ciclosAno = [] } = useQuery({
     queryKey: ['ciclos-ano', ano],
-    queryFn: () => api.get(`/ciclos/?ano=${ano}`).then(r => r.data.results ?? r.data),
+    queryFn: () => api.get(`/ciclos/?ano=${ano}&page_size=500`).then(r => r.data.results ?? r.data),
     enabled: !!ano,
   })
   const ciclosByQ = Object.fromEntries(ciclosAno.map(c => [c.quadrimestre, c]))
@@ -224,7 +224,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
   const { data: execucoes = [] } = useQuery({
     queryKey: ['execucoes', meta.id, ano],
-    queryFn: () => api.get(`/execucoes/?atividade__meta=${meta.id}&ciclo__ano=${ano}`)
+    queryFn: () => api.get(`/execucoes/?atividade__meta=${meta.id}&ciclo__ano=${ano}&page_size=500`)
       .then(r => r.data.results ?? r.data),
     enabled: !!ano,
   })
@@ -773,7 +773,7 @@ function ModalAnexoIndicadores({ onClose }) {
 
   const { data: anexos = [], isLoading } = useQuery({
     queryKey: ['anexos-indicadores'],
-    queryFn: () => api.get('/anexos-indicadores/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/anexos-indicadores/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const enviar = async (file) => {
@@ -908,7 +908,7 @@ export default function DOMI() {
 
   const { data: diretrizes = [] } = useQuery({
     queryKey: ['diretrizes'],
-    queryFn: () => api.get('/diretrizes/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/diretrizes/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const { data: objetivos = [] } = useQuery({

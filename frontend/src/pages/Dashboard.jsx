@@ -369,7 +369,7 @@ export default function Dashboard() {
 
   const { data: diretrizes = [] } = useQuery({
     queryKey: ['diretrizes-lista'],
-    queryFn: () => api.get('/diretrizes/?page_size=200').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/diretrizes/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const { data: cicloAtual } = useQuery({

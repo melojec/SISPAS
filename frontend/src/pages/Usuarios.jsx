@@ -85,12 +85,12 @@ export default function Usuarios() {
 
   const { data: usuarios = [] } = useQuery({
     queryKey: ['usuarios'],
-    queryFn: () => api.get('/usuarios/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/usuarios/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const { data: areas = [] } = useQuery({
     queryKey: ['areas'],
-    queryFn: () => api.get('/areas/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/areas/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const toggleAtivo = useMutation({

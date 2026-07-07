@@ -10,7 +10,7 @@ export default function Ciclos() {
 
   const { data: ciclos = [] } = useQuery({
     queryKey: ['ciclos'],
-    queryFn: () => api.get('/ciclos/').then(r => r.data.results ?? r.data),
+    queryFn: () => api.get('/ciclos/?page_size=500').then(r => r.data.results ?? r.data),
   })
 
   const anoAtual = new Date().getFullYear()
