@@ -140,9 +140,9 @@ class ImportarPASView(APIView):
             valor = _to_float(valor_meta if valor_meta not in (None, 'NULL', '') else 0, unidade_at)
             _, criado = Atividade.objects.update_or_create(
                 meta=meta,
-                descricao=str(descricao),
+                codigo=str(cod_ativ),
                 defaults={
-                    'codigo': str(cod_ativ),
+                    'descricao': str(descricao),
                     'valor_previsto': valor,
                     'indicador': str(indicador_at) if indicador_at else '',
                     'unidade': str(unidade_at) if unidade_at else '',
