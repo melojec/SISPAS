@@ -23,11 +23,13 @@ def _nat(table):
             RawSQL(f'CAST(SPLIT_PART("{table}"."codigo", \'.\', 1) AS INTEGER)', []),
             RawSQL(f'CAST(NULLIF(SPLIT_PART("{table}"."codigo", \'.\', 2), \'\') AS INTEGER)', []),
             RawSQL(f'CAST(NULLIF(SPLIT_PART("{table}"."codigo", \'.\', 3), \'\') AS INTEGER)', []),
+            RawSQL(f'CAST(NULLIF(SPLIT_PART("{table}"."codigo", \'.\', 4), \'\') AS INTEGER)', []),
         ]
     # MySQL / MariaDB
     return [
         RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
         RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
+        RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 3), '.', -1) AS UNSIGNED)", []),
         RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', -1) AS UNSIGNED)", []),
     ]
 
