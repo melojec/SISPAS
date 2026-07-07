@@ -20,8 +20,18 @@ class AtividadeSerializer(serializers.ModelSerializer):
         fields = ['id', 'meta', 'codigo', 'descricao', 'indicador', 'unidade', 'valor_previsto']
 
 
+def _nat_key(codigo):
+    """Chave de ordenação natural para códigos pontilhados (ex: 1.2.7.4)."""
+    parts = str(codigo or '').split('.')
+    return [int(p) if p.isdigit() else 0 for p in parts]
+
+
 class MetaSerializer(serializers.ModelSerializer):
-    atividades = AtividadeSerializer(many=True, read_only=True)
+    atividades = serializers.SerializerMethodField()
+
+    def get_atividades(self, obj):
+        qs = sorted(obj.atividades.all(), key=lambda a: _nat_key(a.codigo))
+        return AtividadeSerializer(qs, many=True).data
     area_nome = serializers.CharField(source='area.nome', read_only=True)
     objetivo_codigo = serializers.CharField(source='objetivo.codigo', read_only=True)
     objetivo_diretriz = serializers.IntegerField(source='objetivo.diretriz_id', read_only=True)
