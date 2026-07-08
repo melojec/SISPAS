@@ -49,6 +49,12 @@ class RegistroQuadrimestral(models.Model):
     acao = models.TextField(blank=True)
     analise = models.TextField(blank=True)
     atividades_nao_realizadas = models.TextField(blank=True)
+    municipios_beneficiados = models.ManyToManyField(
+        'core.Municipio',
+        blank=True,
+        related_name='registros',
+        db_table='registro_municipio',
+    )
     validado_coord = models.BooleanField(default=False)
     validado_asplan = models.BooleanField(default=False)
     criado_por = models.ForeignKey(

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+﻿from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.db.models.expressions import RawSQL
@@ -104,3 +104,28 @@ class AtividadeViewSet(viewsets.ModelViewSet):
         if self.action in ('create', 'update', 'partial_update', 'destroy'):
             return [IsASPLAN()]
         return [IsUsuarioAtivo()]
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from collections import defaultdict
+from .models import Municipio
+
+class MunicipioListView(APIView):
+    permission_classes = [IsUsuarioAtivo]
+
+    def get(self, request):
+        qs = Municipio.objects.values('id', 'cod_ibge', 'nome', 'regiao', 'macrorregiao')
+        hier = defaultdict(lambda: defaultdict(list))
+        for m in qs:
+            hier[m['macrorregiao']][m['regiao']].append({'id': m['id'], 'cod_ibge': m['cod_ibge'], 'nome': m['nome']})
+        resultado = [
+            {
+                'macrorregiao': macro,
+                'regioes': [
+                    {'regiao': reg, 'municipios': sorted(muns, key=lambda x: x['nome'])}
+                    for reg, muns in sorted(regioes.items())
+                ],
+            }
+            for macro, regioes in sorted(hier.items())
+        ]
+        return Response(resultado)

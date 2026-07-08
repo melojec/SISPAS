@@ -70,6 +70,22 @@ class Meta(models.Model):
         return f'{self.codigo} — {self.descricao[:60]}'
 
 
+class Municipio(models.Model):
+    cod_ibge = models.CharField(max_length=10, unique=True)
+    nome = models.CharField(max_length=100)
+    regiao = models.CharField(max_length=100)
+    macrorregiao = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Município'
+        verbose_name_plural = 'Municípios'
+        db_table = 'municipio'
+        ordering = ['macrorregiao', 'regiao', 'nome']
+
+    def __str__(self):
+        return self.nome
+
+
 class Atividade(models.Model):
     meta = models.ForeignKey(Meta, on_delete=models.CASCADE, related_name='atividades')
     codigo = models.CharField(max_length=20, blank=True, default='')

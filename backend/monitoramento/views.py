@@ -47,7 +47,7 @@ class RegistroQuadrimestralViewSet(viewsets.ModelViewSet):
         user = self.request.user
         qs = RegistroQuadrimestral.objects.select_related(
             'meta', 'meta__area', 'ciclo', 'criado_por'
-        )
+        ).prefetch_related('municipios_beneficiados')
         from usuarios.models import Usuario
         if user.perfil in (Usuario.ADMINISTRADOR, Usuario.ASPLAN):
             return qs

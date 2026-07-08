@@ -1,5 +1,12 @@
 from rest_framework import serializers
+from core.models import Municipio
 from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores
+
+_INDICADORES_MUNICIPIO = {'nº de municípios beneficiados'}
+
+
+def _is_municipio(indicador):
+    return (indicador or '').strip().lower() in _INDICADORES_MUNICIPIO
 
 
 class CicloSerializer(serializers.ModelSerializer):
@@ -19,15 +26,23 @@ class RegistroQuadrimestralSerializer(serializers.ModelSerializer):
     meta_descricao = serializers.CharField(source='meta.descricao', read_only=True)
     meta_previsto = serializers.DecimalField(source='meta.previsto_exercicio', max_digits=15, decimal_places=2, read_only=True)
     meta_unidade = serializers.CharField(source='meta.unidade', read_only=True)
+    meta_indicador = serializers.CharField(source='meta.indicador', read_only=True)
     ciclo_display = serializers.CharField(source='ciclo.__str__', read_only=True)
     criado_por_nome = serializers.CharField(source='criado_por.nome', read_only=True)
+    municipios_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Municipio.objects.all(),
+        source='municipios_beneficiados',
+        required=False,
+    )
 
     class Meta:
         model = RegistroQuadrimestral
         fields = [
-            'id', 'meta', 'meta_codigo', 'meta_descricao', 'meta_previsto', 'meta_unidade',
+            'id', 'meta', 'meta_codigo', 'meta_descricao', 'meta_previsto', 'meta_unidade', 'meta_indicador',
             'ciclo', 'ciclo_display',
-            'realizado', 'problema', 'acao', 'analise', 'atividades_nao_realizadas',
+            'realizado', 'municipios_ids',
+            'problema', 'acao', 'analise', 'atividades_nao_realizadas',
             'validado_coord', 'validado_asplan',
             'criado_por', 'criado_por_nome',
             'criado_em', 'atualizado_em',
@@ -40,9 +55,27 @@ class RegistroQuadrimestralSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Não é possível registrar dados em um ciclo fechado.')
         return data
 
+    def _calc_realizado(self, municipios):
+        return len(set(m.pk for m in municipios))
+
     def create(self, validated_data):
+        municipios = validated_data.pop('municipios_beneficiados', [])
+        meta = validated_data.get('meta')
+        if _is_municipio(getattr(meta, 'indicador', '')):
+            validated_data['realizado'] = self._calc_realizado(municipios)
         validated_data['criado_por'] = self.context['request'].user
-        return super().create(validated_data)
+        instance = super().create(validated_data)
+        instance.municipios_beneficiados.set(municipios)
+        return instance
+
+    def update(self, instance, validated_data):
+        municipios = validated_data.pop('municipios_beneficiados', None)
+        if _is_municipio(instance.meta.indicador) and municipios is not None:
+            validated_data['realizado'] = self._calc_realizado(municipios)
+        instance = super().update(instance, validated_data)
+        if municipios is not None:
+            instance.municipios_beneficiados.set(municipios)
+        return instance
 
 
 class ExecucaoFinanceiraSerializer(serializers.ModelSerializer):

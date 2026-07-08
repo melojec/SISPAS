@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import api from '../services/api'
 import useAuthStore from '../store/authStore'
 import RichTextEditor from '../components/RichTextEditor'
+import MunicipioSelector from '../components/MunicipioSelector'
 
 // ── Modal de preenchimento da meta ────────────────────────────────────────────
+const isMunicipio = (indicador) =>
+  (indicador || '').trim().toLowerCase() === 'nº de municípios beneficiados'
+
 const isPorcentagem = (unidade) =>
   (unidade || '').toLowerCase().includes('porcentagem') || (unidade || '').trim() === '%'
 
@@ -196,6 +200,7 @@ function ModalConfirmacaoSalvar({ campos, onConfirmar, onCancelar, salvando, err
 function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const qc = useQueryClient()
   const [verGrafico, setVerGrafico] = useState(false)
+  const ehMunicipio = isMunicipio(meta.indicador)
 
   const ano = ciclo?.ano
 
@@ -207,6 +212,13 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       : null,
     enabled: !!ciclo,
   })
+
+  const [municipiosSelecionados, setMunicipiosSelecionados] = useState([])
+  useEffect(() => {
+    if (registroExistente?.municipios_ids) {
+      setMunicipiosSelecionados(registroExistente.municipios_ids)
+    }
+  }, [registroExistente?.id])
 
   const { data: registrosAno = [] } = useQuery({
     queryKey: ['registros-ano', meta.id, ano],
@@ -265,11 +277,15 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const salvarTudo = useMutation({
     mutationFn: async (dados) => {
       const registroPayload = {
-        realizado: dados[`realizado_q${cicloQ}`] !== '' ? parseDecimal(dados[`realizado_q${cicloQ}`]) : 0,
         problema:  dados.problema,
         acao:      dados.acao,
         analise:   dados.analise,
         atividades_nao_planejadas: dados.atividades_nao_planejadas,
+      }
+      if (ehMunicipio) {
+        registroPayload.municipios_ids = municipiosSelecionados
+      } else {
+        registroPayload.realizado = dados[`realizado_q${cicloQ}`] !== '' ? parseDecimal(dados[`realizado_q${cicloQ}`]) : 0
       }
       if (registroExistente) {
         await api.patch(`/registros/${registroExistente.id}/`, registroPayload)
@@ -506,38 +522,65 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </div>
 
           {/* Realizado por quadrimestre */}
-          <div>
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-              Realizado por Quadrimestre <span className="font-normal normal-case">({meta.unidade || 'unidade'})</span>
-            </p>
-            <div className="grid grid-cols-3 gap-3 max-w-sm">
-              {[1, 2, 3].map(q => {
-                const isAtivo = cicloQ === q
-                const cicloQ_ = ciclosByQ[q]
-                const podePreencher = podeEditar && isAtivo && !!cicloQ_
-                return (
-                  <div key={q} className={`rounded-lg border px-3 py-2.5 text-center ${isAtivo ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700'}`}>
-                    <p className={`text-xs font-large mb-1.5 ${isAtivo ? 'text-blue-700 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'}`}>
-                      {q}º Quadrimestre
-                    </p>
-                    <input
-                      type="text"
-                      inputMode={isPorcentagem(meta.unidade) ? 'decimal' : 'numeric'}
-                      disabled={!podePreencher}
-                      placeholder="-"
-                      onKeyDown={isPorcentagem(meta.unidade) ? soNumerosDecimal : soNumeros}
-                      className={`w-full text-center border rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors ${
-                        podePreencher
-                          ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-                          : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                      }`}
-                      {...register(`realizado_q${q}`)}
-                    />
-                  </div>
-                )
-              })}
+          {ehMunicipio ? (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                Municípios Beneficiados — {cicloQ}º Quadrimestre
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+                Selecione os municípios beneficiados neste quadrimestre. O realizado é calculado automaticamente.
+              </p>
+              <MunicipioSelector
+                value={municipiosSelecionados}
+                onChange={setMunicipiosSelecionados}
+                disabled={!podeEditar}
+              />
+              {/* Contagens dos outros quadrimestres (somente leitura) */}
+              {[1, 2, 3].filter(q => q !== cicloQ).some(q => registrosByQ[q]) && (
+                <div className="mt-3 flex gap-3">
+                  {[1, 2, 3].filter(q => q !== cicloQ && registrosByQ[q]).map(q => (
+                    <div key={q} className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-center min-w-[90px]">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{q}º Quadrimestre</p>
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">{fmtValor(registrosByQ[q].realizado, 'Unidade')} mun.</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          ) : (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                Realizado por Quadrimestre <span className="font-normal normal-case">({meta.unidade || 'unidade'})</span>
+              </p>
+              <div className="grid grid-cols-3 gap-3 max-w-sm">
+                {[1, 2, 3].map(q => {
+                  const isAtivo = cicloQ === q
+                  const cicloQ_ = ciclosByQ[q]
+                  const podePreencher = podeEditar && isAtivo && !!cicloQ_
+                  return (
+                    <div key={q} className={`rounded-lg border px-3 py-2.5 text-center ${isAtivo ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700'}`}>
+                      <p className={`text-xs font-large mb-1.5 ${isAtivo ? 'text-blue-700 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {q}º Quadrimestre
+                      </p>
+                      <input
+                        type="text"
+                        inputMode={isPorcentagem(meta.unidade) ? 'decimal' : 'numeric'}
+                        disabled={!podePreencher}
+                        placeholder="-"
+                        onKeyDown={isPorcentagem(meta.unidade) ? soNumerosDecimal : soNumeros}
+                        className={`w-full text-center border rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors ${
+                          podePreencher
+                            ? 'border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                            : 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                        }`}
+                        {...register(`realizado_q${q}`)}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Atividades com campos Q1/Q2/Q3 */}
           {meta.atividades?.length > 0 && (
@@ -635,7 +678,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 avisoVazio: 'Não preenchida — não será salva',
               }))
               const campos = [
-                { nome: 'realizado', label: 'Realizado por Quadrimestre', obrigatorio: true, preenchido: d[`realizado_q${cicloQ_}`] !== '' && d[`realizado_q${cicloQ_}`] !== undefined },
+                { nome: 'realizado', label: ehMunicipio ? 'Municípios Beneficiados' : 'Realizado por Quadrimestre', obrigatorio: true, preenchido: ehMunicipio ? municipiosSelecionados.length > 0 : (d[`realizado_q${cicloQ_}`] !== '' && d[`realizado_q${cicloQ_}`] !== undefined) },
                 { nome: 'problema', label: 'Problemas Encontrados no Quadrimestre', obrigatorio: true, preenchido: !!(d.problema?.trim()) },
                 { nome: 'acao', label: 'Ações Realizadas para o Enfrentamento dos Problemas', obrigatorio: true, preenchido: !!(d.acao?.trim()) },
                 { nome: 'analise', label: 'Análises e Considerações (DigiSUS)', obrigatorio: true, preenchido: !!(d.analise?.trim()) },
