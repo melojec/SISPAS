@@ -66,14 +66,15 @@ class MetaPDFView(APIView):
 
         import os, base64
         _logo_candidates = [
-            os.path.join(os.path.dirname(__file__), 'logo_pdf.png'),
-            os.path.join(os.path.dirname(__file__), 'logo.png'),
+            (os.path.join(os.path.dirname(__file__), 'logo_pdf.png'), 'image/png'),
+            (os.path.join(os.path.dirname(__file__), 'logo.png'), 'image/png'),
+            (os.path.join(os.path.dirname(__file__), 'logo.svg'), 'image/svg+xml'),
         ]
         logo_path = ''
-        for _candidate in _logo_candidates:
+        for _candidate, _mime in _logo_candidates:
             if os.path.exists(_candidate):
                 with open(_candidate, 'rb') as f:
-                    logo_path = f'data:image/png;base64,{base64.b64encode(f.read()).decode()}'
+                    logo_path = f'data:{_mime};base64,{base64.b64encode(f.read()).decode()}'
                 break
 
         html_string = render_to_string('relatorios/meta_pdf.html', {
@@ -142,14 +143,15 @@ class TodasMetasPDFView(APIView):
 
         import os, base64
         _logo_candidates = [
-            os.path.join(os.path.dirname(__file__), 'logo_pdf.png'),
-            os.path.join(os.path.dirname(__file__), 'logo.png'),
+            (os.path.join(os.path.dirname(__file__), 'logo_pdf.png'), 'image/png'),
+            (os.path.join(os.path.dirname(__file__), 'logo.png'), 'image/png'),
+            (os.path.join(os.path.dirname(__file__), 'logo.svg'), 'image/svg+xml'),
         ]
         logo_path = ''
-        for _candidate in _logo_candidates:
+        for _candidate, _mime in _logo_candidates:
             if os.path.exists(_candidate):
                 with open(_candidate, 'rb') as f:
-                    logo_path = f'data:image/png;base64,{base64.b64encode(f.read()).decode()}'
+                    logo_path = f'data:{_mime};base64,{base64.b64encode(f.read()).decode()}'
                 break
 
         html_string = render_to_string('relatorios/todas_metas_pdf.html', {

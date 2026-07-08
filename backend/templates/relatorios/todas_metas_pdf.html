@@ -16,8 +16,8 @@
     font-size: 8px; color: #9ca3af; text-align: center; }
 
   /* ── Capa ── */
-  .capa-wrap { width: 100%; border-collapse: collapse; height: 240mm; }
-  .capa-td { vertical-align: middle; text-align: center; }
+  .capa-wrap { width: 100%; border-collapse: collapse; height: 260mm; }
+  .capa-td { vertical-align: middle; text-align: center; height: 240mm; }
   .capa-logo { margin-bottom: 20px; }
   .capa-titulo { font-size: 22px; font-weight: bold; color: #172554; margin-bottom: 8px; }
   .capa-sub { font-size: 12px; color: #374151; margin-bottom: 30px; line-height: 1.6; }
@@ -92,30 +92,27 @@
 </head>
 <body>
 
-<div id="rodape">SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente</div>
-
 <!-- == CAPA == -->
 <table class="capa-wrap" cellpadding="0" cellspacing="0">
   <tr>
-      <td class="capa-td">
-            <div class="capa-logo">
-                    <img src="{{ logo_path }}" width="90" height="90" />
-                          </div>
-                                <div class="capa-titulo">Fichas de Metas</div>
-                                      <div class="capa-sub">
-                                              Sistema de Monitoramento da Programação Anual de Saúde — SES-MA<br>
-                                                      Secretaria de Estado da Saúde do Maranhão
-                                                            </div>
-                                                                  {% if ciclo %}
-                                                                        <div class="capa-meta-box">Ciclo: {{ ciclo }}</div><br>
-                                                                              {% endif %}
-                                                                                    {% if area_filtro %}
-                                                                                          <div class="capa-meta-box">Área: {{ area_filtro.sigla }} — {{ area_filtro.nome }}</div>
-                                                                                                {% endif %}
-                                                                                                      <div class="capa-data">Gerado em: {{ data_geracao }} · {{ total_metas }} meta{{ total_metas|pluralize:"s" }}</div>
-                                                                                                          </td>
-                                                                                                            </tr>
-                                                                                                            </table>
+    <td class="capa-td">
+      {% if logo_path %}<div class="capa-logo"><img src="{{ logo_path }}" width="90" height="90" /></div>{% endif %}
+      <div class="capa-titulo">Fichas de Metas</div>
+      <div class="capa-sub">
+        Sistema de Monitoramento da Programação Anual de Saúde — SES-MA<br>
+        Secretaria de Estado da Saúde do Maranhão
+      </div>
+      {% if ciclo %}<div class="capa-meta-box">Ciclo: {{ ciclo }}</div><br>{% endif %}
+      {% if area_filtro %}<div class="capa-meta-box">Área: {{ area_filtro.sigla }} — {{ area_filtro.nome }}</div>{% endif %}
+      <div class="capa-data">Gerado em: {{ data_geracao }} · {{ total_metas }} meta{{ total_metas|pluralize:"s" }}</div>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align:bottom;padding-bottom:10px;">
+      <div id="rodape">SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente</div>
+    </td>
+  </tr>
+</table>
 
 <!-- == FICHAS == -->
 {% for item in metas_data %}
