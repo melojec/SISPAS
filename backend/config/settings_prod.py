@@ -23,6 +23,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = []
 
+TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
+
 # Whitenoise também serve o frontend React
 WHITENOISE_ROOT = BASE_DIR / 'staticfiles' / 'frontend'
 
