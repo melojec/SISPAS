@@ -101,7 +101,7 @@ class TodasMetasPDFView(APIView):
         try:
             return self._get(request)
         except Exception as e:
-            return Response({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()}, status=500)
+            return Response({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()}, status=200)
 
     def _get(self, request):
         ciclo_id = request.query_params.get('ciclo')
