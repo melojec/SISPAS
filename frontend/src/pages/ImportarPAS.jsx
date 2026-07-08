@@ -25,7 +25,11 @@ export default function ImportarPAS() {
       })
       setResultado(data)
     } catch (e) {
-      setErro(e.response?.data?.erro || 'Erro ao importar a planilha.')
+      const data = e.response?.data
+      if (data?.erro) setErro(data.erro)
+      else if (typeof data === 'string') setErro(data)
+      else if (data && typeof data === 'object') setErro(JSON.stringify(data))
+      else setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
     } finally {
       setCarregando(false)
     }
