@@ -27,7 +27,6 @@ class _Encoder(json.JSONEncoder):
         return str(obj)
 
 MODULOS_AUDITADOS = [
-    'core.Diretriz', 'core.Objetivo', 'core.Meta', 'core.Atividade',
     'monitoramento.Ciclo', 'monitoramento.RegistroQuadrimestral',
     'monitoramento.ExecucaoFinanceira',
     'usuarios.Usuario',

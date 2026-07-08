@@ -150,6 +150,21 @@ class ImportarPASView(APIView):
                 criadas_a += 1
             resultado['atividades'] = {'criadas': criadas_a, 'ignoradas': ignoradas_a}
 
+            # Registra uma única entrada de auditoria para toda a importação
+            try:
+                from auditoria.models import LogAuditoria
+                from auditoria.middleware import get_current_ip
+                LogAuditoria.objects.create(
+                    usuario=request.user if request.user.is_authenticated else None,
+                    acao=LogAuditoria.CRIACAO,
+                    modulo='ImportarPAS',
+                    objeto_id=None,
+                    dados_depois={'ano': ano, **resultado},
+                    ip=get_current_ip(),
+                )
+            except Exception:
+                pass
+
             return Response({'sucesso': True, 'ano': ano, 'resultado': resultado})
 
         except Exception as e:

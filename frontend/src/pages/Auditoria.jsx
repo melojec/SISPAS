@@ -65,8 +65,20 @@ export default function Auditoria() {
                                                'bg-red-100    dark:bg-red-900/40    text-red-700    dark:text-red-400'
                     }`}>{log.acao_display}</span>
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-400">{log.modulo}</td>
-                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{log.objeto_id}</td>
+                  <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">
+                    <span className="font-mono">{log.modulo}</span>
+                    {log.modulo === 'ImportarPAS' && log.dados_depois && (
+                      <span className="ml-2 text-gray-400 dark:text-gray-500">
+                        PAS {log.dados_depois.ano} — {log.dados_depois.diretrizes?.criadas ?? 0} diretrizes, {log.dados_depois.metas?.criadas ?? 0} metas, {log.dados_depois.atividades?.criadas ?? 0} atividades criadas
+                      </span>
+                    )}
+                    {log.modulo !== 'ImportarPAS' && log.dados_depois?.descricao && (
+                      <span className="ml-2 text-gray-400 dark:text-gray-500 truncate max-w-xs inline-block align-bottom">
+                        {String(log.dados_depois.descricao).slice(0, 60)}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{log.objeto_id ?? '—'}</td>
                   <td className="px-4 py-3 text-gray-400 dark:text-gray-500 text-xs">{log.ip}</td>
                 </tr>
               ))}
