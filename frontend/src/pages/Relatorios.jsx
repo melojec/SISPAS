@@ -42,18 +42,24 @@ export default function Relatorios() {
       const text = await r.data.text()
       try {
         const json = JSON.parse(text)
-        setErro(`Erro: ${json.erro ?? text}`)
+        setErro(`${json.erro ?? ''}\n\n${json.detalhe ?? ''}`.trim())
       } catch {
         baixarArquivo(r.data, 'fichas_metas.pdf')
       }
     } catch (e) {
+      const status = e.response?.status ?? '?'
+      let detalhe = e.message
       try {
-        const text = await e.response?.data?.text?.()
-        const json = JSON.parse(text)
-        setErro(`Erro ${e.response?.status}: ${json.erro ?? json.detail ?? text}`)
-      } catch {
-        setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
-      }
+        const blob = e.response?.data
+        const text = blob instanceof Blob ? await blob.text() : String(blob ?? '')
+        try {
+          const json = JSON.parse(text)
+          detalhe = `${json.erro ?? ''}\n\n${json.detalhe ?? ''}`.trim()
+        } catch {
+          detalhe = text.slice(0, 2000)
+        }
+      } catch {}
+      setErro(`HTTP ${status}:\n${detalhe}`)
     }
     finally { setLoadingFichas(false) }
   }
@@ -95,7 +101,11 @@ export default function Relatorios() {
         </div>
       </div>
 
-      {erro && <p className="text-sm text-red-500">{erro}</p>}
+      {erro && (
+        <pre className="text-xs text-red-400 bg-red-950/30 border border-red-800 rounded-lg p-3 whitespace-pre-wrap break-all max-h-64 overflow-y-auto">
+          {erro}
+        </pre>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
