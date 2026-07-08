@@ -15,7 +15,7 @@ const isUnidade = (unidade) =>
 
 const soNumeros = (e) => {
   if (['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return
-  if (!/^\d$/.test(e.key)) e.preventDefault()
+  if (!/[\d.]/.test(e.key)) e.preventDefault()
 }
 
 const soNumerosDecimal = (e) => {
@@ -41,7 +41,7 @@ const fmtInput = (v, unidade) => {
 }
 
 // Converte string com vírgula para float
-const parseDecimal = (s) => parseFloat(String(s ?? '').replace(',', '.'))
+const parseDecimal = (s) => parseFloat(String(s ?? '').replace(/\./g, '').replace(',', '.'))
 
 function GraficoProgresso({ meta, ciclo, onClose }) {
   const { data: registro } = useQuery({
