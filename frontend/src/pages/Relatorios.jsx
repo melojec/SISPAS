@@ -39,8 +39,14 @@ export default function Relatorios() {
     setErro(''); setLoadingFichas(true)
     try {
       const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
-      baixarArquivo(r.data, 'fichas_metas.pdf')
-    } catch { setErro('Erro ao gerar PDF de fichas.') }
+      const text = await r.data.text()
+      try {
+        const json = JSON.parse(text)
+        setErro(`Erro: ${json.erro ?? text}`)
+      } catch {
+        baixarArquivo(r.data, 'fichas_metas.pdf')
+      }
+    } catch (e) { setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`) }
     finally { setLoadingFichas(false) }
   }
 

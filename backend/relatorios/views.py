@@ -91,6 +91,13 @@ class TodasMetasPDFView(APIView):
     permission_classes = [IsUsuarioAtivo]
 
     def get(self, request):
+        import traceback
+        try:
+            return self._get(request)
+        except Exception as e:
+            return Response({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()}, status=500)
+
+    def _get(self, request):
         ciclo_id = request.query_params.get('ciclo')
         area_id = request.query_params.get('area')
 
