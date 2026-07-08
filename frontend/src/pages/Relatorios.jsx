@@ -39,10 +39,17 @@ export default function Relatorios() {
     setErro(''); setLoadingFichas(true)
     try {
       const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'text' })
-      const blob = new Blob([r.data], { type: 'text/html' })
-      const url = URL.createObjectURL(blob)
-      const win = window.open(url, '_blank')
-      if (win) win.onload = () => { win.focus(); win.print() }
+      const html2pdf = (await import('html2pdf.js')).default
+      const el = document.createElement('div')
+      el.innerHTML = r.data
+      await html2pdf().set({
+        margin: [12, 16, 18, 16],
+        filename: 'fichas_metas.pdf',
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], before: '.page-break' },
+      }).from(el).save()
     } catch (e) {
       setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
     }
