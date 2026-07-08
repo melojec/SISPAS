@@ -193,9 +193,16 @@ Campos de texto qualitativos (problema, acao, analise, atividades_nao_planejadas
 - `statusPorMeta` calculado a partir de `todosRegistros` (query com page_size=500), não de query separada limitada.
 - Modal de confirmação do DOMI: `max-h-[80vh] flex flex-col` com área de lista scrollável.
 - Frontend build: sempre rodar `npm run build` e `git add -f backend/staticfiles/frontend/` antes do push — pasta está no .gitignore.
-- RichTextEditor: Tiptap com StarterKit (sem heading/codeBlock/blockquote/hr/code), Underline, TextAlign. Integrado via `Controller` do react-hook-form. Valores salvos como HTML no backend TextField.
+- RichTextEditor: Tiptap com StarterKit (sem heading/codeBlock/blockquote/hr/code), Underline, TextAlign. Integrado via `Controller` do react-hook-form. Valores salvos como HTML no backend TextField. Editor vazio retorna `''` (não `<p></p>`).
 - Ciclo.pas_ano: nullable, populado via dropdown no frontend; anos disponíveis = banco + ano atual ± 1.
+- ImportarPAS: usa `update_or_create(meta=meta, codigo=str(cod_ativ), ...)` para Atividade. Antes de importar, deduplica atividades por (meta, codigo) mantendo a que tem mais ExecucaoFinanceira. NÃO deleta atividades em massa — ExecucaoFinanceira tem CASCADE e seria perdida.
+- ExecucaoFinanceira tem `on_delete=CASCADE` para Atividade — nunca deletar atividades sem considerar isso.
+- Modal de confirmação do DOMI: exibe erro detalhado do backend no rodapé quando `salvarTudo` falha. `salvarTudo.reset()` chamado ao fechar o modal para limpar o estado de erro.
+- Auditoria: `MODULOS_AUDITADOS` só inclui monitoramento e usuarios (Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, Usuario). Diretriz/Objetivo/Meta/Atividade removidos para evitar ruído do import. ImportarPAS registra uma entrada única com resumo `{ano, diretrizes, metas, atividades}`.
+- Logo do PDF: buscado em `relatorios/logo_pdf.png` e `relatorios/logo.png` (fallback). Nunca apontar para `frontend/src/assets/` — não existe no Render.
+- PDF TodasMetasPDFView: envolto em try/except, retorna JSON `{erro, detalhe}` com status 500 em caso de falha. Frontend Relatorios.jsx tenta parsear o blob como JSON para exibir o erro real.
 
 ## Próximo foco
+- Investigar por que a meta 1.2.5 não aceita ser salva (erro aparece agora no modal de confirmação após último deploy).
+- Investigar erro no PDF de fichas (Exportar Fichas PDF na página Relatórios) — logo corrigido para usar relatorios/logo_pdf.png, mas ainda dando erro; adicionado try/except com retorno JSON detalhado para diagnóstico.
 - Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
-- Após reimportar a PAS pelo módulo ImportarPAS, verificar se atividades com descrição repetida (ex: 2.5.2) agora aparecem corretamente (correção aplicada na sessão atual).
