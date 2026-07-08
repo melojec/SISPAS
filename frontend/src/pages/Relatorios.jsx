@@ -39,19 +39,61 @@ export default function Relatorios() {
     setErro(''); setLoadingFichas(true)
     try {
       const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'text' })
-      const html2pdf = (await import('html2pdf.js')).default
-      const el = document.createElement('div')
-      el.innerHTML = r.data
-      await html2pdf().set({
-        margin: [12, 16, 18, 16],
-        filename: 'fichas_metas.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'], before: '.page-break' },
-      }).from(el).save()
+      const { jsPDF } = await import('jspdf')
+      const html2canvas = (await import('html2canvas')).default
+
+      // Parse HTML e extrai estilo + seções separadas por .page-break
+      const parser = new DOMParser()
+      const htmlDoc = parser.parseFromString(r.data, 'text/html')
+      const styleEl = htmlDoc.querySelector('style')
+
+      const sections = []
+      let current = []
+      for (const child of Array.from(htmlDoc.body.children)) {
+        if (child.classList.contains('page-break')) {
+          if (current.length) { sections.push(current); current = [] }
+        } else {
+          current.push(child)
+        }
+      }
+      if (current.length) sections.push(current)
+
+      // Container oculto para renderização
+      const container = document.createElement('div')
+      container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:white;color:#111;font-family:Arial,sans-serif;font-size:10px;'
+      document.body.appendChild(container)
+
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
+      const pdfW = pdf.internal.pageSize.getWidth()
+      const pdfH = pdf.internal.pageSize.getHeight()
+
+      for (let i = 0; i < sections.length; i++) {
+        container.innerHTML = ''
+        if (styleEl) container.appendChild(styleEl.cloneNode(true))
+        sections[i].forEach(el => container.appendChild(el.cloneNode(true)))
+
+        const canvas = await html2canvas(container, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' })
+        const imgData = canvas.toDataURL('image/jpeg', 0.88)
+        const imgH = (canvas.height * pdfW) / canvas.width
+
+        if (i > 0) pdf.addPage()
+        // Se a seção ultrapassa uma página, divide
+        if (imgH <= pdfH) {
+          pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, imgH)
+        } else {
+          let offset = 0
+          while (offset < imgH) {
+            if (offset > 0) pdf.addPage()
+            pdf.addImage(imgData, 'JPEG', 0, -offset, pdfW, imgH)
+            offset += pdfH
+          }
+        }
+      }
+
+      document.body.removeChild(container)
+      pdf.save('fichas_metas.pdf')
     } catch (e) {
-      setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
+      setErro(`Erro: ${e.message}`)
     }
     finally { setLoadingFichas(false) }
   }
