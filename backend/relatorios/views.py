@@ -102,7 +102,9 @@ class TodasMetasPDFView(APIView):
         try:
             return self._get(request)
         except Exception as e:
-            return Response({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()}, status=200)
+            import json
+            body = json.dumps({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()})
+            return HttpResponse(body, content_type='application/json', status=500)
 
     def _get(self, request):
         ciclo_id = request.query_params.get('ciclo')
@@ -162,7 +164,13 @@ class TodasMetasPDFView(APIView):
             'logo_path': logo_path,
             'data_geracao': date.today().strftime('%d/%m/%Y'),
         })
-        return HttpResponse(html_string, content_type='text/html; charset=utf-8')
+        from weasyprint import HTML as WP_HTML
+        pdf_bytes = WP_HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+        return HttpResponse(
+            pdf_bytes,
+            content_type='application/pdf',
+            headers={'Content-Disposition': 'attachment; filename="fichas_metas.pdf"'},
+        )
 
 
 class RelatorioPDFView(APIView):

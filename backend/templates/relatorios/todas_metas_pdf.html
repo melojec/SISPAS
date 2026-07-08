@@ -3,21 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  * { margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; font-size: 10px; color: #111; background: white; }
-
-  @media print {
-    @page { margin: 12mm 16mm 18mm 16mm; size: A4; }
-    pdf\:nextpage, pdf\:nextframe { display: none; }
-    .page-break { page-break-before: always; }
+  @page {
+    size: A4;
+    margin: 12mm 16mm 18mm 16mm;
+    @bottom-center {
+      content: "SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente";
+      font-size: 8px;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 4px;
+    }
   }
 
-  #rodape { border-top: 1px solid #e5e7eb; padding-top: 6px;
-    font-size: 8px; color: #9ca3af; text-align: center; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 10px; color: #111; background: white; }
+
+  .page-break { break-before: page; page-break-before: always; }
 
   /* ── Capa ── */
-  .capa-wrap { width: 100%; border-collapse: collapse; height: 260mm; }
-  .capa-td { vertical-align: middle; text-align: center; height: 240mm; }
+  .capa-wrap {
+    height: 260mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
   .capa-logo { margin-bottom: 20px; }
   .capa-titulo { font-size: 22px; font-weight: bold; color: #172554; margin-bottom: 8px; }
   .capa-sub { font-size: 12px; color: #374151; margin-bottom: 30px; line-height: 1.6; }
@@ -36,8 +47,8 @@
   .bc-area-nome { font-size: 11px; font-weight: bold; color: #111; }
 
   /* ── Box meta ── */
-  .meta-box { background: #172554; color: white; padding: 3px 2px 2px; margin-bottom: 2px; }
-  .meta-box-text {font-size: 12px; font-weight: bold; line-height: 1.8; align-items: center; display: flex; justify-content: center; text-align: center;}
+  .meta-box { background: #172554; color: white; padding: 6px 8px; margin-bottom: 2px; text-align: center; }
+  .meta-box-text { font-size: 12px; font-weight: bold; line-height: 1.8; }
 
   /* ── Indicador + Valores Planejados ── */
   .iv-tbl { width: 100%; border-collapse: collapse; border: 0.5px solid #172457;
@@ -86,33 +97,24 @@
     text-align: justify; padding: 0 2px; margin-bottom: 16px; }
   .aq-field-empty { font-size: 10px; color: #9ca3af; font-style: italic; margin-bottom: 16px; }
 
-  /* ── Identificação no topo de cada ficha (substitui o cabeçalho) ── */
+  /* ── Identificação no topo de cada ficha ── */
   .ficha-id { font-size: 8px; color: #9ca3af; text-align: right; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <!-- == CAPA == -->
-<table class="capa-wrap" cellpadding="0" cellspacing="0">
-  <tr>
-    <td class="capa-td">
-      {% if logo_path %}<div class="capa-logo"><img src="{{ logo_path }}" width="90" height="90" /></div>{% endif %}
-      <div class="capa-titulo">Fichas de Metas</div>
-      <div class="capa-sub">
-        Sistema de Monitoramento da Programação Anual de Saúde — SES-MA<br>
-        Secretaria de Estado da Saúde do Maranhão
-      </div>
-      {% if ciclo %}<div class="capa-meta-box">Ciclo: {{ ciclo }}</div><br>{% endif %}
-      {% if area_filtro %}<div class="capa-meta-box">Área: {{ area_filtro.sigla }} — {{ area_filtro.nome }}</div>{% endif %}
-      <div class="capa-data">Gerado em: {{ data_geracao }} · {{ total_metas }} meta{{ total_metas|pluralize:"s" }}</div>
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align:bottom;padding-bottom:10px;">
-      <div id="rodape">SISPAS · Secretaria de Estado da Saúde do Maranhão · Documento gerado automaticamente</div>
-    </td>
-  </tr>
-</table>
+<div class="capa-wrap">
+  {% if logo_path %}<div class="capa-logo"><img src="{{ logo_path }}" width="90" height="90" /></div>{% endif %}
+  <div class="capa-titulo">Fichas de Metas</div>
+  <div class="capa-sub">
+    Sistema de Monitoramento da Programação Anual de Saúde — SES-MA<br>
+    Secretaria de Estado da Saúde do Maranhão
+  </div>
+  {% if ciclo %}<div class="capa-meta-box">Ciclo: {{ ciclo }}</div><br>{% endif %}
+  {% if area_filtro %}<div class="capa-meta-box">Área: {{ area_filtro.sigla }} — {{ area_filtro.nome }}</div>{% endif %}
+  <div class="capa-data">Gerado em: {{ data_geracao }} · {{ total_metas }} meta{{ total_metas|pluralize:"s" }}</div>
+</div>
 
 <!-- == FICHAS == -->
 {% for item in metas_data %}

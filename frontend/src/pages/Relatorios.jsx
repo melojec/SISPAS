@@ -38,64 +38,27 @@ export default function Relatorios() {
   const exportarFichas = async () => {
     setErro(''); setLoadingFichas(true)
     try {
-      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'text' })
-      const { jsPDF } = await import('jspdf')
-      const html2canvas = (await import('html2canvas')).default
-
-      // Parse HTML e extrai estilo + seções separadas por .page-break
-      const parser = new DOMParser()
-      const htmlDoc = parser.parseFromString(r.data, 'text/html')
-      const styleEl = htmlDoc.querySelector('style')
-
-      const sections = []
-      let current = []
-      for (const child of Array.from(htmlDoc.body.children)) {
-        if (child.classList.contains('page-break')) {
-          if (current.length) { sections.push(current); current = [] }
-        } else {
-          current.push(child)
-        }
+      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
+      // Se o servidor retornou erro JSON, lê como texto e exibe
+      if (r.data.type === 'application/json') {
+        const txt = await r.data.text()
+        const json = JSON.parse(txt)
+        setErro(json.detalhe || json.erro || 'Erro ao gerar PDF')
+        return
       }
-      if (current.length) sections.push(current)
-
-      // Container oculto para renderização
-      const container = document.createElement('div')
-      container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:white;color:#111;font-family:Arial,sans-serif;font-size:10px;'
-      document.body.appendChild(container)
-
-      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
-      const pdfW = pdf.internal.pageSize.getWidth()
-      const pdfH = pdf.internal.pageSize.getHeight()
-
-      for (let i = 0; i < sections.length; i++) {
-        container.innerHTML = ''
-        if (styleEl) container.appendChild(styleEl.cloneNode(true))
-        sections[i].forEach(el => container.appendChild(el.cloneNode(true)))
-
-        const canvas = await html2canvas(container, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' })
-        const imgData = canvas.toDataURL('image/jpeg', 0.88)
-        const imgH = (canvas.height * pdfW) / canvas.width
-
-        if (i > 0) pdf.addPage()
-        // Se a seção ultrapassa uma página, divide
-        if (imgH <= pdfH) {
-          pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, imgH)
-        } else {
-          let offset = 0
-          while (offset < imgH) {
-            if (offset > 0) pdf.addPage()
-            pdf.addImage(imgData, 'JPEG', 0, -offset, pdfW, imgH)
-            offset += pdfH
-          }
-        }
-      }
-
-      document.body.removeChild(container)
-      pdf.save('fichas_metas.pdf')
+      baixarArquivo(r.data, 'fichas_metas.pdf')
     } catch (e) {
+      // Tenta ler o corpo do erro como JSON para mostrar o traceback
+      if (e.response?.data instanceof Blob) {
+        try {
+          const txt = await e.response.data.text()
+          const json = JSON.parse(txt)
+          setErro(json.detalhe || json.erro || `Erro ${e.response.status}`)
+          return
+        } catch {}
+      }
       setErro(`Erro: ${e.message}`)
-    }
-    finally { setLoadingFichas(false) }
+    } finally { setLoadingFichas(false) }
   }
 
   const exportarXLSX = async () => {
