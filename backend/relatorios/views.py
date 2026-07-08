@@ -1,5 +1,15 @@
 import io
+import sys
 from datetime import date
+
+try:
+    from weasyprint import HTML as WP_HTML
+    _WEASYPRINT_OK = True
+except Exception:
+    _WEASYPRINT_OK = False
+    # Remove módulo parcialmente carregado para não poluir sys.modules
+    for _mod in [k for k in sys.modules if k.startswith('weasyprint')]:
+        sys.modules.pop(_mod, None)
 from django.conf import settings
 from django.db.models.expressions import RawSQL
 from django.http import HttpResponse
@@ -164,11 +174,9 @@ class TodasMetasPDFView(APIView):
             'logo_path': logo_path,
             'data_geracao': date.today().strftime('%d/%m/%Y'),
         })
-        try:
-            from weasyprint import HTML as WP_HTML
+        if _WEASYPRINT_OK:
             pdf_bytes = WP_HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
-        except (ImportError, OSError):
-            # Fallback: xhtml2pdf (funciona no Windows local sem GTK)
+        else:
             from xhtml2pdf import pisa
             buffer = io.BytesIO()
             pisa.CreatePDF(html_string, dest=buffer)
