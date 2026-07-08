@@ -164,8 +164,15 @@ class TodasMetasPDFView(APIView):
             'logo_path': logo_path,
             'data_geracao': date.today().strftime('%d/%m/%Y'),
         })
-        from weasyprint import HTML as WP_HTML
-        pdf_bytes = WP_HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+        try:
+            from weasyprint import HTML as WP_HTML
+            pdf_bytes = WP_HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+        except (ImportError, OSError):
+            # Fallback: xhtml2pdf (funciona no Windows local sem GTK)
+            from xhtml2pdf import pisa
+            buffer = io.BytesIO()
+            pisa.CreatePDF(html_string, dest=buffer)
+            pdf_bytes = buffer.getvalue()
         return HttpResponse(
             pdf_bytes,
             content_type='application/pdf',
