@@ -38,28 +38,13 @@ export default function Relatorios() {
   const exportarFichas = async () => {
     setErro(''); setLoadingFichas(true)
     try {
-      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
-      const text = await r.data.text()
-      try {
-        const json = JSON.parse(text)
-        setErro(`${json.erro ?? ''}\n\n${json.detalhe ?? ''}`.trim())
-      } catch {
-        baixarArquivo(r.data, 'fichas_metas.pdf')
-      }
+      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'text' })
+      const blob = new Blob([r.data], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      const win = window.open(url, '_blank')
+      if (win) win.onload = () => { win.focus(); win.print() }
     } catch (e) {
-      const status = e.response?.status ?? '?'
-      let detalhe = e.message
-      try {
-        const blob = e.response?.data
-        const text = blob instanceof Blob ? await blob.text() : String(blob ?? '')
-        try {
-          const json = JSON.parse(text)
-          detalhe = `${json.erro ?? ''}\n\n${json.detalhe ?? ''}`.trim()
-        } catch {
-          detalhe = text.slice(0, 2000)
-        }
-      } catch {}
-      setErro(`HTTP ${status}:\n${detalhe}`)
+      setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
     }
     finally { setLoadingFichas(false) }
   }

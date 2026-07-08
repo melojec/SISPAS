@@ -6,15 +6,10 @@
   * { margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; font-size: 10px; color: #111; background: white; }
 
-  @page {
-    margin: 12mm 16mm 18mm 16mm;
-    @frame footer {
-      -pdf-frame-content: rodape;
-      bottom: 5mm;
-      left: 16mm;
-      right: 16mm;
-      height: 10mm;
-    }
+  @media print {
+    @page { margin: 12mm 16mm 18mm 16mm; size: A4; }
+    pdf\:nextpage, pdf\:nextframe { display: none; }
+    .page-break { page-break-before: always; }
   }
 
   #rodape { border-top: 1px solid #e5e7eb; padding-top: 6px;
@@ -124,7 +119,7 @@
 
 <!-- == FICHAS == -->
 {% for item in metas_data %}
-<pdf:nextpage />
+<div class="page-break"></div>
 
 <!-- Pág. 1 da meta -->
 <div class="ficha-id">
@@ -217,7 +212,7 @@
 {% endif %}
 
 <!-- Pág. 2 da meta — Análise Qualitativa -->
-<pdf:nextpage />
+<div class="page-break"></div>
 
 <div class="ficha-id">
   {% if ciclo %}Ciclo: {{ ciclo }} · {% endif %}Gerado em: {{ data_geracao }}

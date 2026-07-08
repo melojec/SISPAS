@@ -160,13 +160,7 @@ class TodasMetasPDFView(APIView):
             'logo_path': logo_path,
             'data_geracao': date.today().strftime('%d/%m/%Y'),
         })
-        return Response({'ok': True, 'html_len': len(html_string), 'metas': len(metas_data)})
-        from xhtml2pdf import pisa
-        buffer = io.BytesIO()
-        pisa.CreatePDF(html_string, dest=buffer)
-        buffer.seek(0)
-        return HttpResponse(buffer.read(), content_type='application/pdf',
-                            headers={'Content-Disposition': 'attachment; filename="fichas_metas.pdf"'})
+        return HttpResponse(html_string, content_type='text/html; charset=utf-8')
 
 
 class RelatorioPDFView(APIView):
