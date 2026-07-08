@@ -104,7 +104,7 @@ function GraficoProgresso({ meta, ciclo, onClose }) {
   )
 }
 
-function ModalConfirmacaoSalvar({ campos, onConfirmar, onCancelar, salvando }) {
+function ModalConfirmacaoSalvar({ campos, onConfirmar, onCancelar, salvando, erro }) {
   const obrigatoriosVazios = campos.filter(c => c.obrigatorio && !c.preenchido)
   const opcionaisVazios = campos.filter(c => !c.obrigatorio && !c.preenchido)
   const podeConfirmar = obrigatoriosVazios.length === 0
@@ -165,9 +165,14 @@ function ModalConfirmacaoSalvar({ campos, onConfirmar, onCancelar, salvando }) {
               Preencha os {obrigatoriosVazios.length} campo{obrigatoriosVazios.length > 1 ? 's' : ''} obrigatório{obrigatoriosVazios.length > 1 ? 's' : ''} antes de salvar.
             </p>
           )}
-          {podeConfirmar && opcionaisVazios.length > 0 && (
+          {podeConfirmar && opcionaisVazios.length > 0 && !erro && (
             <p className="text-xs bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg px-3 py-2">
               {opcionaisVazios.length} campo{opcionaisVazios.length > 1 ? 's' : ''} opcional{opcionaisVazios.length > 1 ? 'is' : ''} não preenchido{opcionaisVazios.length > 1 ? 's' : ''}. Deseja salvar mesmo assim?
+            </p>
+          )}
+          {erro && (
+            <p className="text-xs bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg px-3 py-2 font-medium">
+              Erro ao salvar: {erro}
             </p>
           )}
           <div className="flex justify-end gap-3">
@@ -726,7 +731,13 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
               <ModalConfirmacaoSalvar
                 campos={pendenteSalvar.campos}
                 salvando={salvarTudo.isPending}
-                onCancelar={() => setPendenteSalvar(null)}
+                erro={salvarTudo.isError
+                  ? (salvarTudo.error?.response?.data?.detail
+                    || JSON.stringify(salvarTudo.error?.response?.data)
+                    || salvarTudo.error?.message
+                    || 'Erro desconhecido')
+                  : null}
+                onCancelar={() => { setPendenteSalvar(null); salvarTudo.reset() }}
                 onConfirmar={() => salvarTudo.mutate(pendenteSalvar.dados, {
                   onSuccess: () => setPendenteSalvar(null),
                 })}
