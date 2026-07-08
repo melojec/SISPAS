@@ -125,11 +125,20 @@ class ImportarPASView(APIView):
                     atualizadas_m += 1
             resultado['metas'] = {'criadas': criadas_m, 'atualizadas': atualizadas_m, 'ignoradas': ignoradas_m}
 
-            # Atividades — apaga as existentes para as metas carregadas antes de recriar,
-            # evitando MultipleObjectsReturned de importações anteriores com chave errada
-            Atividade.objects.filter(meta__in=metas.values()).delete()
+            # Atividades — deduplica por (meta, codigo) sem apagar execuções financeiras:
+            # para cada meta, mantém apenas a atividade com mais execuções quando há duplicatas,
+            # depois faz update_or_create normalmente.
+            from monitoramento.models import ExecucaoFinanceira
+            from django.db.models import Count
+            for meta_obj in metas.values():
+                codigos_vistos = set()
+                for at in Atividade.objects.filter(meta=meta_obj).annotate(n=Count('execucoes')).order_by('-n'):
+                    if at.codigo in codigos_vistos:
+                        at.delete()  # duplicata sem execuções (ou com menos)
+                    else:
+                        codigos_vistos.add(at.codigo)
 
-            criadas_a = ignoradas_a = 0
+            criadas_a = atualizadas_a = ignoradas_a = 0
             for row in wb['Atividade'].iter_rows(min_row=2, values_only=True):
                 _, _, _, _, cod_meta, _, cod_ativ, descricao, indicador_at, unidade_at, valor_meta, *_ = row
                 if not cod_ativ or not descricao:
@@ -139,16 +148,21 @@ class ImportarPASView(APIView):
                     ignoradas_a += 1
                     continue
                 valor = _to_float(valor_meta if valor_meta not in (None, 'NULL', '') else 0, unidade_at)
-                Atividade.objects.create(
+                _, criado = Atividade.objects.update_or_create(
                     meta=meta,
                     codigo=str(cod_ativ),
-                    descricao=str(descricao),
-                    valor_previsto=valor,
-                    indicador=str(indicador_at) if indicador_at else '',
-                    unidade=str(unidade_at) if unidade_at else '',
+                    defaults={
+                        'descricao': str(descricao),
+                        'valor_previsto': valor,
+                        'indicador': str(indicador_at) if indicador_at else '',
+                        'unidade': str(unidade_at) if unidade_at else '',
+                    }
                 )
-                criadas_a += 1
-            resultado['atividades'] = {'criadas': criadas_a, 'ignoradas': ignoradas_a}
+                if criado:
+                    criadas_a += 1
+                else:
+                    atualizadas_a += 1
+            resultado['atividades'] = {'criadas': criadas_a, 'atualizadas': atualizadas_a, 'ignoradas': ignoradas_a}
 
             # Registra uma única entrada de auditoria para toda a importação
             try:

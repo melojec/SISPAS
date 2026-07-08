@@ -119,7 +119,7 @@ export default function ImportarPAS() {
               { label: 'Diretrizes', dados: resultado.resultado.diretrizes, chaves: ['criadas', 'atualizadas'] },
               { label: 'Objetivos', dados: resultado.resultado.objetivos, chaves: ['criados', 'atualizados'] },
               { label: 'Metas', dados: resultado.resultado.metas, chaves: ['criadas', 'atualizadas', 'ignoradas'] },
-              { label: 'Atividades', dados: resultado.resultado.atividades, chaves: ['criadas', 'ignoradas'] },
+              { label: 'Atividades', dados: resultado.resultado.atividades, chaves: ['criadas', 'atualizadas', 'ignoradas'] },
             ].map(({ label, dados, chaves }) => (
               <div key={label} className="rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{label}</p>
