@@ -46,7 +46,15 @@ export default function Relatorios() {
       } catch {
         baixarArquivo(r.data, 'fichas_metas.pdf')
       }
-    } catch (e) { setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`) }
+    } catch (e) {
+      try {
+        const text = await e.response?.data?.text?.()
+        const json = JSON.parse(text)
+        setErro(`Erro ${e.response?.status}: ${json.erro ?? json.detail ?? text}`)
+      } catch {
+        setErro(`Erro ${e.response?.status ?? ''}: ${e.message}`)
+      }
+    }
     finally { setLoadingFichas(false) }
   }
 
