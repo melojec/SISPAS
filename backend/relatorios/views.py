@@ -18,6 +18,12 @@ def _nat(table):
     engine = settings.DATABASES['default']['ENGINE']
     if 'sqlite' in engine:
         return ['codigo']
+    if 'postgresql' in engine:
+        return [
+            RawSQL(f'CAST(SPLIT_PART("{table}"."codigo", \'.\', 1) AS INTEGER)', []),
+            RawSQL(f'CAST(SPLIT_PART("{table}"."codigo", \'.\', 2) AS INTEGER)', []),
+            RawSQL(f'CAST(SPLIT_PART("{table}"."codigo", \'.\', 3) AS INTEGER)', []),
+        ]
     return [
         RawSQL(f"CAST(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 1) AS UNSIGNED)", []),
         RawSQL(f"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`{table}`.`codigo`, '.', 2), '.', -1) AS UNSIGNED)", []),
