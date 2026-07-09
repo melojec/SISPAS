@@ -524,24 +524,30 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
           {/* Realizado por quadrimestre */}
           {ehMunicipio ? (
             <div>
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-                Municípios Beneficiados — {cicloQ}º Quadrimestre
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                Municípios Beneficiados <span className="font-normal normal-case">(Unidade)</span>
               </p>
+              <div className="grid grid-cols-3 gap-3 max-w-sm mb-3">
+                {[1, 2, 3].map(q => {
+                  const isAtivo = cicloQ === q
+                  const reg = registrosByQ[q]
+                  return (
+                    <div key={q} className={`rounded-lg border px-3 py-2.5 text-center ${isAtivo ? 'border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700'}`}>
+                      <p className={`text-xs mb-1.5 ${isAtivo ? 'text-blue-700 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {q}º Quadrimestre
+                      </p>
+                      <p className={`text-sm font-semibold ${isAtivo ? 'text-blue-800 dark:text-blue-200' : 'text-gray-600 dark:text-gray-300'}`}>
+                        {isAtivo ? municipiosSelecionados.length : (reg ? fmtValor(reg.realizado, 'Unidade') : '—')}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
               <MunicipioSelector
                 value={municipiosSelecionados}
                 onChange={setMunicipiosSelecionados}
                 disabled={!podeEditar}
               />
-              {[1, 2, 3].filter(q => q !== cicloQ && registrosByQ[q]).length > 0 && (
-                <div className="mt-4 flex gap-3">
-                  {[1, 2, 3].filter(q => q !== cicloQ && registrosByQ[q]).map(q => (
-                    <div key={q} className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-center min-w-[100px]">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{q}º Quadrimestre</p>
-                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">{fmtValor(registrosByQ[q].realizado, 'Unidade')} mun.</p>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           ) : (
             <div>
