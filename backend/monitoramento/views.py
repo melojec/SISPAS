@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores
-from .serializers import CicloSerializer, RegistroQuadrimestralSerializer, ExecucaoFinanceiraSerializer, AnexoIndicadoresSerializer
+from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores, Auditoria
+from .serializers import CicloSerializer, RegistroQuadrimestralSerializer, ExecucaoFinanceiraSerializer, AnexoIndicadoresSerializer, AuditoriaSerializer
 from usuarios.permissions import IsASPLAN, IsCoordenador, IsUsuarioAtivo, IsUsuarioDeArea
 from notificacoes import services as notif
 
@@ -94,3 +94,13 @@ class AnexoIndicadoresViewSet(viewsets.ModelViewSet):
         nome = self.request.FILES.get('arquivo', None)
         nome_original = nome.name if nome else ''
         serializer.save(enviado_por=self.request.user, nome_original=nome_original)
+
+
+class AuditoriaViewSet(viewsets.ModelViewSet):
+    serializer_class = AuditoriaSerializer
+    permission_classes = [IsUsuarioAtivo]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['meta', 'ano']
+
+    def get_queryset(self):
+        return Auditoria.objects.select_related('meta', 'municipio', 'criado_por').order_by('ano', 'id')

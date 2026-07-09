@@ -94,6 +94,34 @@ class ExecucaoFinanceira(models.Model):
         return f'{self.atividade} | {self.ciclo}'
 
 
+class Auditoria(models.Model):
+    meta = models.ForeignKey('core.Meta', on_delete=models.CASCADE, related_name='auditorias')
+    ano = models.PositiveSmallIntegerField()
+    municipio = models.ForeignKey(
+        'core.Municipio', on_delete=models.SET_NULL, null=True, blank=True, related_name='auditorias'
+    )
+    demandante = models.CharField(max_length=255, blank=True)
+    orgao_responsavel = models.CharField(max_length=255, blank=True)
+    unidade_auditada = models.CharField(max_length=255, blank=True)
+    finalidade = models.TextField(blank=True)
+    recomendacoes = models.TextField(blank=True)
+    encaminhamentos = models.TextField(blank=True)
+    criado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='auditorias_criadas'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Auditoria'
+        verbose_name_plural = 'Auditorias'
+        db_table = 'auditoria_sus'
+        ordering = ['ano', 'id']
+
+    def __str__(self):
+        return f'{self.meta.codigo} | {self.ano} | {self.unidade_auditada or "—"}'
+
+
 class AnexoIndicadores(models.Model):
     arquivo = models.FileField(upload_to='analise_indicadores/')
     nome_original = models.CharField(max_length=255)

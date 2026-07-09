@@ -6,8 +6,11 @@ import api from '../services/api'
 import useAuthStore from '../store/authStore'
 import RichTextEditor from '../components/RichTextEditor'
 import MunicipioSelector from '../components/MunicipioSelector'
+import ModalAuditorias from '../components/ModalAuditorias'
 
 // ── Modal de preenchimento da meta ────────────────────────────────────────────
+const isAuditoria = (codigo) => (codigo || '').trim() === '3.1.3'
+
 const isMunicipio = (indicador) =>
   (indicador || '').trim().toLowerCase() === 'nº de municípios beneficiados'
 
@@ -201,6 +204,8 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
   const qc = useQueryClient()
   const [verGrafico, setVerGrafico] = useState(false)
   const ehMunicipio = isMunicipio(meta.indicador)
+  const ehAuditoria = isAuditoria(meta.codigo)
+  const [verAuditorias, setVerAuditorias] = useState(false)
 
   const ano = ciclo?.ano
 
@@ -407,6 +412,17 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
               <h2 className="text-base font-semibold mt-2 leading-snug">{meta.descricao}</h2>
             </div>
             <div className="flex items-center gap-2 shrink-0 mt-1">
+              {ehAuditoria && (
+                <button
+                  onClick={() => setVerAuditorias(true)}
+                  className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  Auditorias
+                </button>
+              )}
               <button
                 onClick={() => setVerGrafico(true)}
                 className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5"
@@ -433,6 +449,14 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
 
         {verGrafico && (
           <GraficoProgresso meta={meta} ciclo={ciclo} onClose={() => setVerGrafico(false)} />
+        )}
+        {verAuditorias && (
+          <ModalAuditorias
+            meta={meta}
+            ano={ano}
+            podeEditar={podeEditar}
+            onFechar={() => setVerAuditorias(false)}
+          />
         )}
 
         <div className="px-6 py-5 space-y-6">

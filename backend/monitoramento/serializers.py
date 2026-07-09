@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.models import Municipio
-from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores
+from .models import Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, AnexoIndicadores, Auditoria
 
 _INDICADORES_MUNICIPIO = {'nº de municípios beneficiados'}
 
@@ -99,3 +99,23 @@ class AnexoIndicadoresSerializer(serializers.ModelSerializer):
         model = AnexoIndicadores
         fields = ['id', 'arquivo', 'nome_original', 'enviado_por', 'enviado_por_nome', 'enviado_em']
         read_only_fields = ['enviado_por', 'enviado_em']
+
+
+class AuditoriaSerializer(serializers.ModelSerializer):
+    municipio_nome = serializers.CharField(source='municipio.nome', read_only=True, default=None)
+    criado_por_nome = serializers.CharField(source='criado_por.nome', read_only=True, default=None)
+
+    class Meta:
+        model = Auditoria
+        fields = [
+            'id', 'meta', 'ano',
+            'municipio', 'municipio_nome',
+            'demandante', 'orgao_responsavel', 'unidade_auditada',
+            'finalidade', 'recomendacoes', 'encaminhamentos',
+            'criado_por', 'criado_por_nome', 'criado_em', 'atualizado_em',
+        ]
+        read_only_fields = ['criado_por', 'criado_em', 'atualizado_em']
+
+    def create(self, validated_data):
+        validated_data['criado_por'] = self.context['request'].user
+        return super().create(validated_data)
