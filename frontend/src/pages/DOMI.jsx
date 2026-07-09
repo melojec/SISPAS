@@ -524,23 +524,19 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
           {/* Realizado por quadrimestre */}
           {ehMunicipio ? (
             <div>
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
                 Municípios Beneficiados — {cicloQ}º Quadrimestre
-              </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
-                Selecione os municípios beneficiados neste quadrimestre. O realizado é calculado automaticamente.
               </p>
               <MunicipioSelector
                 value={municipiosSelecionados}
                 onChange={setMunicipiosSelecionados}
                 disabled={!podeEditar}
               />
-              {/* Contagens dos outros quadrimestres (somente leitura) */}
-              {[1, 2, 3].filter(q => q !== cicloQ).some(q => registrosByQ[q]) && (
-                <div className="mt-3 flex gap-3">
+              {[1, 2, 3].filter(q => q !== cicloQ && registrosByQ[q]).length > 0 && (
+                <div className="mt-4 flex gap-3">
                   {[1, 2, 3].filter(q => q !== cicloQ && registrosByQ[q]).map(q => (
-                    <div key={q} className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-center min-w-[90px]">
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{q}º Quadrimestre</p>
+                    <div key={q} className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-center min-w-[100px]">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{q}º Quadrimestre</p>
                       <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">{fmtValor(registrosByQ[q].realizado, 'Unidade')} mun.</p>
                     </div>
                   ))}
