@@ -109,7 +109,7 @@ function MunicipioHierarquico({ value, onChange }) {
       )}
       <input type="text" placeholder="Buscar município…" value={busca} onChange={e => setBusca(e.target.value)}
         className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-      <div className="border border-gray-200 dark:border-gray-600 rounded-xl overflow-y-auto p-2" style={{ maxHeight: '14rem' }}>
+      <div className="border border-gray-200 dark:border-gray-600 rounded-xl overflow-y-auto p-2 resize-y" style={{ minHeight: '8rem', maxHeight: '32rem', height: '14rem' }}>
         {hierarquia.map(bloco => (
           <MacrorregiaoBlock key={bloco.macrorregiao} macro={bloco.macrorregiao} regioes={bloco.regioes}
             selected={value} onSelect={onChange} busca={buscaLower} />
