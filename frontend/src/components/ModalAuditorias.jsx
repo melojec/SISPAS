@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../services/api'
-import MunicipioSeletorSimples from './MunicipioSeletorSimples'
 
 const CAMPOS = [
   { key: 'demandante',        label: 'Demandante' },
@@ -14,19 +13,122 @@ const CAMPOS = [
 
 const VAZIO = { demandante: '', orgao_responsavel: '', unidade_auditada: '', finalidade: '', recomendacoes: '', encaminhamentos: '', municipio: null }
 
+// ─── Seletor hierárquico de município (seleção única) ─────────────────────────
+function useMunicipios() {
+  return useQuery({
+    queryKey: ['municipios'],
+    queryFn: () => api.get('/municipios/').then(r => r.data),
+    staleTime: Infinity,
+  })
+}
+
+function ChevronRight({ open }) {
+  return (
+    <svg className={`w-3.5 h-3.5 transition-transform shrink-0 ${open ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  )
+}
+
+function RegiaoBlock({ regiao, municipios, selected, onSelect, busca }) {
+  const [open, setOpen] = useState(false)
+  const filtered = busca ? municipios.filter(m => m.nome.toLowerCase().includes(busca)) : municipios
+  if (filtered.length === 0) return null
+  const temSelecionado = filtered.some(m => m.id === selected)
+
+  return (
+    <div className="mb-1 border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
+      <button type="button" onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-700/60 hover:bg-gray-100 dark:hover:bg-gray-700 text-left">
+        <ChevronRight open={open || !!busca} />
+        <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide flex-1">{regiao}</span>
+        {temSelecionado && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />}
+      </button>
+      {(open || !!busca) && (
+        <div className="py-1 px-1">
+          {filtered.map(m => (
+            <label key={m.id} className={`flex items-center gap-2 px-3 py-1.5 rounded cursor-pointer select-none transition-colors
+              ${m.id === selected ? 'bg-blue-100 dark:bg-blue-900/40' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'}`}>
+              <input type="radio" name="municipio-auditoria" className="accent-blue-600 w-3.5 h-3.5 cursor-pointer"
+                checked={m.id === selected} onChange={() => onSelect(m.id)} />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{m.nome}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MacrorregiaoBlock({ macro, regioes, selected, onSelect, busca }) {
+  const [open, setOpen] = useState(false)
+  const allMuns = regioes.flatMap(r => r.municipios).filter(m => !busca || m.nome.toLowerCase().includes(busca))
+  if (allMuns.length === 0) return null
+  const temSelecionado = allMuns.some(m => m.id === selected)
+
+  return (
+    <div className="mb-2">
+      <button type="button" onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-left mb-1">
+        <ChevronRight open={open || !!busca} />
+        <span className="text-sm font-bold text-blue-800 dark:text-blue-200 flex-1">{macro}</span>
+        {temSelecionado && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />}
+      </button>
+      {(open || !!busca) && (
+        <div className="pl-4">
+          {regioes.map(r => (
+            <RegiaoBlock key={r.regiao} regiao={r.regiao} municipios={r.municipios}
+              selected={selected} onSelect={onSelect} busca={busca} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MunicipioHierarquico({ value, onChange }) {
+  const { data: hierarquia = [], isLoading } = useMunicipios()
+  const [busca, setBusca] = useState('')
+  const buscaLower = busca.toLowerCase().trim()
+
+  const allMuns = useMemo(
+    () => hierarquia.flatMap(m => m.regioes.flatMap(r => r.municipios)),
+    [hierarquia]
+  )
+  const nomeAtual = allMuns.find(m => m.id === value)?.nome
+
+  if (isLoading) return <p className="text-sm text-gray-400">Carregando…</p>
+
+  return (
+    <div className="space-y-2">
+      {value && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">{nomeAtual}</span>
+          <button type="button" onClick={() => onChange(null)} className="text-xs text-red-500 hover:underline">Limpar</button>
+        </div>
+      )}
+      <input type="text" placeholder="Buscar município…" value={busca} onChange={e => setBusca(e.target.value)}
+        className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+      <div className="border border-gray-200 dark:border-gray-600 rounded-xl overflow-y-auto p-2" style={{ maxHeight: '14rem' }}>
+        {hierarquia.map(bloco => (
+          <MacrorregiaoBlock key={bloco.macrorregiao} macro={bloco.macrorregiao} regioes={bloco.regioes}
+            selected={value} onSelect={onChange} busca={buscaLower} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Formulário de auditoria ──────────────────────────────────────────────────
 function FormAuditoria({ inicial, onSalvar, onCancelar, salvando }) {
   const [form, setForm] = useState(inicial)
-
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
 
   return (
     <div className="border border-blue-200 dark:border-blue-800 rounded-xl p-4 bg-blue-50 dark:bg-blue-900/20 space-y-3">
       <div>
         <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Município</label>
-        <MunicipioSeletorSimples
-          value={form.municipio}
-          onChange={id => set('municipio', id)}
-        />
+        <MunicipioHierarquico value={form.municipio} onChange={id => set('municipio', id)} />
       </div>
       {CAMPOS.map(({ key, label, textarea }) => (
         <div key={key}>
@@ -36,7 +138,7 @@ function FormAuditoria({ inicial, onSalvar, onCancelar, salvando }) {
               rows={2}
               value={form[key]}
               onChange={e => set(key, e.target.value)}
-              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-y"
             />
           ) : (
             <input
@@ -62,6 +164,7 @@ function FormAuditoria({ inicial, onSalvar, onCancelar, salvando }) {
   )
 }
 
+// ─── Linha de auditoria ───────────────────────────────────────────────────────
 function LinhaAuditoria({ aud, onEditar, onRemover, podeEditar }) {
   const [expandido, setExpandido] = useState(false)
 
@@ -97,9 +200,14 @@ function LinhaAuditoria({ aud, onEditar, onRemover, podeEditar }) {
           </div>
         )}
       </button>
-
       {expandido && (
         <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700 pt-3 grid grid-cols-1 gap-2">
+          {aud.municipio_nome && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Município</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-0.5">{aud.municipio_nome}</p>
+            </div>
+          )}
           {CAMPOS.map(({ key, label }) => aud[key] ? (
             <div key={key}>
               <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
@@ -112,6 +220,7 @@ function LinhaAuditoria({ aud, onEditar, onRemover, podeEditar }) {
   )
 }
 
+// ─── Modal principal ──────────────────────────────────────────────────────────
 export default function ModalAuditorias({ meta, ano, podeEditar, onFechar }) {
   const qc = useQueryClient()
   const [formAberto, setFormAberto] = useState(false)
@@ -142,11 +251,8 @@ export default function ModalAuditorias({ meta, ano, podeEditar, onFechar }) {
   })
 
   function salvarForm(form) {
-    if (editando) {
-      atualizar.mutate({ id: editando.id, ...form })
-    } else {
-      criar.mutate(form)
-    }
+    if (editando) atualizar.mutate({ id: editando.id, ...form })
+    else criar.mutate(form)
   }
 
   function iniciarEdicao(aud) {
@@ -179,7 +285,7 @@ export default function ModalAuditorias({ meta, ano, podeEditar, onFechar }) {
               {auditorias.length === 0 && !formAberto && (
                 <p className="text-sm text-gray-400 text-center py-8">Nenhuma auditoria registrada para {ano}.</p>
               )}
-              {auditorias.map(aud => (
+              {auditorias.map(aud =>
                 editando?.id === aud.id ? (
                   <FormAuditoria
                     key={aud.id}
@@ -203,23 +309,13 @@ export default function ModalAuditorias({ meta, ano, podeEditar, onFechar }) {
                     </div>
                   </div>
                 ) : (
-                  <LinhaAuditoria
-                    key={aud.id}
-                    aud={aud}
-                    podeEditar={podeEditar}
-                    onEditar={iniciarEdicao}
-                    onRemover={id => setConfirmandoId(id)}
-                  />
+                  <LinhaAuditoria key={aud.id} aud={aud} podeEditar={podeEditar}
+                    onEditar={iniciarEdicao} onRemover={id => setConfirmandoId(id)} />
                 )
-              ))}
-
+              )}
               {formAberto && (
-                <FormAuditoria
-                  inicial={VAZIO}
-                  onSalvar={salvarForm}
-                  onCancelar={() => setFormAberto(false)}
-                  salvando={criar.isPending}
-                />
+                <FormAuditoria inicial={VAZIO} onSalvar={salvarForm}
+                  onCancelar={() => setFormAberto(false)} salvando={criar.isPending} />
               )}
             </>
           )}

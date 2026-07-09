@@ -412,17 +412,6 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
               <h2 className="text-base font-semibold mt-2 leading-snug">{meta.descricao}</h2>
             </div>
             <div className="flex items-center gap-2 shrink-0 mt-1">
-              {ehAuditoria && (
-                <button
-                  onClick={() => setVerAuditorias(true)}
-                  className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                  </svg>
-                  Auditorias
-                </button>
-              )}
               <button
                 onClick={() => setVerGrafico(true)}
                 className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5"
@@ -605,6 +594,22 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                   )
                 })}
               </div>
+            </div>
+          )}
+
+          {/* Botão auditorias */}
+          {ehAuditoria && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setVerAuditorias(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-medium transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Gerenciar Auditorias
+              </button>
             </div>
           )}
 
