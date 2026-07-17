@@ -20,6 +20,8 @@ local_settings.py
 db.sqlite3
 media/
 staticfiles/
+!staticfiles/frontend/
+!staticfiles/frontend/**
 
 # Environment
 .env
