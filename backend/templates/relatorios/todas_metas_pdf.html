@@ -2,7 +2,16 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<title>Fichas de Metas — SISPAS</title>
+{% if print_on_load %}
+<script>window.onload = function(){ window.print(); }</script>
+{% endif %}
 <style>
+  @media print {
+    @page { size: A4; margin: 12mm 16mm 18mm 16mm; }
+    .page-break { page-break-before: always; }
+    .no-print { display: none; }
+  }
   @page {
     size: A4;
     margin: 12mm 16mm 18mm 16mm;

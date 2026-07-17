@@ -35,30 +35,28 @@ export default function Relatorios() {
   if (areaId) params.append('area', areaId)
   const query = params.toString() ? `?${params}` : ''
 
-  const exportarFichas = async () => {
+  const exportarFichas = () => {
+    const token = localStorage.getItem('access_token') || ''
+    // Abre HTML em nova aba; o navegador dispara window.print() automaticamente
+    const url = `/api/relatorios/metas/pdf/${query}`
+    // Faz fetch autenticado, cria blob HTML e abre em nova aba
     setErro(''); setLoadingFichas(true)
-    try {
-      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
-      // Se o servidor retornou erro JSON, lê como texto e exibe
-      if (r.data.type === 'application/json') {
-        const txt = await r.data.text()
-        const json = JSON.parse(txt)
-        setErro(json.detalhe || json.erro || 'Erro ao gerar PDF')
-        return
-      }
-      baixarArquivo(r.data, 'fichas_metas.pdf')
-    } catch (e) {
-      // Tenta ler o corpo do erro como JSON para mostrar o traceback
-      if (e.response?.data instanceof Blob) {
+    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => {
+        if (!r.ok) return r.text().then(t => { throw new Error(t) })
+        return r.blob()
+      })
+      .then(blob => {
+        const burl = URL.createObjectURL(blob)
+        window.open(burl, '_blank')
+      })
+      .catch(e => {
         try {
-          const txt = await e.response.data.text()
-          const json = JSON.parse(txt)
-          setErro(json.detalhe || json.erro || `Erro ${e.response.status}`)
-          return
-        } catch {}
-      }
-      setErro(`Erro: ${e.message}`)
-    } finally { setLoadingFichas(false) }
+          const json = JSON.parse(e.message)
+          setErro(json.detalhe || json.erro || e.message)
+        } catch { setErro(`Erro: ${e.message}`) }
+      })
+      .finally(() => setLoadingFichas(false))
   }
 
   const exportarXLSX = async () => {
