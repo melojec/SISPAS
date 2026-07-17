@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import html2pdf from 'html2pdf.js'
 import api from '../services/api'
 
 const selectCls = 'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm'
@@ -36,61 +35,22 @@ export default function Relatorios() {
   if (areaId) params.append('area', areaId)
   const query = params.toString() ? `?${params}` : ''
 
-  const exportarFichas = () => {
-    const token = localStorage.getItem('access_token') || ''
+  const exportarFichas = async () => {
     setErro(''); setLoadingFichas(true)
-    fetch(`/api/relatorios/metas/pdf/${query}`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => {
-        if (!r.ok) return r.text().then(t => { throw new Error(t) })
-        return r.text()
-      })
-      .then(html => new Promise((resolve, reject) => {
-        const doc = new DOMParser().parseFromString(html, 'text/html')
-
-        // Injeta os <style> do template no documento principal temporariamente
-        const styleEls = []
-        doc.querySelectorAll('style').forEach(s => {
-          const el = document.createElement('style')
-          el.textContent = s.textContent
-          el.setAttribute('data-pdf-temp', '1')
-          document.head.appendChild(el)
-          styleEls.push(el)
-        })
-
-        // Cria wrapper visível mas transparente para o html2canvas capturar
-        const wrapper = document.createElement('div')
-        wrapper.style.cssText = 'position:fixed;left:0;top:0;width:794px;background:white;z-index:9999;opacity:0;pointer-events:none;'
-        wrapper.innerHTML = doc.body.innerHTML
-        document.body.appendChild(wrapper)
-
-        // Aguarda o browser aplicar os estilos antes de capturar
-        setTimeout(() => {
-          html2pdf()
-            .set({
-              margin: [12, 16, 18, 16],
-              filename: 'fichas_metas.pdf',
-              image: { type: 'jpeg', quality: 0.92 },
-              html2canvas: { scale: 1, useCORS: true, logging: false, windowWidth: 794 },
-              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-              pagebreak: { mode: ['css', 'legacy'] },
-            })
-            .from(wrapper)
-            .save()
-            .then(resolve)
-            .catch(reject)
-            .finally(() => {
-              document.body.removeChild(wrapper)
-              styleEls.forEach(el => document.head.removeChild(el))
-            })
-        }, 400)
-      }))
-      .catch(e => {
+    try {
+      const r = await api.get(`/relatorios/metas/pdf/${query}`, { responseType: 'blob' })
+      baixarArquivo(r.data, 'fichas_metas.pdf')
+    } catch (e) {
+      if (e.response?.data instanceof Blob) {
         try {
-          const json = JSON.parse(e.message)
-          setErro(json.detalhe || json.erro || e.message)
-        } catch { setErro(`Erro: ${e.message}`) }
-      })
-      .finally(() => setLoadingFichas(false))
+          const txt = await e.response.data.text()
+          const json = JSON.parse(txt)
+          setErro(json.detalhe || json.erro || `Erro ${e.response.status}`)
+          return
+        } catch {}
+      }
+      setErro(`Erro: ${e.message}`)
+    } finally { setLoadingFichas(false) }
   }
 
   const exportarXLSX = async () => {
