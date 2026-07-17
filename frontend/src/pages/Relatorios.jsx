@@ -66,8 +66,17 @@ export default function Relatorios() {
     try {
       const r = await api.get(`/relatorios/xlsx/${query}`, { responseType: 'blob' })
       baixarArquivo(r.data, 'relatorio_pas.xlsx')
-    } catch { setErro('Erro ao gerar Excel.') }
-    finally { setLoadingXLSX(false) }
+    } catch (e) {
+      if (e.response?.data instanceof Blob) {
+        try {
+          const txt = await e.response.data.text()
+          const json = JSON.parse(txt)
+          setErro(json.detalhe || json.erro || `Erro ${e.response.status}`)
+          return
+        } catch {}
+      }
+      setErro(`Erro: ${e.message}`)
+    } finally { setLoadingXLSX(false) }
   }
 
   return (

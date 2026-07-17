@@ -192,6 +192,14 @@ class RelatorioPDFView(APIView):
     permission_classes = [IsUsuarioAtivo]
 
     def get(self, request):
+        import traceback, json
+        try:
+            return self._get(request)
+        except Exception as e:
+            body = json.dumps({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()})
+            return HttpResponse(body, content_type='application/json', status=500)
+
+    def _get(self, request):
         ciclo_id = request.query_params.get('ciclo')
         area_id = request.query_params.get('area')
 
@@ -220,6 +228,14 @@ class RelatorioXLSXView(APIView):
     permission_classes = [IsUsuarioAtivo]
 
     def get(self, request):
+        import traceback, json
+        try:
+            return self._get(request)
+        except Exception as e:
+            body = json.dumps({'erro': f'{type(e).__name__}: {e}', 'detalhe': traceback.format_exc()})
+            return HttpResponse(body, content_type='application/json', status=500)
+
+    def _get(self, request):
         ciclo_id = request.query_params.get('ciclo')
         area_id = request.query_params.get('area')
 
@@ -256,8 +272,8 @@ class RelatorioXLSXView(APIView):
             ws.cell(row=row, column=4, value=reg.meta.descricao)
             ws.cell(row=row, column=5, value=reg.meta.area.nome)
             ws.cell(row=row, column=6, value=str(reg.ciclo))
-            ws.cell(row=row, column=7, value=float(reg.meta.previsto_exercicio))
-            ws.cell(row=row, column=8, value=float(reg.realizado))
+            ws.cell(row=row, column=7, value=float(reg.meta.previsto_exercicio or 0))
+            ws.cell(row=row, column=8, value=float(reg.realizado or 0))
             ws.cell(row=row, column=9, value=reg.problema)
             ws.cell(row=row, column=10, value=reg.acao)
             ws.cell(row=row, column=11, value=reg.analise)
