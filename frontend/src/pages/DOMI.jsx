@@ -405,13 +405,13 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-[96rem] my-6">
 
         {/* Cabeçalho */}
-        <div className="bg-blue-950 text-white px-6 py-5 rounded-t-2xl">
-          <div className="flex items-start justify-between gap-4">
+        <div className="bg-blue-950 text-white px-4 sm:px-6 py-4 sm:py-5 rounded-t-2xl">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div>
               <span className="text-xs font-mono bg-blue-800 px-2 py-0.5 rounded">{meta.codigo}</span>
               <h2 className="text-base font-semibold mt-2 leading-snug">{meta.descricao}</h2>
             </div>
-            <div className="flex items-center gap-2 shrink-0 mt-1">
+            <div className="flex items-center gap-2 sm:shrink-0 flex-wrap">
               <button
                 onClick={() => setVerGrafico(true)}
                 className="text-blue-300 hover:text-white text-xs px-3 py-1 rounded border border-blue-700 hover:border-blue-400 transition-colors flex items-center gap-1.5"
@@ -451,7 +451,7 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
         <div className="px-6 py-5 space-y-6">
 
           {/* Indicador + Valores Planejados */}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-3 flex items-start justify-between gap-6">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-3 flex flex-col sm:flex-row items-start sm:justify-between gap-4">
                                 <div className="flex-1 min-w-0">
                                               <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">Indicador da Meta</p>
                                                             {meta.indicador
