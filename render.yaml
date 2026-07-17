@@ -3,8 +3,17 @@ services:
     name: sispas
     env: python
     plan: free
-    buildCommand: apt-get install -y libpango-1.0-0 libharfbuzz0b libffi-dev libcairo2 libgdk-pixbuf2.0-0 libfontconfig1 fonts-liberation && pip install -r requirements.txt
-    startCommand: cd backend && python manage.py migrate --settings=config.settings_prod && python manage.py criar_admin --settings=config.settings_prod && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    rootDir: .
+    buildCommand: >-
+      apt-get install -y libpango-1.0-0 libharfbuzz0b libffi-dev libcairo2 libgdk-pixbuf2.0-0 libfontconfig1 fonts-liberation &&
+      pip install -r backend/requirements.txt &&
+      cd frontend && npm ci && npm run build && cd .. &&
+      cd backend && python manage.py collectstatic --noinput --settings=config.settings_prod
+    startCommand: >-
+      cd backend &&
+      python manage.py migrate --settings=config.settings_prod &&
+      python manage.py criar_admin --settings=config.settings_prod &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings_prod
