@@ -31,7 +31,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
   return (
     <aside
       className={`
-        min-h-screen bg-blue-950 dark:bg-[#252525] text-white flex flex-col
+        h-screen overflow-y-auto bg-blue-950 dark:bg-[#252525] text-white flex flex-col
         transition-all duration-300
         ${collapsed ? 'w-16' : 'w-64'}
       `}

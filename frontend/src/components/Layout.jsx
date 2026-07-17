@@ -38,7 +38,7 @@ export default function Layout() {
   const [drawerOpen, setDrawerOpen] = useState(false) // mobile: aberto
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0a0b0b]">
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-[#0a0b0b]">
 
       {/* ── Overlay mobile ── */}
       {drawerOpen && (
