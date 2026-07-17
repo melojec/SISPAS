@@ -57,9 +57,9 @@ export default function Relatorios() {
           styleEls.push(el)
         })
 
-        // Cria wrapper com o conteúdo do body fora da tela
+        // Cria wrapper visível mas transparente para o html2canvas capturar
         const wrapper = document.createElement('div')
-        wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:white;z-index:-9999;'
+        wrapper.style.cssText = 'position:fixed;left:0;top:0;width:794px;background:white;z-index:9999;opacity:0;pointer-events:none;'
         wrapper.innerHTML = doc.body.innerHTML
         document.body.appendChild(wrapper)
 
