@@ -53,8 +53,8 @@ export default function Relatorios() {
             .set({
               margin: [12, 16, 18, 16],
               filename: 'fichas_metas.pdf',
-              image: { type: 'jpeg', quality: 0.98 },
-              html2canvas: { scale: 2, useCORS: true, logging: false },
+              image: { type: 'jpeg', quality: 0.92 },
+              html2canvas: { scale: 1, useCORS: true, logging: false, windowWidth: 794 },
               jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
               pagebreak: { mode: ['css', 'legacy'] },
             })
