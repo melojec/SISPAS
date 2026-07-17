@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import html2pdf from 'html2pdf.js'
 import api from '../services/api'
 
 const selectCls = 'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm'
@@ -37,18 +38,29 @@ export default function Relatorios() {
 
   const exportarFichas = () => {
     const token = localStorage.getItem('access_token') || ''
-    // Abre HTML em nova aba; o navegador dispara window.print() automaticamente
-    const url = `/api/relatorios/metas/pdf/${query}`
-    // Faz fetch autenticado, cria blob HTML e abre em nova aba
     setErro(''); setLoadingFichas(true)
-    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`/api/relatorios/metas/pdf/${query}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => {
         if (!r.ok) return r.text().then(t => { throw new Error(t) })
-        return r.blob()
+        return r.text()
       })
-      .then(blob => {
-        const burl = URL.createObjectURL(blob)
-        window.open(burl, '_blank')
+      .then(html => {
+        const container = document.createElement('div')
+        container.innerHTML = html
+        container.style.cssText = 'position:absolute;left:-9999px;top:0;width:210mm;'
+        document.body.appendChild(container)
+        return html2pdf()
+          .set({
+            margin: [12, 16, 18, 16],
+            filename: 'fichas_metas.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, logging: false },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'] },
+          })
+          .from(container)
+          .save()
+          .finally(() => document.body.removeChild(container))
       })
       .catch(e => {
         try {
