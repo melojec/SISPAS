@@ -44,24 +44,28 @@ export default function Relatorios() {
         if (!r.ok) return r.text().then(t => { throw new Error(t) })
         return r.text()
       })
-      .then(html => {
-        const container = document.createElement('div')
-        container.innerHTML = html
-        container.style.cssText = 'position:absolute;left:-9999px;top:0;width:210mm;'
-        document.body.appendChild(container)
-        return html2pdf()
-          .set({
-            margin: [12, 16, 18, 16],
-            filename: 'fichas_metas.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, logging: false },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['css', 'legacy'] },
-          })
-          .from(container)
-          .save()
-          .finally(() => document.body.removeChild(container))
-      })
+      .then(html => new Promise((resolve, reject) => {
+        const iframe = document.createElement('iframe')
+        iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;height:297mm;border:none;visibility:hidden;'
+        document.body.appendChild(iframe)
+        iframe.onload = () => {
+          html2pdf()
+            .set({
+              margin: [12, 16, 18, 16],
+              filename: 'fichas_metas.pdf',
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: { scale: 2, useCORS: true, logging: false },
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+              pagebreak: { mode: ['css', 'legacy'] },
+            })
+            .from(iframe.contentDocument.body)
+            .save()
+            .then(resolve)
+            .catch(reject)
+            .finally(() => document.body.removeChild(iframe))
+        }
+        iframe.srcdoc = html
+      }))
       .catch(e => {
         try {
           const json = JSON.parse(e.message)
