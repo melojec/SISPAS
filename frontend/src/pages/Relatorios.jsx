@@ -45,10 +45,26 @@ export default function Relatorios() {
         return r.text()
       })
       .then(html => new Promise((resolve, reject) => {
-        const iframe = document.createElement('iframe')
-        iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;height:297mm;border:none;visibility:hidden;'
-        document.body.appendChild(iframe)
-        iframe.onload = () => {
+        const doc = new DOMParser().parseFromString(html, 'text/html')
+
+        // Injeta os <style> do template no documento principal temporariamente
+        const styleEls = []
+        doc.querySelectorAll('style').forEach(s => {
+          const el = document.createElement('style')
+          el.textContent = s.textContent
+          el.setAttribute('data-pdf-temp', '1')
+          document.head.appendChild(el)
+          styleEls.push(el)
+        })
+
+        // Cria wrapper com o conteúdo do body fora da tela
+        const wrapper = document.createElement('div')
+        wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:white;z-index:-9999;'
+        wrapper.innerHTML = doc.body.innerHTML
+        document.body.appendChild(wrapper)
+
+        // Aguarda o browser aplicar os estilos antes de capturar
+        setTimeout(() => {
           html2pdf()
             .set({
               margin: [12, 16, 18, 16],
@@ -58,13 +74,15 @@ export default function Relatorios() {
               jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
               pagebreak: { mode: ['css', 'legacy'] },
             })
-            .from(iframe.contentDocument.body)
+            .from(wrapper)
             .save()
             .then(resolve)
             .catch(reject)
-            .finally(() => document.body.removeChild(iframe))
-        }
-        iframe.srcdoc = html
+            .finally(() => {
+              document.body.removeChild(wrapper)
+              styleEls.forEach(el => document.head.removeChild(el))
+            })
+        }, 400)
       }))
       .catch(e => {
         try {
