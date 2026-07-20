@@ -31,8 +31,8 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
   return (
     <aside
       className={`
-        h-screen overflow-y-auto bg-blue-950 dark:bg-[#252525] text-white flex flex-col
-        transition-all duration-300
+        h-screen overflow-visible bg-blue-950 dark:bg-[#252525] text-white flex flex-col
+        transition-all duration-300 relative
         ${collapsed ? 'w-16' : 'w-64'}
       `}
     >
@@ -51,13 +51,13 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
             onClick={onToggleCollapse}
             title={collapsed ? 'Expandir menu' : 'Recolher menu'}
             className="
-              hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2
-              w-6 h-6 rounded-full
+              hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2
+              w-8 h-8 rounded-full
               bg-blue-800 hover:bg-blue-600
               border border-blue-700
               items-center justify-center
               text-blue-200 hover:text-white
-              transition-colors shadow-md z-10
+              transition-colors shadow-md z-50
             "
           >
             <CollapseIcon collapsed={collapsed} />
@@ -66,7 +66,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
       </div>
 
       {/* Nav links */}
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1">
         {links.map(({ to, label, icone }) => (
           <NavLink
             key={to}
