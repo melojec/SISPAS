@@ -154,7 +154,7 @@ class TodasMetasPDFView(APIView):
                 logo_file = _p
                 break
 
-        def _make_logo(size=52):
+        def _make_logo(size=120):
             if not logo_file:
                 return Spacer(size, size)
             if logo_file.endswith('.svg'):
@@ -301,7 +301,7 @@ class TodasMetasPDFView(APIView):
             bc.setStyle(TableStyle([
                 ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
                 ('TOPPADDING',    (0,0), (-1,-1), 0),
-                ('BOTTOMPADDING', (0,0), (-1,-1), 4*mm),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 0),
                 ('LEFTPADDING',   (0,0), (0,-1), 0),
                 ('LEFTPADDING',   (1,0), (1,-1), 4),
                 ('RIGHTPADDING',  (0,0), (0,-1), 8),
@@ -311,6 +311,7 @@ class TodasMetasPDFView(APIView):
                 ('BOTTOMPADDING', (1,0), (1,-1), 6),
             ]))
             story.append(bc)
+            story.append(Spacer(1, 3*mm))
 
             # ── Banner meta ───────────────────────────────────────────────
             banner_data = [[Paragraph(
