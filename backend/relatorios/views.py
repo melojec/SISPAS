@@ -120,7 +120,7 @@ class TodasMetasPDFView(APIView):
             Paragraph, Table, TableStyle, Spacer, PageBreak, SimpleDocTemplate,
             KeepTogether, Image,
         )
-        from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
+        from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 
         ciclo_id = request.query_params.get('ciclo')
         area_id  = request.query_params.get('area')
@@ -210,8 +210,8 @@ class TodasMetasPDFView(APIView):
         sPlanLbl = st('plbl', fontSize=8.5, textColor=LABEL_TEXT, alignment=TA_CENTER)
         sPlanVal = st('pval', fontSize=22, fontName='Helvetica-Bold',
                       textColor=AZUL, alignment=TA_CENTER, leading=26)
-        sVRLbl   = st('vrlbl', fontSize=9.5, fontName='Helvetica-Bold',
-                      textColor=AZUL, leading=13)
+        sVRLbl   = st('vrlbl', fontSize=7.5, fontName='Helvetica-Bold',
+                      textColor=AZUL, leading=10)
         sQLbl    = st('ql', fontSize=8.5, textColor=CINZA_TEXT, alignment=TA_CENTER)
         sQVal    = st('qv', fontSize=22, fontName='Helvetica-Bold',
                       textColor=AZUL, alignment=TA_CENTER, leading=26)
@@ -220,9 +220,9 @@ class TodasMetasPDFView(APIView):
         sAtvTd   = st('atd', fontSize=9.5, textColor=colors.black, leading=13)
         sAqLbl   = st('aql', fontSize=9.5, fontName='Helvetica-Bold',
                       textColor=colors.HexColor('#1e3a5f'))
-        sAqText  = st('aqt', fontSize=9.5, textColor=colors.black,
-                      leading=14, alignment=TA_LEFT)
-        sAqEmpty = st('aqe', fontSize=9.5, textColor=LABEL_TEXT, fontName='Helvetica-Oblique')
+        sAqText  = st('aqt', fontSize=8.5, textColor=colors.black,
+                      leading=13, alignment=TA_JUSTIFY)
+        sAqEmpty = st('aqe', fontSize=8.5, textColor=LABEL_TEXT, fontName='Helvetica-Oblique')
         sBcLeft  = st('bcl', fontSize=9.5, textColor=CINZA_TEXT, leading=14)
 
         def _strip_html(text):
@@ -305,7 +305,8 @@ class TodasMetasPDFView(APIView):
                 ('BOTTOMPADDING', (0,0), (-1,-1), 4*mm),
                 ('LEFTPADDING',   (0,0), (0,-1), 0),
                 ('LEFTPADDING',   (1,0), (1,-1), 4),
-                ('RIGHTPADDING',  (0,0), (-1,-1), 0),
+                ('RIGHTPADDING',  (0,0), (0,-1), 8),
+                ('RIGHTPADDING',  (1,0), (1,-1), 0),
                 ('BOX',           (1,0), (1,-1), 1, BORDA),
                 ('TOPPADDING',    (1,0), (1,-1), 6),
                 ('BOTTOMPADDING', (1,0), (1,-1), 6),
