@@ -321,6 +321,7 @@ class TodasMetasPDFView(APIView):
                 # ── linha 1: banner (span 2 cols) ──
                 ('SPAN',          (0,1), (1,1)),
                 ('BACKGROUND',    (0,1), (1,1), AZUL),
+                ('BOX',           (0,1), (1,1), 1, BORDA),
                 ('TOPPADDING',    (0,1), (1,1), 6),
                 ('BOTTOMPADDING', (0,1), (1,1), 6),
                 ('LEFTPADDING',   (0,1), (1,1), 8),
