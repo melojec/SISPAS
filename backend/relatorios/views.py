@@ -285,19 +285,29 @@ class TodasMetasPDFView(APIView):
             story.append(_cabecalho(ciclo))
             story.append(Spacer(1, 3*mm))
 
-            # ── Breadcrumb + Área ─────────────────────────────────────────
-            bc_left = [
-                Paragraph(f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}', sBcLeft),
-                Paragraph(f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}', sBcLeft),
-            ]
-            bc_right = [
-                Paragraph('Área Responsável', sAreaLbl),
-                Paragraph(
-                    f'{meta.area.sigla} — {meta.area.nome}' if meta.area else '—',
-                    sAreaNome
-                ),
-            ]
             # ── Breadcrumb + Área + Banner (tabela unificada) ────────────────
+            bc_left = Table(
+                [[Paragraph(f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}', sBcLeft)],
+                 [Paragraph(f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}', sBcLeft)]],
+                colWidths=[W - W_AREA],
+                style=TableStyle([
+                    ('TOPPADDING',    (0,0), (-1,-1), 0),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 0),
+                    ('RIGHTPADDING',  (0,0), (-1,-1), 0),
+                ]),
+            )
+            bc_right = Table(
+                [[Paragraph('Área Responsável', sAreaLbl)],
+                 [Paragraph(f'{meta.area.sigla} — {meta.area.nome}' if meta.area else '—', sAreaNome)]],
+                colWidths=[W_AREA],
+                style=TableStyle([
+                    ('TOPPADDING',    (0,0), (-1,-1), 2),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 4),
+                    ('RIGHTPADDING',  (0,0), (-1,-1), 4),
+                ]),
+            )
             meta_txt = f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
             bc_banner = Table(
                 [
