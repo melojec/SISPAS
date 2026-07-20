@@ -146,31 +146,20 @@ class TodasMetasPDFView(APIView):
             else:
                 regs_atual[r.meta_id] = r
 
-        # ── Logo ─────────────────────────────────────────────────────────
+        # ── Logo — carrega bytes uma vez para evitar OOM com 100+ páginas ──
         _logo_dir = os.path.dirname(__file__)
-        logo_file = None
-        for _name in ['logo_pdf.png', 'logo.png', 'logo.svg']:
+        _logo_bytes = None
+        for _name in ['logo_pdf.png', 'logo.png']:
             _p = os.path.join(_logo_dir, _name)
             if os.path.exists(_p):
-                logo_file = _p
+                with open(_p, 'rb') as _f:
+                    _logo_bytes = _f.read()
                 break
 
-        def _make_logo(size=120):
-            if not logo_file:
-                return Spacer(size, size)
-            if logo_file.endswith('.svg'):
-                try:
-                    from svglib.svglib import svg2rlg
-                    from reportlab.graphics import renderPDF
-                    drawing = svg2rlg(logo_file)
-                    scale = (size * mm) / max(drawing.width, drawing.height)
-                    drawing.width  = drawing.width  * scale
-                    drawing.height = drawing.height * scale
-                    drawing.transform = (scale, 0, 0, scale, 0, 0)
-                    return drawing
-                except Exception:
-                    return Spacer(size, size)
-            return Image(logo_file, width=size * mm, height=size * mm)
+        def _make_logo(size=14):
+            if not _logo_bytes:
+                return Spacer(size * mm, size * mm)
+            return Image(io.BytesIO(_logo_bytes), width=size * mm, height=size * mm)
 
         # ── Cores ─────────────────────────────────────────────────────────
         AZUL       = colors.HexColor('#172554')
