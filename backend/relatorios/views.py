@@ -153,7 +153,10 @@ class TodasMetasPDFView(APIView):
         for _name in ['logo_pdf.png', 'logo.png']:
             _p = os.path.join(_logo_dir, _name)
             if os.path.exists(_p):
-                _pil = PILImage.open(_p).convert('RGB')
+                _pil = PILImage.open(_p).convert('RGBA')
+                _bg  = PILImage.new('RGB', _pil.size, (255, 255, 255))
+                _bg.paste(_pil, mask=_pil.split()[3])
+                _pil = _bg
                 _pil = _pil.resize((120, 120), PILImage.LANCZOS)
                 _buf = io.BytesIO()
                 _pil.save(_buf, format='PNG')
