@@ -297,34 +297,36 @@ class TodasMetasPDFView(APIView):
                     sAreaNome
                 ),
             ]
-            bc = Table([[bc_left, bc_right]], colWidths=[W - W_AREA, W_AREA])
-            bc.setStyle(TableStyle([
-                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
-                ('TOPPADDING',    (0,0), (-1,-1), 0),
-                ('BOTTOMPADDING', (0,0), (-1,-1), 0),
-                ('LEFTPADDING',   (0,0), (0,-1), 0),
-                ('LEFTPADDING',   (1,0), (1,-1), 4),
-                ('RIGHTPADDING',  (0,0), (0,-1), 8),
-                ('RIGHTPADDING',  (1,0), (1,-1), 0),
-                ('BOX',           (1,0), (1,-1), 1, BORDA),
-                ('TOPPADDING',    (1,0), (1,-1), 6),
-                ('BOTTOMPADDING', (1,0), (1,-1), 6),
+            # ── Breadcrumb + Área + Banner (tabela unificada) ────────────────
+            meta_txt = f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
+            bc_banner = Table(
+                [
+                    [bc_left, bc_right],
+                    [Paragraph(meta_txt, sWhiteBd), ''],
+                ],
+                colWidths=[W - W_AREA, W_AREA],
+            )
+            bc_banner.setStyle(TableStyle([
+                # ── linha 0: breadcrumb ──
+                ('VALIGN',        (0,0), (1,0), 'MIDDLE'),
+                ('TOPPADDING',    (0,0), (1,0), 4),
+                ('BOTTOMPADDING', (0,0), (1,0), 4),
+                ('LEFTPADDING',   (0,0), (0,0), 0),
+                ('RIGHTPADDING',  (0,0), (0,0), 8),
+                ('LEFTPADDING',   (1,0), (1,0), 4),
+                ('RIGHTPADDING',  (1,0), (1,0), 4),
+                ('BOX',           (1,0), (1,0), 1, BORDA),
+                ('TOPPADDING',    (1,0), (1,0), 6),
+                ('BOTTOMPADDING', (1,0), (1,0), 6),
+                # ── linha 1: banner (span 2 cols) ──
+                ('SPAN',          (0,1), (1,1)),
+                ('BACKGROUND',    (0,1), (1,1), AZUL),
+                ('TOPPADDING',    (0,1), (1,1), 6),
+                ('BOTTOMPADDING', (0,1), (1,1), 6),
+                ('LEFTPADDING',   (0,1), (1,1), 8),
+                ('RIGHTPADDING',  (0,1), (1,1), 8),
             ]))
-            story.append(bc)
-            story.append(Spacer(1, 3*mm))
-
-            # ── Banner meta ───────────────────────────────────────────────
-            banner_data = [[Paragraph(
-                f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}', sWhiteBd
-            )]]
-            story.append(Table(banner_data, colWidths=[W],
-                style=TableStyle([
-                    ('BACKGROUND',    (0,0), (-1,-1), AZUL),
-                    ('TOPPADDING',    (0,0), (-1,-1), 6),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-                    ('LEFTPADDING',   (0,0), (-1,-1), 8),
-                    ('RIGHTPADDING',  (0,0), (-1,-1), 8),
-                ])))
+            story.append(bc_banner)
 
             # ── Indicador + Valores Planejados ────────────────────────────
             ind_txt = _strip_html(meta.indicador) or ''
