@@ -96,8 +96,14 @@
     text-align: justify; padding: 0 2px; margin-bottom: 16px; }
   .aq-field-empty { font-size: 10px; color: #9ca3af; font-style: italic; margin-bottom: 16px; }
 
-  /* ── Identificação no topo de cada ficha ── */
-  .ficha-id { font-size: 8px; color: #9ca3af; text-align: right; margin-bottom: 10px; }
+  /* ── Cabeçalho por ficha ── */
+  .ph { width: 100%; border-collapse: collapse; border-bottom: 2px solid #172554; margin-bottom: 14px; }
+  .ph td { vertical-align: middle; padding: 4px 6px 8px; }
+  .ph-logo { width: 62px; }
+  .ph-logo img { display: block; }
+  .ph-title { font-size: 13px; font-weight: bold; color: #172554; line-height: 1.2; }
+  .ph-sub { font-size: 8px; color: #6b7280; margin-top: 2px; }
+  .ph-right { text-align: right; font-size: 8px; color: #374151; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -120,9 +126,19 @@
 <div class="page-break"></div>
 
 <!-- Pág. 1 da meta -->
-<div class="ficha-id">
-  {% if ciclo %}Ciclo: {{ ciclo }} · {% endif %}Gerado em: {{ data_geracao }}
-</div>
+<table class="ph" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="ph-logo"><img src="{{ logo_path }}" width="52" height="52" /></td>
+    <td>
+      <div class="ph-title">Ficha de Meta</div>
+      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
+    </td>
+    <td class="ph-right">
+      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
+      Gerado em: {{ data_geracao }}
+    </td>
+  </tr>
+</table>
 
 <!-- Breadcrumb + Área -->
 <table class="bc-tbl" cellpadding="0" cellspacing="0">
@@ -212,9 +228,19 @@
 <!-- Pág. 2 da meta — Análise Qualitativa -->
 <div class="page-break"></div>
 
-<div class="ficha-id">
-  {% if ciclo %}Ciclo: {{ ciclo }} · {% endif %}Gerado em: {{ data_geracao }}
-</div>
+<table class="ph" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="ph-logo"><img src="{{ logo_path }}" width="52" height="52" /></td>
+    <td>
+      <div class="ph-title">Ficha de Meta</div>
+      <div class="ph-sub">Sistema de Monitoramento da Programação Anual de Saúde — SES-MA</div>
+    </td>
+    <td class="ph-right">
+      {% if ciclo %}Ciclo: {{ ciclo }}<br>{% endif %}
+      Gerado em: {{ data_geracao }}
+    </td>
+  </tr>
+</table>
 
 <div class="aq-header">Análise Qualitativa — {{ item.meta.codigo }}</div>
 
