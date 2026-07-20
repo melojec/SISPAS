@@ -179,7 +179,7 @@ Campos de texto qualitativos (problema, acao, analise, atividades_nao_planejadas
 - `_nat_key(codigo)`: split por `.`, converte cada parte para int (ou 0 se não-numérico).
 - Testes rodam com SQLite in-memory (`config/settings_test.py`).
 - PDF gerado com xhtml2pdf: não suporta CSS flex/grid (usar tabelas), não carrega arquivos locais via `file:///`.
-- Logotipo do PDF em `backend/relatorios/logo.png` — carregado como base64 no `MetaPDFView`.
+- Logotipo do PDF em `backend/relatorios/logo_pdf.png` — carregado como base64 no `MetaPDFView` (xhtml2pdf) e como bytes pré-processados no `TodasMetasPDFView` (ReportLab).
 - Exportações PDF/XLSX no frontend usam `api.get(..., {responseType: 'blob'})`.
 - Notificações: marcar como lida faz DELETE (apaga o registro), não PATCH.
 - Usuario customizado usa campo `ativo` (não `is_active`) para ativar/desativar contas.
@@ -200,9 +200,11 @@ Campos de texto qualitativos (problema, acao, analise, atividades_nao_planejadas
 - Modal de confirmação do DOMI: exibe erro detalhado do backend no rodapé quando `salvarTudo` falha. `salvarTudo.reset()` chamado ao fechar o modal para limpar o estado de erro.
 - Auditoria: `MODULOS_AUDITADOS` só inclui monitoramento e usuarios (Ciclo, RegistroQuadrimestral, ExecucaoFinanceira, Usuario). Diretriz/Objetivo/Meta/Atividade removidos para evitar ruído do import. ImportarPAS registra uma entrada única com resumo `{ano, diretrizes, metas, atividades}`.
 - Logo do PDF: buscado em `relatorios/logo_pdf.png` e `relatorios/logo.png` (fallback). Nunca apontar para `frontend/src/assets/` — não existe no Render.
-- PDF TodasMetasPDFView: envolto em try/except, retorna JSON `{erro, detalhe}` com status 500 em caso de falha. Frontend Relatorios.jsx tenta parsear o blob como JSON para exibir o erro real.
+- PDF TodasMetasPDFView: gerado inteiramente via ReportLab (não usa template HTML). Layout idêntico ao meta_pdf.html: cabeçalho institucional por página, breadcrumb + área, banner azul da meta, indicador + valores planejados, valores realizados por quadrimestre, tabela de atividades, página 2 com análise qualitativa. Logo pré-processada com Pillow (RGBA → RGB sobre fundo branco, redimensionada para 120×120px) e carregada uma única vez para evitar OOM com muitas metas. Envolto em try/except BaseException, retorna JSON `{erro, detalhe}` com status 500 em caso de falha. Frontend Relatorios.jsx tenta parsear o blob como JSON para exibir o erro real.
+- Ficha individual (MetaPDFView): usa xhtml2pdf + template `relatorios/meta_pdf.html`. Logo embarcada como base64. Layout com cabeçalho, breadcrumb, banner azul, indicador/valores, quadrimestres, atividades, página 2 com análise qualitativa.
 
 ## Próximo foco
-- Investigar por que a meta 1.2.5 não aceita ser salva (erro aparece agora no modal de confirmação após último deploy).
-- Investigar erro no PDF de fichas (Exportar Fichas PDF na página Relatórios) — logo corrigido para usar relatorios/logo_pdf.png, mas ainda dando erro; adicionado try/except com retorno JSON detalhado para diagnóstico.
+- Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
+
+## Pendências antes do deploy definitivo
 - Deploy definitivo em servidor da TI da SES-MA (Ubuntu Server 22.04 + Nginx + Gunicorn + MariaDB produção).
