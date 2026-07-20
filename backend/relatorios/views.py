@@ -110,12 +110,14 @@ class TodasMetasPDFView(APIView):
             return HttpResponse(body, content_type='application/json', status=500)
 
     def _get(self, request):
+        import os
         from reportlab.lib import colors
         from reportlab.lib.pagesizes import A4
         from reportlab.lib.styles import ParagraphStyle
-        from reportlab.lib.units import mm
+        from reportlab.lib.units import mm, pt
         from reportlab.platypus import (
-            Paragraph, Table, TableStyle, Spacer, PageBreak, SimpleDocTemplate, KeepTogether,
+            Paragraph, Table, TableStyle, Spacer, PageBreak, SimpleDocTemplate,
+            KeepTogether, Image,
         )
         from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 
@@ -133,42 +135,96 @@ class TodasMetasPDFView(APIView):
         registros_all = RegistroQuadrimestral.objects.filter(
             meta__in=metas_qs
         ).select_related('ciclo').order_by('ciclo__ano', 'ciclo__quadrimestre')
-        regs_por_meta = {}   # {meta_id: {quadrimestre: registro}} — valores Q1/Q2/Q3
-        regs_atual = {}      # {meta_id: registro} — campos qualitativos do ciclo selecionado
+        regs_por_meta = {}
+        regs_atual = {}
         for r in registros_all:
             regs_por_meta.setdefault(r.meta_id, {})[r.ciclo.quadrimestre] = r
             if ciclo:
                 if r.ciclo_id == ciclo.pk:
                     regs_atual[r.meta_id] = r
             else:
-                regs_atual[r.meta_id] = r  # sem filtro: o mais recente fica (order_by acima)
+                regs_atual[r.meta_id] = r
 
-        # ── Cores e estilos ──────────────────────────────────────────────
-        AZUL      = colors.HexColor('#172554')
-        AZUL_CLARO= colors.HexColor('#dbeafe')
-        CINZA     = colors.HexColor('#f3f4f6')
-        BORDA     = colors.HexColor('#172457')
+        # ── Logo ─────────────────────────────────────────────────────────
+        _logo_dir = os.path.dirname(__file__)
+        logo_file = None
+        for _name in ['logo_pdf.png', 'logo.png', 'logo.svg']:
+            _p = os.path.join(_logo_dir, _name)
+            if os.path.exists(_p):
+                logo_file = _p
+                break
 
+        def _make_logo(size=52):
+            if not logo_file:
+                return Spacer(size, size)
+            if logo_file.endswith('.svg'):
+                try:
+                    from svglib.svglib import svg2rlg
+                    from reportlab.graphics import renderPDF
+                    drawing = svg2rlg(logo_file)
+                    scale = (size * pt) / max(drawing.width, drawing.height)
+                    drawing.width  = drawing.width  * scale
+                    drawing.height = drawing.height * scale
+                    drawing.transform = (scale, 0, 0, scale, 0, 0)
+                    return drawing
+                except Exception:
+                    return Spacer(size, size)
+            return Image(logo_file, width=size * pt, height=size * pt)
+
+        # ── Cores ─────────────────────────────────────────────────────────
+        AZUL       = colors.HexColor('#172554')
+        AZUL_H     = colors.HexColor('#A2B1D9')   # header de tabela
+        AZUL_LABEL = colors.HexColor('#dbeafe')   # fundo labels análise
+        AZUL_TINT  = colors.HexColor('#f8faff')   # fundo painel direito / linhas pares
+        AZUL_VR    = colors.HexColor('#eff6ff')   # fundo célula "Valores Realizados"
+        BORDA      = colors.HexColor('#172554')
+        BORDA_INTR = colors.HexColor('#c5cfe8')
+        CINZA_TEXT = colors.HexColor('#374151')
+        LABEL_TEXT = colors.HexColor('#6b7280')
+
+        # ── Estilos de texto ──────────────────────────────────────────────
         def st(name, **kw):
             base = dict(fontName='Helvetica', fontSize=9, leading=12,
-                        textColor=colors.black, spaceAfter=2)
+                        textColor=colors.black, spaceAfter=0, spaceBefore=0)
             base.update(kw)
             return ParagraphStyle(name, **base)
 
-        sNormal   = st('n')
-        sSmall    = st('sm', fontSize=7, leading=9, textColor=colors.HexColor('#374151'))
-        sLabel    = st('lbl', fontSize=7, leading=9, textColor=colors.HexColor('#6b7280'),
-                       fontName='Helvetica-Bold')
-        sWhite    = st('w', fontName='Helvetica-Bold', textColor=colors.white)
-        sWhiteSm  = st('wsm', fontSize=7, textColor=colors.white)
-        sCodigo   = st('cod', fontName='Helvetica-Bold', fontSize=10, textColor=colors.white)
-        sDesc     = st('desc', fontSize=9, textColor=colors.white, leading=13)
-        sArea     = st('area', fontSize=8, fontName='Helvetica-Bold', alignment=TA_CENTER)
-        sNum      = st('num', fontSize=10, fontName='Helvetica-Bold', alignment=TA_CENTER)
-        sQLabel   = st('ql', fontSize=7, textColor=colors.HexColor('#374151'), alignment=TA_CENTER)
+        sNormal  = st('n', fontSize=9, leading=13, textColor=CINZA_TEXT)
+        sSmallGr = st('sgr', fontSize=8, leading=11, textColor=CINZA_TEXT)
+        sLabel   = st('lbl', fontSize=7.5, leading=10, textColor=LABEL_TEXT,
+                      fontName='Helvetica-Bold', wordWrap='CJK')
+        sWhiteBd = st('wb', fontSize=10.5, fontName='Helvetica-Bold',
+                      textColor=colors.white, leading=15, alignment=TA_CENTER)
+        sWhiteSm = st('wsm', fontSize=8, textColor=colors.white, leading=11)
+        sTitle   = st('title', fontSize=13, fontName='Helvetica-Bold',
+                      textColor=AZUL, leading=16)
+        sSub     = st('sub', fontSize=8, textColor=LABEL_TEXT, leading=10)
+        sRight   = st('right', fontSize=8, textColor=CINZA_TEXT,
+                      leading=11, alignment=TA_RIGHT)
+        sAreaLbl = st('albl', fontSize=7.5, textColor=LABEL_TEXT,
+                      fontName='Helvetica-Bold', alignment=TA_CENTER,
+                      wordWrap='CJK')
+        sAreaNome= st('anome', fontSize=10.5, fontName='Helvetica-Bold',
+                      textColor=colors.black, alignment=TA_CENTER, leading=14)
+        sPlanLbl = st('plbl', fontSize=8.5, textColor=LABEL_TEXT, alignment=TA_CENTER)
+        sPlanVal = st('pval', fontSize=22, fontName='Helvetica-Bold',
+                      textColor=AZUL, alignment=TA_CENTER, leading=26)
+        sVRLbl   = st('vrlbl', fontSize=9.5, fontName='Helvetica-Bold',
+                      textColor=AZUL, leading=13)
+        sQLbl    = st('ql', fontSize=8.5, textColor=CINZA_TEXT, alignment=TA_CENTER)
+        sQVal    = st('qv', fontSize=22, fontName='Helvetica-Bold',
+                      textColor=AZUL, alignment=TA_CENTER, leading=26)
+        sAtvTh   = st('ath', fontSize=8.5, fontName='Helvetica-Bold',
+                      textColor=colors.HexColor('#172457'), alignment=TA_CENTER)
+        sAtvTd   = st('atd', fontSize=9.5, textColor=colors.black, leading=13)
+        sAqLbl   = st('aql', fontSize=9.5, fontName='Helvetica-Bold',
+                      textColor=colors.HexColor('#1e3a5f'))
+        sAqText  = st('aqt', fontSize=9.5, textColor=colors.black,
+                      leading=14, alignment=TA_LEFT)
+        sAqEmpty = st('aqe', fontSize=9.5, textColor=LABEL_TEXT, fontName='Helvetica-Oblique')
+        sBcLeft  = st('bcl', fontSize=9.5, textColor=CINZA_TEXT, leading=14)
 
         def _strip_html(text):
-            """Remove tags HTML de campos rich text."""
             if not text:
                 return ''
             return re.sub(r'<[^>]+>', '', html.unescape(str(text))).strip()
@@ -180,156 +236,259 @@ class TodasMetasPDFView(APIView):
                 v = float(val)
                 if 'porcentagem' in (unidade or '').lower():
                     return f'{v:,.2f}%'.replace(',', 'X').replace('.', ',').replace('X', '.')
-                if 'unidade' in (unidade or '').lower():
-                    return f'{int(v)}'
-                return f'{v:,.4f}'.replace(',', 'X').replace('.', ',').replace('X', '.').rstrip('0').rstrip(',')
+                return f'{int(round(v))}'
             except Exception:
                 return str(val)
 
-        # ── Monta elementos ───────────────────────────────────────────────
-        W = A4[0] - 32*mm   # largura útil
+        # ── Dimensões ─────────────────────────────────────────────────────
+        W       = A4[0] - 32*mm
+        W_AREA  = 46*mm
+        W_PLAN  = 62*mm
+        W_VRL   = 22*mm
+        LOGO_SZ = 14*mm   # 52pt ≈ 14mm
+        data_geracao = date.today().strftime('%d/%m/%Y')
+
+        def _cabecalho(ciclo_obj):
+            ciclo_txt = f'Ciclo: {ciclo_obj}<br/>' if ciclo_obj else ''
+            logo = _make_logo(14)
+            data = [[
+                logo,
+                [Paragraph('Ficha de Meta', sTitle),
+                 Paragraph('Sistema de Monitoramento da Programação Anual de Saúde — SES-MA', sSub)],
+                Paragraph(f'{ciclo_txt}Gerado em: {data_geracao}', sRight),
+            ]]
+            t = Table(data, colWidths=[LOGO_SZ + 2*mm, W - LOGO_SZ - 2*mm - 38*mm, 38*mm])
+            t.setStyle(TableStyle([
+                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                ('TOPPADDING',    (0,0), (-1,-1), 3),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                ('LEFTPADDING',   (0,0), (-1,-1), 0),
+                ('RIGHTPADDING',  (0,0), (-1,-1), 0),
+                ('LINEBELOW',     (0,0), (-1,-1), 2, AZUL),
+            ]))
+            return t
+
+        # ── Monta story ───────────────────────────────────────────────────
         story = []
 
         for idx, meta in enumerate(metas_qs):
-            reg_por_q = regs_por_meta.get(meta.pk, {})
+            reg_por_q      = regs_por_meta.get(meta.pk, {})
             registro_atual = regs_atual.get(meta.pk)
             un = meta.unidade or ''
+            d   = meta.objetivo.diretriz
+            obj = meta.objetivo
 
             if idx > 0:
                 story.append(PageBreak())
 
-            # ── Cabeçalho azul ────────────────────────────────────────────
-            d = meta.objetivo.diretriz
-            obj = meta.objetivo
-            header_data = [[
-                Paragraph(f'<b>{d.codigo}</b> {_strip_html(d.descricao)}', sWhiteSm),
-            ]]
-            story.append(Table(header_data, colWidths=[W],
-                style=TableStyle([
-                    ('BACKGROUND', (0,0), (-1,-1), AZUL),
-                    ('TOPPADDING', (0,0), (-1,-1), 4),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 4),
-                    ('LEFTPADDING', (0,0), (-1,-1), 8),
-                ])))
+            # ── Cabeçalho ─────────────────────────────────────────────────
+            story.append(_cabecalho(ciclo))
+            story.append(Spacer(1, 3*mm))
 
-            # Objetivo
-            obj_data = [[Paragraph(f'<b>{obj.codigo}</b> {_strip_html(obj.descricao)}', sSmall)]]
-            story.append(Table(obj_data, colWidths=[W],
-                style=TableStyle([
-                    ('BACKGROUND', (0,0), (-1,-1), CINZA),
-                    ('TOPPADDING', (0,0), (-1,-1), 3),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-                    ('LEFTPADDING', (0,0), (-1,-1), 8),
-                    ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                ])))
+            # ── Breadcrumb + Área ─────────────────────────────────────────
+            bc_left = [
+                Paragraph(f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}', sBcLeft),
+                Paragraph(f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}', sBcLeft),
+            ]
+            bc_right = [
+                Paragraph('Área Responsável', sAreaLbl),
+                Paragraph(
+                    f'{meta.area.sigla} — {meta.area.nome}' if meta.area else '—',
+                    sAreaNome
+                ),
+            ]
+            bc = Table([[bc_left, bc_right]], colWidths=[W - W_AREA, W_AREA])
+            bc.setStyle(TableStyle([
+                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                ('TOPPADDING',    (0,0), (-1,-1), 0),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 4*mm),
+                ('LEFTPADDING',   (0,0), (0,-1), 0),
+                ('LEFTPADDING',   (1,0), (1,-1), 4),
+                ('RIGHTPADDING',  (0,0), (-1,-1), 0),
+                ('BOX',           (1,0), (1,-1), 1, BORDA),
+                ('TOPPADDING',    (1,0), (1,-1), 6),
+                ('BOTTOMPADDING', (1,0), (1,-1), 6),
+            ]))
+            story.append(bc)
 
-            # Meta (código + descrição + área)
-            w_area = 42*mm
-            meta_data = [[
-                [Paragraph(f'META {meta.codigo}', sCodigo),
-                 Paragraph(_strip_html(meta.descricao), sDesc)],
-                [Paragraph('ÁREA', sLabel),
-                 Paragraph(meta.area.sigla if meta.area else '—', sArea)],
-            ]]
-            story.append(Table(meta_data, colWidths=[W - w_area, w_area],
+            # ── Banner meta ───────────────────────────────────────────────
+            banner_data = [[Paragraph(
+                f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}', sWhiteBd
+            )]]
+            story.append(Table(banner_data, colWidths=[W],
                 style=TableStyle([
-                    ('BACKGROUND', (0,0), (0,0), AZUL),
-                    ('BACKGROUND', (1,0), (1,0), AZUL_CLARO),
-                    ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                    ('TOPPADDING', (0,0), (-1,-1), 6),
+                    ('BACKGROUND',    (0,0), (-1,-1), AZUL),
+                    ('TOPPADDING',    (0,0), (-1,-1), 6),
                     ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-                    ('LEFTPADDING', (0,0), (0,0), 8),
-                    ('LEFTPADDING', (1,0), (1,0), 4),
-                    ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                    ('LINEAFTER', (0,0), (0,0), 0.5, BORDA),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 8),
+                    ('RIGHTPADDING',  (0,0), (-1,-1), 8),
                 ])))
 
             # ── Indicador + Valores Planejados ────────────────────────────
-            w_plan = 60*mm
-            ppa  = _fmt(meta.previsto_ppa, un)
-            exer = _fmt(meta.previsto_exercicio, un)
-            ind_data = [[
-                [Paragraph('INDICADOR DA META', sLabel),
-                 Paragraph(_strip_html(meta.indicador) or 'Não informado', sNormal)],
-                [Paragraph('VALORES PLANEJADOS', sLabel),
-                 Paragraph(f'PES 2024–2027: <b>{ppa}</b>   |   PAS {ciclo.ano if ciclo else "—"}: <b>{exer}</b>', sSmall)],
-            ]]
-            story.append(Table(ind_data, colWidths=[W - w_plan, w_plan],
-                style=TableStyle([
-                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                    ('TOPPADDING', (0,0), (-1,-1), 5),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 5),
-                    ('LEFTPADDING', (0,0), (-1,-1), 8),
-                    ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                    ('LINEAFTER', (0,0), (0,0), 0.5, BORDA),
-                ])))
+            ind_txt = _strip_html(meta.indicador) or ''
+            un_txt  = _strip_html(meta.unidade)   or ''
+            ind_content = []
+            if ind_txt:
+                ind_content.append(Paragraph(f'<b>Indicador:</b> {ind_txt}', sNormal))
+            if un_txt:
+                ind_content.append(Paragraph(f'<b>Unidade:</b> {un_txt}', sNormal))
+            if not ind_content:
+                ind_content.append(Paragraph('<i>Não informado</i>', st('ni', textColor=LABEL_TEXT, fontName='Helvetica-Oblique')))
 
-            # ── Realizado por Quadrimestre ─────────────────────────────────
+            ppa_lbl  = 'PES (4 anos)'
+            pas_lbl  = f'PAS (Ano {ciclo.ano})' if ciclo else 'PAS'
+            ppa_val  = _fmt(meta.previsto_ppa, un)
+            exer_val = _fmt(meta.previsto_exercicio, un)
+
+            iv_right = [
+                Paragraph('Valores Planejados', sLabel),
+                Table(
+                    [[Paragraph(ppa_lbl, sPlanLbl), Paragraph(pas_lbl, sPlanLbl)],
+                     [Paragraph(ppa_val, sPlanVal), Paragraph(exer_val, sPlanVal)]],
+                    colWidths=[(W_PLAN - 4*mm) / 2] * 2,
+                    style=TableStyle([
+                        ('ALIGN',         (0,0), (-1,-1), 'CENTER'),
+                        ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                        ('TOPPADDING',    (0,0), (-1,-1), 2),
+                        ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+                        ('LINEAFTER',     (0,0), (0,-1), 0.5, colors.HexColor('#e5e7eb')),
+                    ])
+                ),
+            ]
+            iv = Table([[ind_content, iv_right]], colWidths=[W - W_PLAN, W_PLAN])
+            iv.setStyle(TableStyle([
+                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                ('TOPPADDING',    (0,0), (-1,-1), 7),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 7),
+                ('LEFTPADDING',   (0,0), (0,-1), 8),
+                ('LEFTPADDING',   (1,0), (1,-1), 6),
+                ('RIGHTPADDING',  (0,0), (-1,-1), 6),
+                ('BOX',           (0,0), (-1,-1), 1, BORDA),
+                ('LINEAFTER',     (0,0), (0,-1), 1, BORDA),
+                ('BACKGROUND',    (1,0), (1,-1), AZUL_TINT),
+                ('LINEBEFORE',    (0,0), (-1,-1), 0, colors.white),
+            ]))
+            story.append(iv)
+
+            # ── Valores Realizados ────────────────────────────────────────
             q_labels = ['1º Quadrimestre', '2º Quadrimestre', '3º Quadrimestre']
-            q_vals   = [_fmt(reg_por_q[q].realizado, un) if q in reg_por_q else '—' for q in [1,2,3]]
-            q_data   = [[Paragraph(l, sQLabel) for l in q_labels],
-                        [Paragraph(v, sNum)    for v in q_vals]]
-            story.append(Table(q_data, colWidths=[W/3]*3,
-                style=TableStyle([
-                    ('BACKGROUND', (0,0), (-1,0), CINZA),
-                    ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                    ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                    ('TOPPADDING', (0,0), (-1,-1), 4),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 4),
-                    ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                    ('INNERGRID', (0,0), (-1,-1), 0.5, BORDA),
-                ])))
+            q_vals   = [_fmt(reg_por_q[q].realizado, un) if q in reg_por_q else '—'
+                        for q in [1, 2, 3]]
+            vr_cells = [Paragraph('Valores\nRealizados', sVRLbl)]
+            for lbl, val in zip(q_labels, q_vals):
+                vr_cells.append([Paragraph(lbl, sQLbl), Paragraph(val, sQVal)])
 
-            # ── Campos qualitativos ───────────────────────────────────────
-            def campo_qual(label, valor):
-                txt = _strip_html(valor) if valor else ''
-                return [Paragraph(label, sLabel), Paragraph(txt or '—', sNormal)]
-
-            if registro_atual:
-                qual_rows = [
-                    campo_qual('PROBLEMAS ENCONTRADOS', registro_atual.problema),
-                    campo_qual('AÇÕES REALIZADAS', registro_atual.acao),
-                    campo_qual('ANÁLISE', registro_atual.analise),
-                ]
-                if getattr(registro_atual, 'atividades_nao_planejadas', None):
-                    qual_rows.append(campo_qual('ATIVIDADES NÃO PLANEJADAS', registro_atual.atividades_nao_planejadas))
-                for row in qual_rows:
-                    story.append(Table([[row[0]], [row[1]]], colWidths=[W],
-                        style=TableStyle([
-                            ('BACKGROUND', (0,0), (-1,0), CINZA),
-                            ('TOPPADDING', (0,0), (-1,-1), 3),
-                            ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-                            ('LEFTPADDING', (0,0), (-1,-1), 8),
-                            ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                        ])))
+            vr = Table([vr_cells],
+                colWidths=[W_VRL] + [(W - W_VRL) / 3] * 3)
+            vr.setStyle(TableStyle([
+                ('BACKGROUND',    (0,0), (0,-1), AZUL_VR),
+                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                ('ALIGN',         (1,0), (-1,-1), 'CENTER'),
+                ('TOPPADDING',    (0,0), (-1,-1), 6),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                ('LEFTPADDING',   (0,0), (0,-1), 8),
+                ('LEFTPADDING',   (1,0), (-1,-1), 4),
+                ('BOX',           (0,0), (-1,-1), 1, BORDA),
+                ('LINEAFTER',     (0,0), (0,-1), 1, BORDA),
+                ('LINEAFTER',     (1,0), (1,-1), 0.5, BORDA_INTR),
+                ('LINEAFTER',     (2,0), (2,-1), 0.5, BORDA_INTR),
+            ]))
+            story.append(vr)
+            story.append(Spacer(1, 4*mm))
 
             # ── Atividades ────────────────────────────────────────────────
             atividades = list(meta.atividades.all())
             if atividades:
-                at_header = [[Paragraph('ATIVIDADES PREVISTAS', sLabel)]]
-                story.append(Table(at_header, colWidths=[W],
+                atv_banner = Table([[Paragraph('Atividades', sWhiteBd)]], colWidths=[W],
                     style=TableStyle([
-                        ('BACKGROUND', (0,0), (-1,-1), CINZA),
-                        ('TOPPADDING', (0,0), (-1,-1), 3),
-                        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-                        ('LEFTPADDING', (0,0), (-1,-1), 8),
-                        ('BOX', (0,0), (-1,-1), 0.5, BORDA),
-                    ])))
-                for at in atividades:
-                    at_row = [[Paragraph(f'<b>{at.codigo}</b>  {_strip_html(at.descricao)}', sSmall)]]
-                    story.append(Table(at_row, colWidths=[W],
-                        style=TableStyle([
-                            ('TOPPADDING', (0,0), (-1,-1), 2),
-                            ('BOTTOMPADDING', (0,0), (-1,-1), 2),
-                            ('LEFTPADDING', (0,0), (-1,-1), 12),
-                            ('LINEBELOW', (0,0), (-1,-1), 0.25, colors.HexColor('#e5e7eb')),
-                        ])))
+                        ('BACKGROUND',    (0,0), (-1,-1), AZUL),
+                        ('TOPPADDING',    (0,0), (-1,-1), 6),
+                        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                        ('LEFTPADDING',   (0,0), (-1,-1), 8),
+                    ]))
+                story.append(atv_banner)
+
+                w_ind  = 36*mm
+                w_un   = 18*mm
+                w_meta = 13*mm
+                w_desc = W - w_ind - w_un - w_meta
+                atv_rows = [[
+                    Paragraph('Descrição',              sAtvTh),
+                    Paragraph('Indicador da Atividade', sAtvTh),
+                    Paragraph('Unidade',                sAtvTh),
+                    Paragraph('Meta',                   sAtvTh),
+                ]]
+                for i, a in enumerate(atividades):
+                    bg = AZUL_TINT if i % 2 == 1 else colors.white
+                    atv_rows.append([
+                        Paragraph(_strip_html(a.descricao), sAtvTd),
+                        Paragraph(_strip_html(a.indicador) or '—', st(f'ati{i}', fontSize=9.5, alignment=TA_CENTER)),
+                        Paragraph(_strip_html(a.unidade)   or '—', st(f'atu{i}', fontSize=9.5, alignment=TA_CENTER)),
+                        Paragraph(_fmt(a.valor_previsto, un), st(f'atm{i}', fontSize=9.5, alignment=TA_CENTER)),
+                    ])
+
+                atv_tbl = Table(atv_rows, colWidths=[w_desc, w_ind, w_un, w_meta])
+                row_styles = [
+                    ('BACKGROUND',    (0,0), (-1,0), AZUL_H),
+                    ('FONTNAME',      (0,0), (-1,0), 'Helvetica-Bold'),
+                    ('ALIGN',         (1,0), (-1,-1), 'CENTER'),
+                    ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                    ('TOPPADDING',    (0,0), (-1,-1), 4),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 6),
+                    ('RIGHTPADDING',  (0,0), (-1,-1), 6),
+                    ('BOX',           (0,0), (-1,-1), 1, BORDA_INTR),
+                    ('INNERGRID',     (0,0), (-1,-1), 0.5, BORDA_INTR),
+                ]
+                for i in range(1, len(atv_rows)):
+                    if i % 2 == 0:
+                        row_styles.append(('BACKGROUND', (0,i), (-1,i), AZUL_TINT))
+                atv_tbl.setStyle(TableStyle(row_styles))
+                story.append(atv_tbl)
+
+            # ── Pág. 2 — Análise Qualitativa ─────────────────────────────
+            story.append(PageBreak())
+            story.append(_cabecalho(ciclo))
+            story.append(Spacer(1, 3*mm))
+
+            aq_banner = Table(
+                [[Paragraph(f'Análise Qualitativa', sWhiteBd)]],
+                colWidths=[W],
+                style=TableStyle([
+                    ('BACKGROUND',    (0,0), (-1,-1), AZUL),
+                    ('TOPPADDING',    (0,0), (-1,-1), 7),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 7),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 8),
+                ])
+            )
+            story.append(aq_banner)
+            story.append(Spacer(1, 4*mm))
+
+            def _aq_field(label, valor):
+                lbl_row = Table([[Paragraph(label, sAqLbl)]], colWidths=[W],
+                    style=TableStyle([
+                        ('BACKGROUND',    (0,0), (-1,-1), AZUL_LABEL),
+                        ('TOPPADDING',    (0,0), (-1,-1), 4),
+                        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+                        ('LEFTPADDING',   (0,0), (-1,-1), 8),
+                    ]))
+                txt = _strip_html(valor) if valor else ''
+                txt_para = (Paragraph(txt, sAqText) if txt
+                            else Paragraph('Não informado', sAqEmpty))
+                return [lbl_row, txt_para, Spacer(1, 4*mm)]
+
+            story += _aq_field('Problemas Encontrados no Quadrimestre',
+                               registro_atual.problema if registro_atual else None)
+            story += _aq_field('Ações Realizadas para o Enfrentamento dos Problemas',
+                               registro_atual.acao if registro_atual else None)
+            story += _aq_field('Análises e Considerações – Este texto irá diretamente para o DigiSUS',
+                               registro_atual.analise if registro_atual else None)
 
         # ── Gera PDF ──────────────────────────────────────────────────────
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4,
             leftMargin=16*mm, rightMargin=16*mm,
-            topMargin=12*mm, bottomMargin=18*mm)
+            topMargin=14*mm, bottomMargin=16*mm)
         doc.build(story)
         buffer.seek(0)
         return HttpResponse(buffer.read(), content_type='application/pdf',
