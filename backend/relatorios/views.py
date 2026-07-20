@@ -114,7 +114,8 @@ class TodasMetasPDFView(APIView):
         from reportlab.lib import colors
         from reportlab.lib.pagesizes import A4
         from reportlab.lib.styles import ParagraphStyle
-        from reportlab.lib.units import mm, pt
+        from reportlab.lib.units import mm
+        pt = 1  # 1 point = 1 ReportLab unit
         from reportlab.platypus import (
             Paragraph, Table, TableStyle, Spacer, PageBreak, SimpleDocTemplate,
             KeepTogether, Image,
