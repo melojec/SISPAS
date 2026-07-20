@@ -302,7 +302,7 @@ class TodasMetasPDFView(APIView):
             bc_banner = Table(
                 [
                     [bc_left, bc_right],
-                    [Paragraph(meta_txt, sWhiteBd), ''],
+                    [Paragraph(meta_txt, sWhiteBd), Paragraph('', sWhiteBd)],
                 ],
                 colWidths=[W - W_AREA, W_AREA],
             )
