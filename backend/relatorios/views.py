@@ -146,14 +146,18 @@ class TodasMetasPDFView(APIView):
             else:
                 regs_atual[r.meta_id] = r
 
-        # ── Logo — carrega bytes uma vez para evitar OOM com 100+ páginas ──
+        # ── Logo — converte para RGB e redimensiona uma vez, reutiliza nos 100+ cabeçalhos
+        from PIL import Image as PILImage
         _logo_dir = os.path.dirname(__file__)
         _logo_bytes = None
         for _name in ['logo_pdf.png', 'logo.png']:
             _p = os.path.join(_logo_dir, _name)
             if os.path.exists(_p):
-                with open(_p, 'rb') as _f:
-                    _logo_bytes = _f.read()
+                _pil = PILImage.open(_p).convert('RGB')
+                _pil = _pil.resize((120, 120), PILImage.LANCZOS)
+                _buf = io.BytesIO()
+                _pil.save(_buf, format='PNG')
+                _logo_bytes = _buf.getvalue()
                 break
 
         def _make_logo(size=14):
