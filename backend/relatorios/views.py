@@ -132,10 +132,16 @@ class TodasMetasPDFView(APIView):
 
         registros_all = RegistroQuadrimestral.objects.filter(
             meta__in=metas_qs
-        ).select_related('ciclo')
-        regs_por_meta = {}
+        ).select_related('ciclo').order_by('ciclo__ano', 'ciclo__quadrimestre')
+        regs_por_meta = {}   # {meta_id: {quadrimestre: registro}} — valores Q1/Q2/Q3
+        regs_atual = {}      # {meta_id: registro} — campos qualitativos do ciclo selecionado
         for r in registros_all:
             regs_por_meta.setdefault(r.meta_id, {})[r.ciclo.quadrimestre] = r
+            if ciclo:
+                if r.ciclo_id == ciclo.pk:
+                    regs_atual[r.meta_id] = r
+            else:
+                regs_atual[r.meta_id] = r  # sem filtro: o mais recente fica (order_by acima)
 
         # ── Cores e estilos ──────────────────────────────────────────────
         AZUL      = colors.HexColor('#172554')
@@ -186,7 +192,7 @@ class TodasMetasPDFView(APIView):
 
         for idx, meta in enumerate(metas_qs):
             reg_por_q = regs_por_meta.get(meta.pk, {})
-            registro_atual = reg_por_q.get(ciclo.quadrimestre) if ciclo else None
+            registro_atual = regs_atual.get(meta.pk)
             un = meta.unidade or ''
 
             if idx > 0:
