@@ -115,7 +115,6 @@ class TodasMetasPDFView(APIView):
         from reportlab.lib.pagesizes import A4
         from reportlab.lib.styles import ParagraphStyle
         from reportlab.lib.units import mm
-        pt = 1  # 1 point = 1 ReportLab unit
         from reportlab.platypus import (
             Paragraph, Table, TableStyle, Spacer, PageBreak, SimpleDocTemplate,
             KeepTogether, Image,
@@ -163,14 +162,14 @@ class TodasMetasPDFView(APIView):
                     from svglib.svglib import svg2rlg
                     from reportlab.graphics import renderPDF
                     drawing = svg2rlg(logo_file)
-                    scale = (size * pt) / max(drawing.width, drawing.height)
+                    scale = (size * mm) / max(drawing.width, drawing.height)
                     drawing.width  = drawing.width  * scale
                     drawing.height = drawing.height * scale
                     drawing.transform = (scale, 0, 0, scale, 0, 0)
                     return drawing
                 except Exception:
                     return Spacer(size, size)
-            return Image(logo_file, width=size * pt, height=size * pt)
+            return Image(logo_file, width=size * mm, height=size * mm)
 
         # ── Cores ─────────────────────────────────────────────────────────
         AZUL       = colors.HexColor('#172554')
