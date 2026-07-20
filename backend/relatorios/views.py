@@ -285,61 +285,50 @@ class TodasMetasPDFView(APIView):
 
             # ── Cabeçalho ─────────────────────────────────────────────────
             story.append(_cabecalho(ciclo))
-            story.append(Spacer(1, 3*mm))
+            story.append(Spacer(1, 2*mm))
 
-            # ── Breadcrumb + Área + Banner (tabela unificada) ────────────────
-            bc_left = Table(
-                [[Paragraph(f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}', sBcLeft)],
-                 [Paragraph(f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}', sBcLeft)]],
-                colWidths=[W - W_AREA],
-                style=TableStyle([
-                    ('TOPPADDING',    (0,0), (-1,-1), 0),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 2),
-                    ('LEFTPADDING',   (0,0), (-1,-1), 0),
-                    ('RIGHTPADDING',  (0,0), (-1,-1), 0),
-                ]),
-            )
-            bc_right = Table(
-                [[Paragraph('Área Responsável', sAreaLbl)],
-                 [Paragraph(f'{meta.area.sigla} — {meta.area.nome}' if meta.area else '—', sAreaNome)]],
-                colWidths=[W_AREA],
-                style=TableStyle([
-                    ('TOPPADDING',    (0,0), (-1,-1), 2),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 2),
-                    ('LEFTPADDING',   (0,0), (-1,-1), 4),
-                    ('RIGHTPADDING',  (0,0), (-1,-1), 4),
-                ]),
-            )
-            meta_txt = f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
-            bc_banner = Table(
-                [
-                    [bc_left, bc_right],
-                    [Paragraph(meta_txt, sWhiteBd), Paragraph('', sWhiteBd)],
-                ],
+            # ── Breadcrumb + Área ─────────────────────────────────────────
+            bc = Table(
+                [[
+                    Paragraph(
+                        f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}<br/>'
+                        f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}',
+                        sBcLeft
+                    ),
+                    [Paragraph('Área Responsável', sAreaLbl),
+                     Paragraph(f'{meta.area.sigla} — {meta.area.nome}' if meta.area else '—', sAreaNome)],
+                ]],
                 colWidths=[W - W_AREA, W_AREA],
             )
-            bc_banner.setStyle(TableStyle([
-                # ── linha 0: breadcrumb ──
-                ('VALIGN',        (0,0), (1,0), 'MIDDLE'),
-                ('TOPPADDING',    (0,0), (1,0), 4),
-                ('BOTTOMPADDING', (0,0), (1,0), 4),
+            bc.setStyle(TableStyle([
+                ('VALIGN',        (0,0), (-1,-1), 'MIDDLE'),
+                ('TOPPADDING',    (0,0), (0,0), 4),
+                ('BOTTOMPADDING', (0,0), (0,0), 4),
                 ('LEFTPADDING',   (0,0), (0,0), 0),
                 ('RIGHTPADDING',  (0,0), (0,0), 8),
+                ('TOPPADDING',    (1,0), (1,0), 6),
+                ('BOTTOMPADDING', (1,0), (1,0), 6),
                 ('LEFTPADDING',   (1,0), (1,0), 4),
                 ('RIGHTPADDING',  (1,0), (1,0), 4),
                 ('BOX',           (1,0), (1,0), 1, BORDA),
-                ('TOPPADDING',    (1,0), (1,0), 6),
-                ('BOTTOMPADDING', (1,0), (1,0), 6),
-                # ── linha 1: banner (span 2 cols) ──
-                ('SPAN',          (0,1), (1,1)),
-                ('BACKGROUND',    (0,1), (1,1), AZUL),
-                ('BOX',           (0,1), (1,1), 1, BORDA),
-                ('TOPPADDING',    (0,1), (1,1), 6),
-                ('BOTTOMPADDING', (0,1), (1,1), 6),
-                ('LEFTPADDING',   (0,1), (1,1), 8),
-                ('RIGHTPADDING',  (0,1), (1,1), 8),
             ]))
-            story.append(bc_banner)
+            story.append(bc)
+            story.append(Spacer(1, 2*mm))
+
+            # ── Banner meta ───────────────────────────────────────────────
+            meta_txt = f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
+            story.append(Table(
+                [[Paragraph(meta_txt, sWhiteBd)]],
+                colWidths=[W],
+                style=TableStyle([
+                    ('BACKGROUND',    (0,0), (-1,-1), AZUL),
+                    ('BOX',           (0,0), (-1,-1), 1, BORDA),
+                    ('TOPPADDING',    (0,0), (-1,-1), 6),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                    ('LEFTPADDING',   (0,0), (-1,-1), 8),
+                    ('RIGHTPADDING',  (0,0), (-1,-1), 8),
+                ]),
+            ))
 
             # ── Indicador + Valores Planejados ────────────────────────────
             ind_txt = _strip_html(meta.indicador) or ''
