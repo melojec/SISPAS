@@ -101,13 +101,12 @@ class TodasMetasPDFView(APIView):
     permission_classes = [IsUsuarioAtivo]
 
     def get(self, request):
-        import traceback, sys
+        import traceback, sys, json
         try:
             return self._get(request)
-        except Exception as e:
-            import json
+        except BaseException as e:
             tb = traceback.format_exc()
-            print(tb, file=sys.stderr)
+            print('[TodasMetasPDF ERROR]', tb, file=sys.stderr, flush=True)
             body = json.dumps({'erro': f'{type(e).__name__}: {e}', 'detalhe': tb})
             return HttpResponse(body, content_type='application/json', status=500)
 
