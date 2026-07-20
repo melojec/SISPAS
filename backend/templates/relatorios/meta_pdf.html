@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; font-size: 10px; color: #111; background: white; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #111; background: white; }
 
   @page {
     margin: 14mm 16mm 16mm 16mm;
@@ -20,7 +20,7 @@
   #rodape {
     border-top: 1px solid #e5e7eb;
     padding-top: 4px;
-    font-size: 8px;
+    font-size: 7.5px;
     color: #9ca3af;
     text-align: center;
   }
@@ -30,45 +30,38 @@
     width: 100%;
     border-collapse: collapse;
     border-bottom: 2px solid #172554;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
-  .ph td { padding: 4px 6px; vertical-align: middle; }
-  .ph-logo { width: 60px; }
+  .ph td { vertical-align: middle; padding: 4px 6px 8px; }
+  .ph-logo { width: 62px; }
   .ph-logo img { display: block; }
   .ph-title { font-size: 13px; font-weight: bold; color: #172554; line-height: 1.2; }
-  .ph-sub { font-size: 8.5px; color: #6b7280; margin-top: 2px; }
-  .ph-right { text-align: right; font-size: 8.5px; color: #374151; white-space: nowrap; }
+  .ph-sub { font-size: 8px; color: #6b7280; margin-top: 2px; }
+  .ph-right { text-align: right; font-size: 8px; color: #374151; white-space: nowrap; }
 
   /* ── Breadcrumb + Área ── */
-  .bc {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-  }
+  .bc { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
   .bc td { vertical-align: top; padding: 0; }
-  .bc-left { font-size: 10px; color: #374151; line-height: 1.6; padding-right: 10px; }
+  .bc-left { font-size: 9.5px; color: #374151; line-height: 1.6; padding-right: 12px; }
   .bc-right {
-    width: 165px;
-    border: 1px solid #172457;
+    width: 162px;
+    border: 1px solid #172554;
     text-align: center;
-    padding: 6px 10px;
+    padding: 7px 10px;
     vertical-align: middle;
   }
   .bc-area-lbl {
-    font-size: 8px;
-    color: #6b7280;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 0.04em;
-    margin-bottom: 3px;
+    font-size: 7.5px; color: #6b7280;
+    text-transform: uppercase; font-weight: bold;
+    letter-spacing: 0.06em; margin-bottom: 3px;
   }
-  .bc-area-nome { font-size: 11px; font-weight: bold; color: #111; }
+  .bc-area-nome { font-size: 10.5px; font-weight: bold; color: #111; }
 
   /* ── Banner Meta ── */
   .meta-banner {
     background: #172554;
     color: white;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: bold;
     text-align: center;
     padding: 7px 10px;
@@ -76,132 +69,81 @@
   }
 
   /* ── Indicador + Valores Planejados ── */
-  .iv {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #172457;
-    border-top: none;
-  }
+  .iv { width: 100%; border-collapse: collapse; border: 1px solid #172554; border-top: none; }
   .iv td { vertical-align: middle; }
-  .iv-left { padding: 8px 10px; width: 55%; font-size: 10px; line-height: 1.6; }
+  .iv-left { padding: 9px 11px; width: 55%; font-size: 9.5px; line-height: 1.6; }
   .iv-right {
-    border-left: 1px solid #172457;
+    border-left: 1px solid #172554;
     background: #f8faff;
-    padding: 6px 8px;
+    padding: 8px 10px;
     text-align: center;
   }
   .iv-right-lbl {
-    font-size: 8px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #6b7280;
-    letter-spacing: 0.04em;
-    margin-bottom: 6px;
+    font-size: 7.5px; font-weight: bold; text-transform: uppercase;
+    color: #6b7280; letter-spacing: 0.06em; margin-bottom: 7px;
   }
-  .plan {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .plan td { text-align: center; padding: 2px 6px; vertical-align: middle; }
+  .plan { width: 100%; border-collapse: collapse; }
+  .plan td { text-align: center; padding: 2px 8px; vertical-align: middle; }
   .plan-sep { border-left: 1px solid #e5e7eb; }
-  .plan-lbl { font-size: 9px; color: #6b7280; margin-bottom: 2px; }
-  .plan-val { font-size: 20px; font-weight: bold; color: #172554; }
+  .plan-lbl { font-size: 8.5px; color: #6b7280; margin-bottom: 2px; }
+  .plan-val { font-size: 22px; font-weight: bold; color: #172554; }
 
   /* ── Valores Realizados ── */
-  .vr {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #172457;
-    border-top: none;
-    margin-bottom: 12px;
-  }
+  .vr { width: 100%; border-collapse: collapse; border: 1px solid #172554; border-top: none; margin-bottom: 13px; }
   .vr td { vertical-align: middle; }
   .vr-label {
-    background: #eff6ff;
-    color: #172554;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 8px 10px;
-    border-right: 1px solid #172457;
-    width: 90px;
-    line-height: 1.4;
+    background: #eff6ff; color: #172554;
+    font-size: 9.5px; font-weight: bold;
+    padding: 9px 10px; border-right: 1px solid #172554;
+    width: 88px; line-height: 1.5;
   }
   .vr-cell {
-    text-align: center;
-    padding: 6px 4px;
-    border-right: 1px solid #172457;
+    text-align: center; padding: 7px 4px;
+    border-right: 1px solid #c5cfe8;
     width: 33%;
   }
   .vr-cell:last-child { border-right: none; }
-  .vr-q-lbl { font-size: 9px; color: #374151; margin-bottom: 2px; }
-  .vr-q-val { font-size: 20px; font-weight: bold; color: #172554; }
+  .vr-q-lbl { font-size: 8.5px; color: #374151; margin-bottom: 2px; }
+  .vr-q-val { font-size: 22px; font-weight: bold; color: #172554; }
 
   /* ── Atividades ── */
   .atv-banner {
-    background: #172554;
-    color: white;
-    text-align: center;
-    font-size: 11px;
-    font-weight: bold;
-    padding: 7px 10px;
-    margin-top: 2px;
+    background: #172554; color: white;
+    text-align: center; font-size: 10.5px; font-weight: bold;
+    padding: 7px 10px; margin-top: 2px;
   }
-  .atv {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 10px;
-  }
+  .atv { width: 100%; border-collapse: collapse; font-size: 9.5px; }
   .atv th {
-    background: #A2B1D9;
-    color: #172457;
-    font-size: 9px;
-    font-weight: bold;
-    padding: 5px 8px;
-    border: 1px solid #c5cfe8;
-    text-align: center;
+    background: #A2B1D9; color: #172457;
+    font-size: 8.5px; font-weight: bold; padding: 5px 8px;
+    border: 1px solid #c5cfe8; text-align: center;
   }
   .atv th.left { text-align: left; }
   .atv td {
-    padding: 6px 8px;
-    border: 1px solid #dddfe9;
-    vertical-align: middle;
-    text-align: center;
-    line-height: 1.5;
+    padding: 6px 8px; border: 1px solid #dddfe9;
+    vertical-align: middle; text-align: center; line-height: 1.5;
   }
   .atv td.left { text-align: left; }
   .atv tr:nth-child(even) td { background: #f8faff; }
 
   /* ── Análise Qualitativa ── */
   .aq-banner {
-    background: #172554;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 8px 10px;
-    margin-bottom: 12px;
+    background: #172554; color: white;
+    text-align: center; font-size: 11px; font-weight: bold;
+    padding: 8px 10px; margin-bottom: 14px;
   }
   .aq-lbl {
-    background: #dbeafe;
-    color: #1e3a5f;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 5px 10px;
-    margin-bottom: 6px;
+    background: #dbeafe; color: #1e3a5f;
+    font-size: 9.5px; font-weight: bold;
+    padding: 5px 10px; margin-bottom: 7px;
   }
   .aq-text {
-    font-size: 10px;
-    color: #111;
-    line-height: 1.7;
-    text-align: justify;
-    padding: 0 2px;
-    margin-bottom: 14px;
+    font-size: 9.5px; color: #111; line-height: 1.7;
+    text-align: justify; padding: 0 2px; margin-bottom: 16px;
   }
   .aq-empty {
-    font-size: 10px;
-    color: #9ca3af;
-    font-style: italic;
-    margin-bottom: 14px;
+    font-size: 9.5px; color: #9ca3af;
+    font-style: italic; margin-bottom: 16px; padding: 0 2px;
   }
 </style>
 </head>
@@ -213,7 +155,7 @@
 <table class="ph" cellpadding="0" cellspacing="0">
   <tr>
     <td class="ph-logo">
-      <img src="{{ logo_path }}" width="55" height="55" />
+      <img src="{{ logo_path }}" width="52" height="52" />
     </td>
     <td>
       <div class="ph-title">Ficha de Meta</div>
@@ -289,9 +231,9 @@
   <thead>
     <tr>
       <th class="left">Descrição</th>
-      <th style="width:130px;">Indicador da Atividade</th>
-      <th style="width:65px;">Unidade</th>
-      <th style="width:45px;">Meta</th>
+      <th style="width:128px;">Indicador da Atividade</th>
+      <th style="width:62px;">Unidade</th>
+      <th style="width:44px;">Meta</th>
     </tr>
   </thead>
   <tbody>
@@ -307,14 +249,14 @@
 </table>
 {% endif %}
 
-<!-- ══ PÁG. ANÁLISE QUALITATIVA ══ -->
+<!-- ══ PÁGINA 2 — ANÁLISE QUALITATIVA ══ -->
 <pdf:nextpage />
 
 <!-- ══ CABEÇALHO PÁG. 2 ══ -->
 <table class="ph" cellpadding="0" cellspacing="0">
   <tr>
     <td class="ph-logo">
-      <img src="{{ logo_path }}" width="55" height="55" />
+      <img src="{{ logo_path }}" width="52" height="52" />
     </td>
     <td>
       <div class="ph-title">Ficha de Meta</div>
