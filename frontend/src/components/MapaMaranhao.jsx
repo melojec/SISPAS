@@ -55,7 +55,7 @@ function allCoords(features) {
   return pts
 }
 
-function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600, intrinsic = true }) {
+function MapaSVG({ paths, ativoSet, cumulativoSet, codIbgeToRegiao = {}, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600, intrinsic = true }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -78,12 +78,11 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
             onMouseEnter={e => {
               const svg = e.currentTarget.closest('svg')
               const rect = svg.getBoundingClientRect()
-              const scaleX = 400 / rect.width
-              const scaleY = 350 / rect.height
               setTooltip({
-                x: (e.clientX - rect.left) * scaleX,
-                y: (e.clientY - rect.top) * scaleY,
+                x: (e.clientX - rect.left) * (W / rect.width),
+                y: (e.clientY - rect.top) * (H / rect.height),
                 nome,
+                regiao: codIbgeToRegiao[codarea] || '',
                 ativo: isAtivo,
                 cumulativo: isCumulativo,
               })
@@ -91,15 +90,21 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
           />
         )
       })}
-      {tooltip && (
-        <g transform={`translate(${Math.min(tooltip.x + 4, 250)},${Math.max(tooltip.y - 28, 2)})`}>
-          <rect x={0} y={0} width={130} height={30} rx={3} fill="#1e293b" opacity={0.93} />
-          <text x={6} y={12} fontSize={8.5} fill="#f1f5f9" fontFamily="system-ui">{tooltip.nome}</text>
-          <text x={6} y={23} fontSize={7.5} fill={tooltip.ativo ? '#93c5fd' : tooltip.cumulativo ? '#bfdbfe' : '#94a3b8'} fontFamily="system-ui">
-            {tooltip.ativo ? '● Quadrimestre atual' : tooltip.cumulativo ? '● Cumulativo' : '○ Não beneficiado'}
-          </text>
-        </g>
-      )}
+      {tooltip && (() => {
+        const tw = 150, th = 40
+        const tx = Math.min(tooltip.x + 6, W - tw - 4)
+        const ty = Math.max(tooltip.y - th - 4, 2)
+        return (
+          <g transform={`translate(${tx},${ty})`}>
+            <rect x={0} y={0} width={tw} height={th} rx={4} fill="#1e293b" opacity={0.95} />
+            <text x={8} y={14} fontSize={9} fontWeight="600" fill="#f1f5f9" fontFamily="system-ui">{tooltip.nome}</text>
+            <text x={8} y={26} fontSize={8} fill="#94a3b8" fontFamily="system-ui">{tooltip.regiao}</text>
+            <text x={8} y={36} fontSize={7.5} fill={tooltip.ativo ? '#60a5fa' : tooltip.cumulativo ? '#bfdbfe' : '#64748b'} fontFamily="system-ui">
+              {tooltip.ativo ? '● Quadrimestre atual' : tooltip.cumulativo ? '● Cumulativo' : '○ Não beneficiado'}
+            </text>
+          </g>
+        )
+      })()}
     </svg>
   )
 }
@@ -129,6 +134,16 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
     return map
   }, [hierarquia])
 
+  // cod_ibge → regiao de saúde
+  const codIbgeToRegiao = useMemo(() => {
+    const map = {}
+    for (const macro of hierarquia)
+      for (const reg of macro.regioes)
+        for (const m of reg.municipios)
+          map[m.cod_ibge] = reg.regiao
+    return map
+  }, [hierarquia])
+
   const cumulativoSet = useMemo(
     () => new Set(municipiosCumulativos.map(id => idToCodIbge[id]).filter(Boolean)),
     [municipiosCumulativos, idToCodIbge]
@@ -154,6 +169,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
       d: featureToPath(f.geometry, minLon, maxLon, minLat, maxLat, W, H),
       nome: f.properties?.nome || f.properties?.codarea,
     }))
+    // regiao is added after merge with hierarquia — done in render via codIbgeToRegiao
     return { paths, W, H }
   }, [geo])
 
@@ -201,10 +217,9 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
         <div style={{ width: MINI_W, height: MINI_H, overflow: 'hidden' }}>
           <MapaSVG
             paths={paths} W={W} H={H}
-            ativoSet={ativoSet}
-            cumulativoSet={cumulativoSet}
-            tooltip={tooltip}
-            setTooltip={setTooltip}
+            ativoSet={ativoSet} cumulativoSet={cumulativoSet}
+            codIbgeToRegiao={codIbgeToRegiao}
+            tooltip={tooltip} setTooltip={setTooltip}
             strokeWidth={0.3}
             svgStyle={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' }}
           />
@@ -249,17 +264,16 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
               </div>
             </div>
 
-            {/* Mapa grande — sem atributos width/height para width:100% height:auto funcionar */}
-            <div className="flex-1 min-h-0 overflow-auto p-4 flex items-center justify-center">
+            {/* Mapa grande */}
+            <div className="flex-1 min-h-0 overflow-hidden p-4 flex items-center justify-center">
               <MapaSVG
                 paths={paths} W={W} H={H}
                 intrinsic={false}
-                ativoSet={ativoSet}
-                cumulativoSet={cumulativoSet}
-                tooltip={tooltipFull}
-                setTooltip={setTooltipFull}
+                ativoSet={ativoSet} cumulativoSet={cumulativoSet}
+                codIbgeToRegiao={codIbgeToRegiao}
+                tooltip={tooltipFull} setTooltip={setTooltipFull}
                 strokeWidth={0.5}
-                svgStyle={{ width: '100%', height: 'auto', display: 'block' }}
+                svgStyle={{ height: '100%', width: 'auto', display: 'block' }}
               />
             </div>
           </div>
