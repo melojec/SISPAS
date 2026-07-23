@@ -236,7 +236,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             ativoSet={ativoSet} cumulativoSet={cumulativoSet}
             tooltip={tooltip} setTooltip={setTooltip}
             strokeWidth={0.3}
-            svgStyle={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' }}
+            svgStyle={{ width: MINI_W, height: MINI_H, display: 'block' }}
           />
         </div>
       </div>
