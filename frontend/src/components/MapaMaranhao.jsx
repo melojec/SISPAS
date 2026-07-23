@@ -161,8 +161,13 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
   const totalCumulativo = municipiosCumulativos.length
   const totalAtivo = municipiosAtivos.length
 
+  // Mini map dimensions: fixed height, width derived from geographic aspect ratio
+  const MINI_H = 190
+  const MINI_W = H > 0 ? Math.round(MINI_H * W / H) : 110
+  const HEADER_H = 30
+
   const shell = (children) => (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0 flex items-center justify-center" style={{ width: 200, height: 200 }}>
+    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0 flex items-center justify-center" style={{ width: MINI_W, height: MINI_H + HEADER_H }}>
       {children}
     </div>
   )
@@ -172,7 +177,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
 
   return (
     <>
-      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shrink-0" style={{ width: 185, height: 210 }}>
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shrink-0" style={{ width: MINI_W, height: MINI_H + HEADER_H }}>
         {/* Header */}
         <div className="flex items-center gap-1.5 px-2 py-1.5 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60">
           <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
@@ -194,7 +199,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
         </div>
 
         {/* Mini mapa */}
-        <div style={{ width: 163, height: 163, overflow: 'hidden' }}>
+        <div style={{ width: MINI_W, height: MINI_H, overflow: 'hidden' }}>
           <MapaSVG
             paths={paths} W={W} H={H}
             ativoSet={ativoSet}
