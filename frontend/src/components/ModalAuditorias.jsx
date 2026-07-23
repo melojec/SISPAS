@@ -164,59 +164,57 @@ function FormAuditoria({ inicial, onSalvar, onCancelar, salvando }) {
   )
 }
 
-// ─── Linha de auditoria ───────────────────────────────────────────────────────
-function LinhaAuditoria({ aud, onEditar, onRemover, podeEditar }) {
-  const [expandido, setExpandido] = useState(false)
-
+// ─── Item de auditoria (lista) ────────────────────────────────────────────────
+function LinhaAuditoria({ aud, index, onEditar, onRemover, podeEditar }) {
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-      <button type="button" onClick={() => setExpandido(v => !v)}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-        <svg className={`w-4 h-4 text-gray-400 transition-transform shrink-0 ${expandido ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+    <li className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+      {/* Cabeçalho do item */}
+      <div className="flex items-start gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800/60 border-b border-gray-100 dark:border-gray-700">
+        <span className="mt-0.5 w-5 h-5 rounded-full bg-blue-900 text-white text-xs font-bold flex items-center justify-center shrink-0">
+          {index + 1}
+        </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
-            {aud.unidade_auditada || <span className="text-gray-400 italic">Unidade não informada</span>}
+          <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+            {aud.unidade_auditada || <span className="text-gray-400 italic font-normal">Unidade não informada</span>}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {[aud.municipio_nome, aud.demandante, aud.orgao_responsavel].filter(Boolean).join(' · ') || '—'}
-          </p>
+          {aud.municipio_nome && (
+            <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">{aud.municipio_nome}</p>
+          )}
         </div>
         {podeEditar && (
-          <div className="flex gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+          <div className="flex gap-1 shrink-0">
             <button type="button" onClick={() => onEditar(aud)}
-              className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded">
+              className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </button>
             <button type="button" onClick={() => onRemover(aud.id)}
-              className="p-1.5 text-gray-400 hover:text-red-500 rounded">
+              className="p-1.5 text-gray-400 hover:text-red-500 rounded transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </button>
           </div>
         )}
-      </button>
-      {expandido && (
-        <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700 pt-3 grid grid-cols-1 gap-2">
-          {aud.municipio_nome && (
-            <div>
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Município</p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mt-0.5">{aud.municipio_nome}</p>
-            </div>
-          )}
-          {CAMPOS.map(({ key, label }) => aud[key] ? (
-            <div key={key}>
-              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mt-0.5 whitespace-pre-wrap">{aud[key]}</p>
-            </div>
-          ) : null)}
-        </div>
-      )}
-    </div>
+      </div>
+
+      {/* Campos */}
+      <dl className="px-4 py-3 grid grid-cols-1 gap-2.5">
+        {[
+          { label: 'Demandante',                    value: aud.demandante },
+          { label: 'Órgão Responsável',             value: aud.orgao_responsavel },
+          { label: 'Finalidade',                    value: aud.finalidade },
+          { label: 'Recomendações',                 value: aud.recomendacoes },
+          { label: 'Encaminhamentos',               value: aud.encaminhamentos },
+        ].filter(f => f.value).map(({ label, value }) => (
+          <div key={label}>
+            <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-0.5">{label}</dt>
+            <dd className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </li>
   )
 }
 
@@ -285,34 +283,36 @@ export default function ModalAuditorias({ meta, ano, podeEditar, onFechar }) {
               {auditorias.length === 0 && !formAberto && (
                 <p className="text-sm text-gray-400 text-center py-8">Nenhuma auditoria registrada para {ano}.</p>
               )}
-              {auditorias.map(aud =>
-                editando?.id === aud.id ? (
-                  <FormAuditoria
-                    key={aud.id}
-                    inicial={{ demandante: aud.demandante, orgao_responsavel: aud.orgao_responsavel, unidade_auditada: aud.unidade_auditada, finalidade: aud.finalidade, recomendacoes: aud.recomendacoes, encaminhamentos: aud.encaminhamentos, municipio: aud.municipio }}
-                    onSalvar={salvarForm}
-                    onCancelar={() => setEditando(null)}
-                    salvando={atualizar.isPending}
-                  />
-                ) : confirmandoId === aud.id ? (
-                  <div key={aud.id} className="border border-red-200 dark:border-red-800 rounded-xl p-4 bg-red-50 dark:bg-red-900/20 flex items-center justify-between gap-3">
-                    <p className="text-sm text-red-700 dark:text-red-400">Remover esta auditoria?</p>
-                    <div className="flex gap-2 shrink-0">
-                      <button type="button" onClick={() => setConfirmandoId(null)}
-                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        Cancelar
-                      </button>
-                      <button type="button" onClick={() => remover.mutate(aud.id)} disabled={remover.isPending}
-                        className="px-3 py-1.5 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-60">
-                        {remover.isPending ? 'Removendo…' : 'Remover'}
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <LinhaAuditoria key={aud.id} aud={aud} podeEditar={podeEditar}
-                    onEditar={iniciarEdicao} onRemover={id => setConfirmandoId(id)} />
-                )
-              )}
+              <ol className="space-y-3">
+                {auditorias.map((aud, index) =>
+                  editando?.id === aud.id ? (
+                    <FormAuditoria
+                      key={aud.id}
+                      inicial={{ demandante: aud.demandante, orgao_responsavel: aud.orgao_responsavel, unidade_auditada: aud.unidade_auditada, finalidade: aud.finalidade, recomendacoes: aud.recomendacoes, encaminhamentos: aud.encaminhamentos, municipio: aud.municipio }}
+                      onSalvar={salvarForm}
+                      onCancelar={() => setEditando(null)}
+                      salvando={atualizar.isPending}
+                    />
+                  ) : confirmandoId === aud.id ? (
+                    <li key={aud.id} className="border border-red-200 dark:border-red-800 rounded-xl p-4 bg-red-50 dark:bg-red-900/20 flex items-center justify-between gap-3">
+                      <p className="text-sm text-red-700 dark:text-red-400">Remover esta auditoria?</p>
+                      <div className="flex gap-2 shrink-0">
+                        <button type="button" onClick={() => setConfirmandoId(null)}
+                          className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                          Cancelar
+                        </button>
+                        <button type="button" onClick={() => remover.mutate(aud.id)} disabled={remover.isPending}
+                          className="px-3 py-1.5 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-60">
+                          {remover.isPending ? 'Removendo…' : 'Remover'}
+                        </button>
+                      </div>
+                    </li>
+                  ) : (
+                    <LinhaAuditoria key={aud.id} aud={aud} index={index} podeEditar={podeEditar}
+                      onEditar={iniciarEdicao} onRemover={id => setConfirmandoId(id)} />
+                  )
+                )}
+              </ol>
               {formAberto && (
                 <FormAuditoria inicial={VAZIO} onSalvar={salvarForm}
                   onCancelar={() => setFormAberto(false)} salvando={criar.isPending} />
