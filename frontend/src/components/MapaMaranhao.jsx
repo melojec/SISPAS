@@ -55,12 +55,12 @@ function allCoords(features) {
   return pts
 }
 
-function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle }) {
+function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600 }) {
   return (
     <svg
-      viewBox="0 0 400 350"
-      width="400"
-      height="350"
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
       preserveAspectRatio="xMidYMid meet"
       style={svgStyle}
       onMouseLeave={() => setTooltip(null)}
@@ -139,21 +139,23 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
     [municipiosAtivos, idToCodIbge]
   )
 
-  const { paths } = useMemo(() => {
-    if (!geo?.features) return { paths: [] }
+  const { paths, W, H } = useMemo(() => {
+    if (!geo?.features) return { paths: [], W: 400, H: 600 }
     const features = geo.features
     const coords = allCoords(features)
     const lons = coords.map(c => c[0])
     const lats = coords.map(c => c[1])
     const minLon = Math.min(...lons), maxLon = Math.max(...lons)
     const minLat = Math.min(...lats), maxLat = Math.max(...lats)
-    const W = 400, H = 350
+    // Preserve real geographic proportions (Maranhão is taller than wide)
+    const W = 400
+    const H = Math.round(W * (maxLat - minLat) / (maxLon - minLon))
     const paths = features.map(f => ({
       codarea: f.properties?.codarea,
       d: featureToPath(f.geometry, minLon, maxLon, minLat, maxLat, W, H),
       nome: f.properties?.nome || f.properties?.codarea,
     }))
-    return { paths }
+    return { paths, W, H }
   }, [geo])
 
   const totalCumulativo = municipiosCumulativos.length
@@ -170,7 +172,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
 
   return (
     <>
-      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shrink-0" style={{ width: 200, height: 200 }}>
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shrink-0" style={{ width: 185, height: 210 }}>
         {/* Header */}
         <div className="flex items-center gap-1.5 px-2 py-1.5 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60">
           <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
@@ -192,15 +194,15 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
         </div>
 
         {/* Mini mapa */}
-        <div style={{ width: 200, height: 163, overflow: 'hidden' }}>
+        <div style={{ width: 163, height: 163, overflow: 'hidden' }}>
           <MapaSVG
-            paths={paths}
+            paths={paths} W={W} H={H}
             ativoSet={ativoSet}
             cumulativoSet={cumulativoSet}
             tooltip={tooltip}
             setTooltip={setTooltip}
             strokeWidth={0.3}
-            svgStyle={{ width: 200, height: 163 }}
+            svgStyle={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' }}
           />
         </div>
       </div>
@@ -246,7 +248,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             {/* Mapa grande */}
             <div className="flex-1 min-h-0 overflow-hidden p-4 flex items-center justify-center">
               <MapaSVG
-                paths={paths}
+                paths={paths} W={W} H={H}
                 ativoSet={ativoSet}
                 cumulativoSet={cumulativoSet}
                 tooltip={tooltipFull}
