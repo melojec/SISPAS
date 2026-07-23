@@ -55,12 +55,12 @@ function allCoords(features) {
   return pts
 }
 
-function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3 }) {
+function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle }) {
   return (
     <svg
       viewBox="0 0 400 350"
       preserveAspectRatio="xMidYMid meet"
-      style={{ width: '100%', height: '100%' }}
+      style={svgStyle}
       onMouseLeave={() => setTooltip(null)}
     >
       {paths.map(({ codarea, d, nome }) => {
@@ -198,6 +198,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             tooltip={tooltip}
             setTooltip={setTooltip}
             strokeWidth={0.3}
+            svgStyle={{ width: 200, height: 163 }}
           />
         </div>
       </div>
@@ -240,18 +241,17 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
               </div>
             </div>
 
-            {/* Mapa grande */}
-            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-hidden">
-              <div style={{ width: '100%', height: '100%', maxWidth: '100%', aspectRatio: '400/350' }}>
-                <MapaSVG
-                  paths={paths}
-                  ativoSet={ativoSet}
-                  cumulativoSet={cumulativoSet}
-                  tooltip={tooltipFull}
-                  setTooltip={setTooltipFull}
-                  strokeWidth={0.5}
-                />
-              </div>
+            {/* Mapa grande — width:100% height:auto preserva proporção via viewBox */}
+            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-auto">
+              <MapaSVG
+                paths={paths}
+                ativoSet={ativoSet}
+                cumulativoSet={cumulativoSet}
+                tooltip={tooltipFull}
+                setTooltip={setTooltipFull}
+                strokeWidth={0.5}
+                svgStyle={{ width: '100%', height: 'auto', display: 'block' }}
+              />
             </div>
           </div>
         </div>,
