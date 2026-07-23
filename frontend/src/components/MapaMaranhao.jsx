@@ -95,7 +95,9 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
           <g transform={`translate(${tx},${ty})`}>
             <rect x={0} y={0} width={tw} height={th} rx={5} fill="#1e293b" opacity={0.96} />
             <text x={10} y={18} fontSize={11} fontWeight="bold" fill="#f8fafc" fontFamily="system-ui">{tooltip.nome}</text>
-            <text x={10} y={33} fontSize={9.5} fill="#94a3b8" fontFamily="system-ui">{tooltip.regiao}</text>
+            <text x={10} y={33} fontSize={9.5} fill="#94a3b8" fontFamily="system-ui">
+              <tspan fontWeight="600" fill="#64748b">Região: </tspan>{tooltip.regiao}
+            </text>
             <text x={10} y={47} fontSize={9} fill={tooltip.ativo ? '#60a5fa' : tooltip.cumulativo ? '#bfdbfe' : '#64748b'} fontFamily="system-ui">
               {tooltip.ativo ? '● Quadrimestre atual' : tooltip.cumulativo ? '● Cumulativo' : '○ Não beneficiado'}
             </text>
