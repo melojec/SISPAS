@@ -24,7 +24,7 @@ export default function RichTextEditor({ value, onChange, disabled, placeholder 
     },
     editorProps: {
       attributes: {
-        class: 'min-h-[80px] px-3 py-2 text-sm outline-none prose prose-sm dark:prose-invert max-w-none',
+        class: 'min-h-[80px] px-3 py-2 text-sm outline-none prose prose-sm dark:prose-invert max-w-none text-gray-900 dark:text-gray-100',
       },
     },
   })
