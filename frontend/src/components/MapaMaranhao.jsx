@@ -185,8 +185,8 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
   const totalAtivo = municipiosAtivos.length
 
   // Tamanhos disponíveis para o mini mapa (altura em px)
-  const SIZES = [160, 220, 300, 380]
-  const [sizeIdx, setSizeIdx] = useState(1)
+  const SIZES = [220, 300, 380, 760]
+  const [sizeIdx, setSizeIdx] = useState(0)
   const MINI_H = SIZES[sizeIdx]
   const MINI_W = H > 0 ? Math.round(MINI_H * W / H) : 110
   const HEADER_H = 30
