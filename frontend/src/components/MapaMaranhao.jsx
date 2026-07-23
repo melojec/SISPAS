@@ -184,8 +184,10 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
   const totalCumulativo = municipiosCumulativos.length
   const totalAtivo = municipiosAtivos.length
 
-  // Mini map dimensions: fixed height, width derived from geographic aspect ratio
-  const MINI_H = 190
+  // Tamanhos disponíveis para o mini mapa (altura em px)
+  const SIZES = [160, 220, 300, 380]
+  const [sizeIdx, setSizeIdx] = useState(1)
+  const MINI_H = SIZES[sizeIdx]
   const MINI_W = H > 0 ? Math.round(MINI_H * W / H) : 110
   const HEADER_H = 30
 
@@ -211,14 +213,20 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             <span className="w-2.5 h-2.5 rounded-sm bg-blue-200 dark:bg-blue-800 inline-block" />
             Total ({totalCumulativo})
           </span>
-          <button
-            type="button"
-            onClick={() => setTelaCheiaAberta(true)}
-            title="Ver em tela cheia"
-            className="ml-auto text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            <ModalTelaCheiaIcon />
-          </button>
+          <div className="ml-auto flex items-center gap-0.5">
+            <button type="button" onClick={() => setSizeIdx(i => Math.max(0, i - 1))}
+              disabled={sizeIdx === 0}
+              title="Diminuir mapa"
+              className="w-5 h-5 flex items-center justify-center rounded text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-30 transition-colors text-xs font-bold leading-none">−</button>
+            <button type="button" onClick={() => setSizeIdx(i => Math.min(SIZES.length - 1, i + 1))}
+              disabled={sizeIdx === SIZES.length - 1}
+              title="Aumentar mapa"
+              className="w-5 h-5 flex items-center justify-center rounded text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-30 transition-colors text-xs font-bold leading-none">+</button>
+            <button type="button" onClick={() => setTelaCheiaAberta(true)} title="Ver em tela cheia"
+              className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <ModalTelaCheiaIcon />
+            </button>
+          </div>
         </div>
 
         {/* Mini mapa */}
