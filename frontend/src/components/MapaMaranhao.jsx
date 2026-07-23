@@ -59,6 +59,7 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
   return (
     <svg
       viewBox="0 0 400 350"
+      preserveAspectRatio="xMidYMid meet"
       style={{ width: '100%', height: '100%' }}
       onMouseLeave={() => setTooltip(null)}
     >
@@ -189,7 +190,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
         </div>
 
         {/* Mini mapa */}
-        <div style={{ width: 200, height: 163 }}>
+        <div style={{ width: 200, height: 163, overflow: 'hidden' }}>
           <MapaSVG
             paths={paths}
             ativoSet={ativoSet}
@@ -240,15 +241,17 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             </div>
 
             {/* Mapa grande */}
-            <div className="flex-1 p-4">
-              <MapaSVG
-                paths={paths}
-                ativoSet={ativoSet}
-                cumulativoSet={cumulativoSet}
-                tooltip={tooltipFull}
-                setTooltip={setTooltipFull}
-                strokeWidth={0.5}
-              />
+            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-hidden">
+              <div style={{ width: '100%', height: '100%', maxWidth: '100%', aspectRatio: '400/350' }}>
+                <MapaSVG
+                  paths={paths}
+                  ativoSet={ativoSet}
+                  cumulativoSet={cumulativoSet}
+                  tooltip={tooltipFull}
+                  setTooltip={setTooltipFull}
+                  strokeWidth={0.5}
+                />
+              </div>
             </div>
           </div>
         </div>,
