@@ -55,12 +55,11 @@ function allCoords(features) {
   return pts
 }
 
-function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600 }) {
+function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600, intrinsic = true }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      width={W}
-      height={H}
+      {...(intrinsic ? { width: W, height: H } : {})}
       preserveAspectRatio="xMidYMid meet"
       style={svgStyle}
       onMouseLeave={() => setTooltip(null)}
@@ -250,16 +249,17 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
               </div>
             </div>
 
-            {/* Mapa grande */}
-            <div className="flex-1 min-h-0 overflow-hidden p-4 flex items-center justify-center">
+            {/* Mapa grande — sem atributos width/height para width:100% height:auto funcionar */}
+            <div className="flex-1 min-h-0 overflow-auto p-4 flex items-center justify-center">
               <MapaSVG
                 paths={paths} W={W} H={H}
+                intrinsic={false}
                 ativoSet={ativoSet}
                 cumulativoSet={cumulativoSet}
                 tooltip={tooltipFull}
                 setTooltip={setTooltipFull}
                 strokeWidth={0.5}
-                svgStyle={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' }}
+                svgStyle={{ width: '100%', height: 'auto', display: 'block' }}
               />
             </div>
           </div>
