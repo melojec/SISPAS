@@ -219,7 +219,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
         >
           <div
             className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-            style={{ width: 'min(90vw, 720px)', height: 'min(90vh, 640px)' }}
+            style={{ height: 'min(90vh, 720px)', width: H > 0 ? `min(90vw, ${Math.round(720 * W / H)}px)` : 'min(90vw, 400px)' }}
             onClick={e => e.stopPropagation()}
           >
             {/* Header modal */}
