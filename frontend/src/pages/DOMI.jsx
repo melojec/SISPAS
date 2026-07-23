@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -7,6 +7,7 @@ import useAuthStore from '../store/authStore'
 import RichTextEditor from '../components/RichTextEditor'
 import MunicipioSelector from '../components/MunicipioSelector'
 import ModalAuditorias from '../components/ModalAuditorias'
+import MapaMaranhao from '../components/MapaMaranhao'
 
 // ── Modal de preenchimento da meta ────────────────────────────────────────────
 const isAuditoria = (codigo) => (codigo || '').trim() === '3.1.3'
@@ -244,6 +245,12 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
       return cicloDoReg ? [cicloDoReg.quadrimestre, r] : null
     }).filter(Boolean)
   )
+
+  const municipiosCumulativos = useMemo(() => {
+    const ids = new Set()
+    registrosAno.forEach(r => (r.municipios_ids || []).forEach(id => ids.add(id)))
+    return [...ids]
+  }, [registrosAno])
 
   const { data: execucoes = [] } = useQuery({
     queryKey: ['execucoes', meta.id, ano],
@@ -560,6 +567,10 @@ function ModalMeta({ meta, ciclo, onClose, onSalvo }) {
                 value={municipiosSelecionados}
                 onChange={setMunicipiosSelecionados}
                 disabled={!podeEditar}
+              />
+              <MapaMaranhao
+                municipiosCumulativos={municipiosCumulativos}
+                municipiosAtivos={municipiosSelecionados}
               />
             </div>
           ) : (
