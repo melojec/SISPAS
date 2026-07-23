@@ -241,8 +241,8 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
               </div>
             </div>
 
-            {/* Mapa grande — width:100% height:auto preserva proporção via viewBox */}
-            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-auto">
+            {/* Mapa grande */}
+            <div className="flex-1 min-h-0 overflow-hidden p-4">
               <MapaSVG
                 paths={paths}
                 ativoSet={ativoSet}
@@ -250,7 +250,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
                 tooltip={tooltipFull}
                 setTooltip={setTooltipFull}
                 strokeWidth={0.5}
-                svgStyle={{ width: '100%', height: 'auto', display: 'block' }}
+                svgStyle={{ width: '100%', height: '100%', display: 'block' }}
               />
             </div>
           </div>
