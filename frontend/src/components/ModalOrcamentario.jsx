@@ -17,6 +17,23 @@ function fmtAbrev(v) {
   return `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
 }
 
+// Abrevia nome da fonte de recurso para caber no cabeçalho
+function abrevFundo(ds) {
+  if (!ds) return ''
+  return ds
+    .replace('Transferências de fundos à Fundo de Recursos do SUS, provenientes do Governo Federal (R$)', 'Transf. Fed. (SUS)')
+    .replace('Transferências de fundos ao Fundo de Recursos do SUS, provenientes do Governo Estadual (R$)', 'Transf. Estadual (SUS)')
+    .replace('Receita de impostos e de transferência de impostos (receita própria - R$)', 'Rec. Impostos (própria)')
+    .replace('Recursos ordinários - Fonte Livre (R$)', 'Rec. Ordinários')
+    .replace('Transferências de convênios destinados à Saúde (R$)', 'Convênios')
+    .replace('Outros recursos destinados à Saúde (R$)', 'Outros Recursos')
+    .replace('Royalties do petróleo destinados à Saúde (R$)', 'Royalties Petróleo')
+    .replace('Operações de Crédito vinculadas à Saúde (R$)', 'Op. Crédito')
+    .replace('Transferências da União - inciso I do art. 5º da Lei Complementar 173/2020 (R$)', 'Transf. União LC173')
+    .replace(/\s*\(R\$\)\s*$/, '')
+    .trim()
+}
+
 // Monta estrutura de pivot a partir dos fundos agregados
 function buildPivot(fundos) {
   // Colunas = fundos
@@ -165,78 +182,83 @@ export default function ModalOrcamentario({ onFechar }) {
 
           {subfuncoes.length > 0 && (
             <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
-              <table className="text-xs border-collapse w-full" style={{ minWidth: `${180 + colunas.length * 140 + 140}px` }}>
+              <table className="text-xs border-collapse w-full" style={{ minWidth: `${220 + colunas.length * 130 + 130}px` }}>
                 <thead>
                   <tr className="bg-blue-950 text-white">
-                    <th className="px-3 py-2.5 text-left font-semibold sticky left-0 bg-blue-950 z-10 min-w-[180px]">Subfunções</th>
-                    <th className="px-2 py-2.5 text-center font-semibold w-20">Natureza</th>
+                    <th className="px-3 py-3 text-left font-semibold sticky left-0 bg-blue-950 z-10 min-w-[220px] border-r border-blue-800">Subfunções</th>
+                    <th className="px-2 py-3 text-center font-semibold w-20 text-blue-200 border-r border-blue-800">Natureza</th>
                     {colunas.map(col => (
-                      <th key={col.co_fundo} className="px-3 py-2 text-right font-semibold leading-tight max-w-[140px]">
-                        {col.ds_fundo}
+                      <th key={col.co_fundo} title={col.ds_fundo}
+                        className="px-3 py-3 text-right font-semibold border-r border-blue-800 whitespace-nowrap cursor-help">
+                        {abrevFundo(col.ds_fundo)}
                       </th>
                     ))}
-                    <th className="px-3 py-2.5 text-right font-semibold bg-blue-900">TOTAL</th>
+                    <th className="px-3 py-3 text-right font-bold bg-blue-900 whitespace-nowrap">TOTAL</th>
                   </tr>
                 </thead>
                 <tbody>
                   {subfuncoes.map((sub, si) => {
                     const rowTotalC = colunas.reduce((s, col) => s + (celulas[sub.codigo]?.[col.co_fundo]?.O || 0), 0)
                     const rowTotalA = colunas.reduce((s, col) => s + (celulas[sub.codigo]?.[col.co_fundo]?.A || 0), 0)
-                    const rowBase = si % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-750'
+                    const isEven = si % 2 === 0
+                    const bg = isEven ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-850'
+                    const bgSticky = isEven ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-850'
                     return [
-                      // Linha Corrente
-                      <tr key={`${sub.codigo}-C`} className={`${rowBase} border-b border-gray-100 dark:border-gray-700`}>
-                        <td className={`px-3 py-1.5 font-semibold sticky left-0 z-10 ${rowBase}`}>
-                          {sub.codigo} — {sub.nome}
+                      <tr key={`${sub.codigo}-C`} className={`${bg} border-t-2 border-gray-200 dark:border-gray-600`}>
+                        <td className={`px-3 pt-2 pb-0.5 font-semibold text-gray-800 dark:text-gray-100 sticky left-0 z-10 ${bgSticky} border-r border-gray-200 dark:border-gray-700`}>
+                          <span className="font-mono text-blue-600 dark:text-blue-400 mr-1.5">{sub.codigo}</span>{sub.nome}
                         </td>
-                        <td className="px-2 py-1.5 text-center text-gray-500 dark:text-gray-400 whitespace-nowrap">Corrente</td>
+                        <td className="px-2 pt-2 pb-0.5 text-center text-[10px] font-semibold text-green-700 dark:text-green-400 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
+                          Corrente
+                        </td>
                         {colunas.map(col => {
                           const v = celulas[sub.codigo]?.[col.co_fundo]?.O || 0
                           return (
-                            <td key={col.co_fundo} className="px-3 py-1.5 text-right tabular-nums text-gray-700 dark:text-gray-300">
-                              {v ? fmt(v) : '—'}
+                            <td key={col.co_fundo} className="px-3 pt-2 pb-0.5 text-right tabular-nums text-gray-700 dark:text-gray-200 border-r border-gray-100 dark:border-gray-700">
+                              {v ? fmt(v) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                             </td>
                           )
                         })}
-                        <td className="px-3 py-1.5 text-right tabular-nums font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20">
-                          {rowTotalC ? fmt(rowTotalC) : '—'}
+                        <td className="px-3 pt-2 pb-0.5 text-right tabular-nums font-bold text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40">
+                          {rowTotalC ? fmt(rowTotalC) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                         </td>
                       </tr>,
-                      // Linha Capital
-                      <tr key={`${sub.codigo}-A`} className={`${rowBase} border-b border-gray-200 dark:border-gray-600`}>
-                        <td className={`px-3 py-1.5 sticky left-0 z-10 ${rowBase}`} />
-                        <td className="px-2 py-1.5 text-center text-gray-500 dark:text-gray-400 whitespace-nowrap">Capital</td>
+                      <tr key={`${sub.codigo}-A`} className={`${bg}`}>
+                        <td className={`px-3 pt-0.5 pb-2 sticky left-0 z-10 ${bgSticky} border-r border-gray-200 dark:border-gray-700`} />
+                        <td className="px-2 pt-0.5 pb-2 text-center text-[10px] font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
+                          Capital
+                        </td>
                         {colunas.map(col => {
                           const v = celulas[sub.codigo]?.[col.co_fundo]?.A || 0
                           return (
-                            <td key={col.co_fundo} className="px-3 py-1.5 text-right tabular-nums text-gray-600 dark:text-gray-400">
-                              {v ? fmt(v) : '—'}
+                            <td key={col.co_fundo} className="px-3 pt-0.5 pb-2 text-right tabular-nums text-gray-500 dark:text-gray-400 border-r border-gray-100 dark:border-gray-700">
+                              {v ? fmt(v) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                             </td>
                           )
                         })}
-                        <td className="px-3 py-1.5 text-right tabular-nums font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20">
-                          {rowTotalA ? fmt(rowTotalA) : '—'}
+                        <td className="px-3 pt-0.5 pb-2 text-right tabular-nums font-bold text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40">
+                          {rowTotalA ? fmt(rowTotalA) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                         </td>
                       </tr>,
                     ]
                   })}
 
                   {/* Linha TOTAL */}
-                  <tr className="bg-blue-950 text-white font-bold border-t-2 border-blue-800">
-                    <td className="px-3 py-2.5 sticky left-0 bg-blue-950 z-10">TOTAL</td>
-                    <td />
+                  <tr className="bg-blue-950 text-white font-bold border-t-2 border-blue-700">
+                    <td className="px-3 py-3 sticky left-0 bg-blue-950 z-10 border-r border-blue-800 tracking-wide">TOTAL</td>
+                    <td className="border-r border-blue-800" />
                     {colunas.map(col => {
                       const total = subfuncoes.reduce((s, sub) => {
                         const c = celulas[sub.codigo]?.[col.co_fundo]
                         return s + (c?.O || 0) + (c?.A || 0)
                       }, 0)
                       return (
-                        <td key={col.co_fundo} className="px-3 py-2.5 text-right tabular-nums">
+                        <td key={col.co_fundo} className="px-3 py-3 text-right tabular-nums border-r border-blue-800">
                           {total ? fmt(total) : '—'}
                         </td>
                       )
                     })}
-                    <td className="px-3 py-2.5 text-right tabular-nums bg-blue-900">
+                    <td className="px-3 py-3 text-right tabular-nums bg-blue-900">
                       {fmt(totalGeral)}
                     </td>
                   </tr>
