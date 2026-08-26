@@ -154,37 +154,61 @@ function TabelaFundos({ fundos }) {
   )
 }
 
-export default function ModalOrcamentario({ municipio, onFechar }) {
-  // municipio: { nome, cod_ibge }
+export default function ModalOrcamentario({ onFechar }) {
   const [ano, setAno] = useState(ANOS[0])
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['dgmp-orcamentario', municipio.cod_ibge, ano],
+    queryKey: ['dgmp-orcamentario-estadual', ano],
     queryFn: () =>
       api.get('/dgmp/orcamentario/', {
         params: {
-          co_esfera: 1,
+          co_esfera: 2,
           nu_ano_exercicio: ano,
-          co_municipio_ibge: municipio.cod_ibge,
+          sg_uf: 'MA',
         },
       }).then(r => r.data),
     staleTime: 5 * 60 * 1000,
   })
 
-  const municipioData = useMemo(() => {
-    if (!data) return null
+  // Para esfera estadual, os dados podem estar em estados[0] diretamente
+  // ou agrupados dentro de municipios (entidades estaduais)
+  const fundos = useMemo(() => {
+    if (!data) return []
     const estado = data?.[0]?.estados?.[0]
-    return estado?.municipios?.[0] ?? null
+    if (!estado) return []
+    // Tenta diretamente no estado, depois agrega municipios
+    if (estado.fundos?.length) return estado.fundos
+    if (estado.municipios?.length) {
+      const map = {}
+      for (const mun of estado.municipios) {
+        for (const f of mun.fundos ?? []) {
+          if (!map[f.co_fundo]) map[f.co_fundo] = { ...f, subfuncoes: [] }
+          for (const sub of f.subfuncoes) {
+            const existing = map[f.co_fundo].subfuncoes.find(s => s.nu_codigo_interno === sub.nu_codigo_interno)
+            if (existing) {
+              for (const op of sub.operacoes) {
+                const eo = existing.operacoes.find(o => o.st_natureza === op.st_natureza)
+                if (eo) eo.vl_receita = (eo.vl_receita || 0) + (op.vl_receita || 0)
+                else existing.operacoes.push({ ...op })
+              }
+            } else {
+              map[f.co_fundo].subfuncoes.push({ ...sub, operacoes: sub.operacoes.map(o => ({ ...o })) })
+            }
+          }
+        }
+      }
+      return Object.values(map)
+    }
+    return []
   }, [data])
 
   const totalGeral = useMemo(() => {
-    if (!municipioData) return 0
-    return municipioData.fundos.reduce(
+    return fundos.reduce(
       (s, f) => s + f.subfuncoes.reduce(
         (ss, sub) => ss + sub.operacoes.reduce((sss, op) => sss + (op.vl_receita || 0), 0), 0
       ), 0
     )
-  }, [municipioData])
+  }, [fundos])
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4">
@@ -198,7 +222,7 @@ export default function ModalOrcamentario({ municipio, onFechar }) {
               </svg>
               <h3 className="text-base font-semibold">Dados Orçamentários — DGMP</h3>
             </div>
-            <p className="text-xs text-blue-300">{municipio.nome} · PAS Municipal · {ano}</p>
+            <p className="text-xs text-blue-300">Estado do Maranhão · PAS Estadual · {ano}</p>
           </div>
           <button type="button" onClick={onFechar} className="text-blue-300 hover:text-white mt-0.5">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,21 +275,18 @@ export default function ModalOrcamentario({ municipio, onFechar }) {
             </div>
           )}
 
-          {!isLoading && !isError && !municipioData && (
+          {!isLoading && !isError && fundos.length === 0 && (
             <div className="text-center py-12">
               <p className="text-sm text-gray-400">
-                Nenhum dado orçamentário encontrado para {municipio.nome} em {ano}.
-              </p>
-              <p className="text-xs text-gray-300 dark:text-gray-600 mt-1">
-                O município pode não ter registrado PAS neste ano.
+                Nenhum dado orçamentário encontrado para o Maranhão em {ano}.
               </p>
             </div>
           )}
 
-          {municipioData && (
+          {fundos.length > 0 && (
             <>
-              <GraficoSubfuncoes dados={municipioData.fundos} />
-              <TabelaFundos fundos={municipioData.fundos} />
+              <GraficoSubfuncoes dados={fundos} />
+              <TabelaFundos fundos={fundos} />
               <p className="text-xs text-gray-400 dark:text-gray-600 mt-4 text-right">
                 Fonte: DigiSUS Gestor (DGMP) · Programação Anual de Saúde
               </p>
