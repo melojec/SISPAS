@@ -170,11 +170,12 @@ export default function ModalOrcamentario({ onFechar }) {
     staleTime: 5 * 60 * 1000,
   })
 
-  // Para esfera estadual, a API retorna estados[0].municipios[0].fundos
-  // onde o "município" é a Secretaria Estadual de Saúde (São Luís)
+  // Para esfera estadual, a API pode retornar objeto ou array
   const fundos = useMemo(() => {
     if (!data) return []
-    return data?.[0]?.estados?.[0]?.municipios?.[0]?.fundos ?? []
+    console.log('[DGMP] resposta bruta:', JSON.stringify(data).slice(0, 500))
+    const root = Array.isArray(data) ? data[0] : data
+    return root?.estados?.[0]?.municipios?.[0]?.fundos ?? []
   }, [data])
 
   const totalGeral = useMemo(() => {
