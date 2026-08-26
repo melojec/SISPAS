@@ -200,44 +200,41 @@ export default function ModalOrcamentario({ onFechar }) {
                   {subfuncoes.map((sub, si) => {
                     const rowTotalC = colunas.reduce((s, col) => s + (celulas[sub.codigo]?.[col.co_fundo]?.O || 0), 0)
                     const rowTotalA = colunas.reduce((s, col) => s + (celulas[sub.codigo]?.[col.co_fundo]?.A || 0), 0)
-                    const isEven = si % 2 === 0
-                    const bg = isEven ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-850'
-                    const bgSticky = isEven ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-850'
                     return [
-                      <tr key={`${sub.codigo}-C`} className={`${bg} border-t-2 border-gray-200 dark:border-gray-600`}>
-                        <td className={`px-3 pt-2 pb-0.5 font-semibold text-gray-800 dark:text-gray-100 sticky left-0 z-10 ${bgSticky} border-r border-gray-200 dark:border-gray-700`}>
+                      <tr key={`${sub.codigo}-C`} className="border-t-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
+                        <td className="px-3 pt-2 pb-0.5 font-semibold text-gray-800 dark:text-gray-100 sticky left-0 z-10 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
                           <span className="font-mono text-blue-600 dark:text-blue-400 mr-1.5">{sub.codigo}</span>{sub.nome}
                         </td>
-                        <td className="px-2 pt-2 pb-0.5 text-center text-[10px] font-semibold text-green-700 dark:text-green-400 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
+                        <td className="px-2 pt-2 pb-0.5 text-center text-[10px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
                           Corrente
                         </td>
                         {colunas.map(col => {
                           const v = celulas[sub.codigo]?.[col.co_fundo]?.O || 0
                           return (
-                            <td key={col.co_fundo} className="px-3 pt-2 pb-0.5 text-right tabular-nums text-gray-700 dark:text-gray-200 border-r border-gray-100 dark:border-gray-700">
+                            <td key={col.co_fundo} className="px-3 pt-2 pb-0.5 text-right tabular-nums text-gray-800 dark:text-gray-100 border-r border-gray-100 dark:border-gray-700">
                               {v ? fmt(v) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                             </td>
                           )
                         })}
-                        <td className="px-3 pt-2 pb-0.5 text-right tabular-nums font-bold text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40">
-                          {rowTotalC ? fmt(rowTotalC) : <span className="text-gray-300 dark:text-gray-600">—</span>}
+                        <td className="px-3 pt-2 pb-0.5 text-right tabular-nums font-bold text-gray-900 dark:text-white bg-blue-50 dark:bg-blue-950/40">
+                          {rowTotalC ? fmt(rowTotalC) : '—'}
                         </td>
                       </tr>,
-                      <tr key={`${sub.codigo}-A`} className={`${bg}`}>
-                        <td className={`px-3 pt-0.5 pb-2 sticky left-0 z-10 ${bgSticky} border-r border-gray-200 dark:border-gray-700`} />
-                        <td className="px-2 pt-0.5 pb-2 text-center text-[10px] font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
+                      <tr key={`${sub.codigo}-A`} className="bg-white dark:bg-gray-800">
+                        <td className="px-3 pt-0.5 pb-2 sticky left-0 z-10 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700" />
+                        <td className="px-2 pt-0.5 pb-2 text-center text-[10px] font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap border-r border-gray-200 dark:border-gray-700">
                           Capital
                         </td>
                         {colunas.map(col => {
                           const v = celulas[sub.codigo]?.[col.co_fundo]?.A || 0
                           return (
-                            <td key={col.co_fundo} className="px-3 pt-0.5 pb-2 text-right tabular-nums text-gray-500 dark:text-gray-400 border-r border-gray-100 dark:border-gray-700">
+                            <td key={col.co_fundo} className="px-3 pt-0.5 pb-2 text-right tabular-nums text-gray-600 dark:text-gray-300 border-r border-gray-100 dark:border-gray-700">
                               {v ? fmt(v) : <span className="text-gray-300 dark:text-gray-600">—</span>}
                             </td>
                           )
                         })}
-                        <td className="px-3 pt-0.5 pb-2 text-right tabular-nums font-bold text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40">
-                          {rowTotalA ? fmt(rowTotalA) : <span className="text-gray-300 dark:text-gray-600">—</span>}
+                        <td className="px-3 pt-0.5 pb-2 text-right tabular-nums font-bold text-gray-700 dark:text-gray-200 bg-blue-50 dark:bg-blue-950/40">
+                          {rowTotalA ? fmt(rowTotalA) : '—'}
                         </td>
                       </tr>,
                     ]
