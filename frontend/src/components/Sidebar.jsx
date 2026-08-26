@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
 import logo from '../assets/logo.svg'
+import ModalOrcamentario from './ModalOrcamentario'
 
 const NAV = [
   { to: '/',                  label: 'Dashboard',              icone: '📊', perfis: null },
@@ -27,8 +29,11 @@ function CollapseIcon({ collapsed }) {
 export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
   const { user, logout } = useAuthStore()
   const links = NAV.filter(n => !n.perfis || n.perfis.includes(user?.perfil))
+  const [orcamentoAberto, setOrcamentoAberto] = useState(false)
 
   return (
+    <>
+    {orcamentoAberto && <ModalOrcamentario onFechar={() => setOrcamentoAberto(false)} />}
     <aside
       className={`
         h-screen overflow-visible bg-blue-950 dark:bg-[#252525] text-white flex flex-col
@@ -84,6 +89,18 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
             {!collapsed && <span>{label}</span>}
           </NavLink>
         ))}
+
+        {/* Botão Orçamento PAS */}
+        <button
+          type="button"
+          onClick={() => setOrcamentoAberto(true)}
+          title={collapsed ? 'Orçamento PAS — MA' : undefined}
+          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-blue-200 hover:bg-blue-800
+            ${collapsed ? 'justify-center' : ''}`}
+        >
+          <span className="text-base leading-none">💰</span>
+          {!collapsed && <span>Orçamento PAS — MA</span>}
+        </button>
       </nav>
 
       {/* Footer: user info + logout */}
@@ -111,5 +128,6 @@ export default function Sidebar({ collapsed, onToggleCollapse, onClose }) {
         )}
       </div>
     </aside>
+    </>
   )
 }
