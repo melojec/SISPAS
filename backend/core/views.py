@@ -136,6 +136,7 @@ import urllib.parse
 import json as _json
 
 DGMP_BASE = 'https://digisusgmp.saude.gov.br/v1.5/api'
+SIOPS_BASE = 'https://siops-consulta-publica-api.saude.gov.br/v1'
 
 class DGMPOrcamentarioView(APIView):
     permission_classes = [IsUsuarioAtivo]
@@ -143,6 +144,23 @@ class DGMPOrcamentarioView(APIView):
     def get(self, request):
         params = urllib.parse.urlencode(request.query_params)
         url = f'{DGMP_BASE}/pas/dados-orcamentarios?{params}'
+        try:
+            req = urllib.request.Request(url, headers={'Accept': 'application/json'})
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                data = _json.loads(resp.read().decode('utf-8'))
+            return Response(data)
+        except Exception as e:
+            return Response({'erro': str(e)}, status=502)
+
+
+class SIOPSDespesaSubfuncaoView(APIView):
+    permission_classes = [IsUsuarioAtivo]
+
+    def get(self, request):
+        uf = request.query_params.get('uf', '21')
+        ano = request.query_params.get('ano', '2025')
+        periodo = request.query_params.get('periodo', '12')
+        url = f'{SIOPS_BASE}/despesas-por-subfuncao/{uf}/{ano}/{periodo}'
         try:
             req = urllib.request.Request(url, headers={'Accept': 'application/json'})
             with urllib.request.urlopen(req, timeout=20) as resp:
