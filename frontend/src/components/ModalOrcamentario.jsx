@@ -225,7 +225,7 @@ export default function ModalOrcamentario({ onFechar }) {
               </button>
             ))}
           </div>
-          {municipioData && (
+          {fundos.length > 0 && (
             <span className="ml-auto text-xs font-bold text-blue-800 dark:text-blue-300">
               Total: {fmtLong(totalGeral)}
             </span>
