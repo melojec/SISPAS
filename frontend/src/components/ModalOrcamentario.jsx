@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import api from '../services/api'
 
-const ANOS = [2024, 2023, 2022, 2021, 2020]
+const ANOS = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 
 const CORES_FUNDO = [
   '#1e40af', '#0369a1', '#0f766e', '#6d28d9', '#b45309', '#be123c',
@@ -155,7 +155,7 @@ function TabelaFundos({ fundos }) {
 }
 
 export default function ModalOrcamentario({ onFechar }) {
-  const [ano, setAno] = useState(ANOS[0])
+  const [ano, setAno] = useState(2025)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['dgmp-orcamentario-estadual', ano],
