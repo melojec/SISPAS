@@ -109,7 +109,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from collections import defaultdict
 from .models import Municipio
-import requests as http_requests
 
 class MunicipioListView(APIView):
     permission_classes = [IsUsuarioAtivo]
@@ -132,22 +131,22 @@ class MunicipioListView(APIView):
         return Response(resultado)
 
 
+import urllib.request
+import urllib.parse
+import json as _json
+
 DGMP_BASE = 'https://digisusgmp.saude.gov.br/v1.5/api'
 
 class DGMPOrcamentarioView(APIView):
     permission_classes = [IsUsuarioAtivo]
 
     def get(self, request):
-        params = {k: v for k, v in request.query_params.items()}
+        params = urllib.parse.urlencode(request.query_params)
+        url = f'{DGMP_BASE}/pas/dados-orcamentarios?{params}'
         try:
-            resp = http_requests.get(
-                f'{DGMP_BASE}/pas/dados-orcamentarios',
-                params=params,
-                timeout=20,
-            )
-            resp.raise_for_status()
-            return Response(resp.json())
-        except http_requests.exceptions.Timeout:
-            return Response({'erro': 'Tempo limite ao acessar DGMP.'}, status=504)
+            req = urllib.request.Request(url, headers={'Accept': 'application/json'})
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                data = _json.loads(resp.read().decode('utf-8'))
+            return Response(data)
         except Exception as e:
             return Response({'erro': str(e)}, status=502)
