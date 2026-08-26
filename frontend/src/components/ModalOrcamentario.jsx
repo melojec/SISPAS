@@ -170,36 +170,11 @@ export default function ModalOrcamentario({ onFechar }) {
     staleTime: 5 * 60 * 1000,
   })
 
-  // Para esfera estadual, os dados podem estar em estados[0] diretamente
-  // ou agrupados dentro de municipios (entidades estaduais)
+  // Para esfera estadual, a API retorna estados[0].municipios[0].fundos
+  // onde o "município" é a Secretaria Estadual de Saúde (São Luís)
   const fundos = useMemo(() => {
     if (!data) return []
-    const estado = data?.[0]?.estados?.[0]
-    if (!estado) return []
-    // Tenta diretamente no estado, depois agrega municipios
-    if (estado.fundos?.length) return estado.fundos
-    if (estado.municipios?.length) {
-      const map = {}
-      for (const mun of estado.municipios) {
-        for (const f of mun.fundos ?? []) {
-          if (!map[f.co_fundo]) map[f.co_fundo] = { ...f, subfuncoes: [] }
-          for (const sub of f.subfuncoes) {
-            const existing = map[f.co_fundo].subfuncoes.find(s => s.nu_codigo_interno === sub.nu_codigo_interno)
-            if (existing) {
-              for (const op of sub.operacoes) {
-                const eo = existing.operacoes.find(o => o.st_natureza === op.st_natureza)
-                if (eo) eo.vl_receita = (eo.vl_receita || 0) + (op.vl_receita || 0)
-                else existing.operacoes.push({ ...op })
-              }
-            } else {
-              map[f.co_fundo].subfuncoes.push({ ...sub, operacoes: sub.operacoes.map(o => ({ ...o })) })
-            }
-          }
-        }
-      }
-      return Object.values(map)
-    }
-    return []
+    return data?.[0]?.estados?.[0]?.municipios?.[0]?.fundos ?? []
   }, [data])
 
   const totalGeral = useMemo(() => {
