@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import AreaViewSet, DiretrizViewSet, ObjetivoViewSet, MetaViewSet, AtividadeViewSet, MunicipioListView
+from .views import AreaViewSet, DiretrizViewSet, ObjetivoViewSet, MetaViewSet, AtividadeViewSet, MunicipioListView, DGMPOrcamentarioView
 from .importar_pas_view import ImportarPASView
 
 router = DefaultRouter()
@@ -13,4 +13,5 @@ router.register('atividades', AtividadeViewSet, basename='atividade')
 urlpatterns = router.urls + [
     path('importar-pas/', ImportarPASView.as_view(), name='importar-pas'),
     path('municipios/', MunicipioListView.as_view(), name='municipios'),
+    path('dgmp/orcamentario/', DGMPOrcamentarioView.as_view(), name='dgmp-orcamentario'),
 ]

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import api from '../services/api'
+import ModalOrcamentario from './ModalOrcamentario'
 
 const IBGE_GEOJSON_URL =
   'https://servicodados.ibge.gov.br/api/v3/malhas/estados/21' +
@@ -55,7 +56,7 @@ function allCoords(features) {
   return pts
 }
 
-function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600, intrinsic = true }) {
+function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWidth = 0.3, svgStyle, W = 400, H = 600, intrinsic = true, onClickMunicipio }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -74,7 +75,7 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
             fill={isAtivo ? '#2563eb' : isCumulativo ? '#bfdbfe' : 'transparent'}
             stroke={isAtivo ? '#1d4ed8' : isCumulativo ? '#93c5fd' : '#9ca3af'}
             strokeWidth={isAtivo || isCumulativo ? strokeWidth * 1.5 : strokeWidth}
-            style={{ opacity: 0.9 }}
+            style={{ opacity: 0.9, cursor: onClickMunicipio ? 'pointer' : 'default' }}
             onMouseEnter={e => {
               const svg = e.currentTarget.closest('svg')
               const rect = svg.getBoundingClientRect()
@@ -84,11 +85,12 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
                 nome, regiao, ativo: isAtivo, cumulativo: isCumulativo,
               })
             }}
+            onClick={() => onClickMunicipio?.({ codarea, nome })}
           />
         )
       })}
       {tooltip && (() => {
-        const tw = 200, th = 56
+        const tw = 210, th = 64
         const tx = Math.min(tooltip.x + 8, W - tw - 4)
         const ty = Math.max(tooltip.y - th - 6, 2)
         return (
@@ -101,6 +103,7 @@ function MapaSVG({ paths, ativoSet, cumulativoSet, tooltip, setTooltip, strokeWi
             <text x={10} y={47} fontSize={9} fill={tooltip.ativo ? '#60a5fa' : tooltip.cumulativo ? '#bfdbfe' : '#64748b'} fontFamily="system-ui">
               {tooltip.ativo ? '● Quadrimestre atual' : tooltip.cumulativo ? '● Cumulativo' : '○ Não beneficiado'}
             </text>
+            <text x={10} y={59} fontSize={8.5} fill="#475569" fontFamily="system-ui">Clique para ver orçamento</text>
           </g>
         )
       })()}
@@ -123,6 +126,7 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
   const [tooltip, setTooltip] = useState(null)
   const [tooltipFull, setTooltipFull] = useState(null)
   const [telaCheiaAberta, setTelaCheiaAberta] = useState(false)
+  const [municipioOrcamento, setMunicipioOrcamento] = useState(null)
 
   const idToCodIbge = useMemo(() => {
     const map = {}
@@ -237,9 +241,19 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
             tooltip={tooltip} setTooltip={setTooltip}
             strokeWidth={0.3}
             svgStyle={{ width: MINI_W, height: MINI_H, display: 'block' }}
+            onClickMunicipio={({ codarea, nome }) => setMunicipioOrcamento({ cod_ibge: codarea, nome })}
           />
         </div>
       </div>
+
+      {/* Modal orçamentário */}
+      {municipioOrcamento && createPortal(
+        <ModalOrcamentario
+          municipio={municipioOrcamento}
+          onFechar={() => setMunicipioOrcamento(null)}
+        />,
+        document.body
+      )}
 
       {/* Modal tela cheia */}
       {telaCheiaAberta && createPortal(
@@ -285,9 +299,13 @@ export default function MapaMaranhao({ municipiosCumulativos = [], municipiosAti
                 paths={paths} W={W} H={H}
                 intrinsic={false}
                 ativoSet={ativoSet} cumulativoSet={cumulativoSet}
-                    tooltip={tooltipFull} setTooltip={setTooltipFull}
+                tooltip={tooltipFull} setTooltip={setTooltipFull}
                 strokeWidth={0.5}
                 svgStyle={{ height: '100%', width: 'auto', display: 'block' }}
+                onClickMunicipio={({ codarea, nome }) => {
+                  setTelaCheiaAberta(false)
+                  setMunicipioOrcamento({ cod_ibge: codarea, nome })
+                }}
               />
             </div>
           </div>
