@@ -250,7 +250,7 @@ class TodasMetasPDFView(APIView):
             logo = _make_logo(14)
             data = [[
                 logo,
-                [Paragraph('Ficha de Meta', sTitle),
+                [Paragraph('Relatório Detalhado do Quadrimestre Anterior - RDQA', sTitle),
                  Paragraph('Sistema de Monitoramento da Programação Anual de Saúde — SES-MA', sSub)],
                 Paragraph(f'{ciclo_txt}Gerado em: {data_geracao}', sRight),
             ]]
@@ -286,8 +286,8 @@ class TodasMetasPDFView(APIView):
             bc = Table(
                 [[
                     Paragraph(
-                        f'<b>{_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}<br/>'
-                        f'<b>{_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}',
+                        f'<b>Diretriz {_strip_html(d.codigo)}</b> - {_strip_html(d.descricao)}<br/>'
+                        f'<b>Objetivo {_strip_html(obj.codigo)}</b> - {_strip_html(obj.descricao)}',
                         sBcLeft
                     ),
                     [Paragraph('Área Responsável', sAreaLbl),
@@ -311,7 +311,7 @@ class TodasMetasPDFView(APIView):
             story.append(Spacer(1, 2*mm))
 
             # ── Banner meta ───────────────────────────────────────────────
-            meta_txt = f'{_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
+            meta_txt = f'Meta {_strip_html(meta.codigo)} - {_strip_html(meta.descricao)}'
             story.append(Table(
                 [[Paragraph(meta_txt, sWhiteBd)]],
                 colWidths=[W],
