@@ -4,6 +4,13 @@ import api from '../services/api'
 
 const ANOS = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 
+// SIOPS aceita apenas períodos 1 (1º RDQA), 2 (2º RDQA) e 12 (RAG)
+const PERIODOS = [
+  { valor: '1',  label: '1º RDQA', desc: 'Jan–Abr' },
+  { valor: '2',  label: '2º RDQA', desc: 'Jan–Ago' },
+  { valor: '12', label: 'RAG',     desc: 'Jan–Dez' },
+]
+
 // Nomes oficiais das fontes — Quadro 1 SIOPS estadual (colunas valor1..valor9)
 const FONTES = [
   { key: 'valor1', label: 'Recursos Ordinários — Fonte Livre' },
@@ -31,16 +38,20 @@ function fmtAbrev(v) {
 }
 
 export default function ModalOrcamentario({ onFechar }) {
-  const [ano, setAno] = useState(2025)
+  const [ano, setAno] = useState(2026)
+  const [periodo, setPeriodo] = useState('1')
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['siops-despesa-subfuncao', ano],
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['siops-despesa-subfuncao', ano, periodo],
     queryFn: () =>
       api.get('/siops/despesa-subfuncao/', {
-        params: { uf: '21', ano, periodo: '12' },
+        params: { uf: '21', ano, periodo },
       }).then(r => r.data),
     staleTime: 5 * 60 * 1000,
+    retry: false,
   })
+
+  const semDados = isError && error?.response?.status === 404
 
   // Linhas de subfunção (exclui linha TOTAL do API — grupo 17)
   const linhas = useMemo(() => {
@@ -72,7 +83,9 @@ export default function ModalOrcamentario({ onFechar }) {
               </svg>
               <h3 className="text-base font-semibold">Despesa Total em Saúde por Fonte e Subfunção</h3>
             </div>
-            <p className="text-xs text-blue-300">Estado do Maranhão · Execução Orçamentária · {ano}</p>
+            <p className="text-xs text-blue-300">
+              Estado do Maranhão · {PERIODOS.find(p => p.valor === periodo)?.label} ({PERIODOS.find(p => p.valor === periodo)?.desc}) · {ano}
+            </p>
           </div>
           <button type="button" onClick={onFechar} className="text-blue-300 hover:text-white mt-0.5">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,22 +94,38 @@ export default function ModalOrcamentario({ onFechar }) {
           </button>
         </div>
 
-        {/* Filtro de ano */}
-        <div className="px-6 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3 shrink-0 flex-wrap">
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Ano:</span>
-          <div className="flex gap-1.5 flex-wrap">
-            {ANOS.map(a => (
-              <button key={a} type="button" onClick={() => setAno(a)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
-                  a === ano ? 'bg-blue-900 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}>
-                {a}
-              </button>
-            ))}
+        {/* Filtros */}
+        <div className="px-6 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center gap-4 shrink-0 flex-wrap">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Período:</span>
+            <div className="flex gap-1">
+              {PERIODOS.map(p => (
+                <button key={p.valor} type="button" onClick={() => setPeriodo(p.valor)}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                    p.valor === periodo ? 'bg-blue-900 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                  title={p.desc}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Ano:</span>
+            <div className="flex gap-1.5 flex-wrap">
+              {ANOS.map(a => (
+                <button key={a} type="button" onClick={() => setAno(a)}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                    a === ano ? 'bg-blue-900 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}>
+                  {a}
+                </button>
+              ))}
+            </div>
           </div>
           {totalGeral > 0 && (
             <span className="ml-auto text-xs font-bold text-blue-800 dark:text-blue-300">
-              Total Geral: {fmtAbrev(totalGeral)}
+              Total: {fmtAbrev(totalGeral)}
             </span>
           )}
         </div>
@@ -113,7 +142,18 @@ export default function ModalOrcamentario({ onFechar }) {
             </div>
           )}
 
-          {isError && (
+          {isError && semDados && (
+            <div className="text-center py-16">
+              <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                Dados não disponíveis
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-600 mt-1">
+                O SIOPS ainda não publicou o {PERIODOS.find(p => p.valor === periodo)?.label} de {ano}.
+              </p>
+            </div>
+          )}
+
+          {isError && !semDados && (
             <div className="text-center py-12">
               <p className="text-sm text-red-500">Erro ao consultar o SIOPS. Tente novamente.</p>
             </div>
@@ -226,7 +266,7 @@ export default function ModalOrcamentario({ onFechar }) {
 
           {linhas.length > 0 && (
             <p className="text-xs text-gray-400 dark:text-gray-600 mt-3 text-right">
-              Fonte: Sistema de Informações sobre Orçamentos Públicos em Saúde (SIOPS) · Período 12 · {ano}
+              Fonte: SIOPS · {PERIODOS.find(p => p.valor === periodo)?.label} ({PERIODOS.find(p => p.valor === periodo)?.desc}) · {ano}
             </p>
           )}
         </div>

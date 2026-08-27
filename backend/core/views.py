@@ -133,6 +133,7 @@ class MunicipioListView(APIView):
 
 import urllib.request
 import urllib.parse
+import urllib.error
 import json as _json
 
 DGMP_BASE = 'https://digisusgmp.saude.gov.br/v1.5/api'
@@ -166,5 +167,9 @@ class SIOPSDespesaSubfuncaoView(APIView):
             with urllib.request.urlopen(req, timeout=20) as resp:
                 data = _json.loads(resp.read().decode('utf-8'))
             return Response(data)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return Response({'erro': 'Dados não disponíveis para este período.'}, status=404)
+            return Response({'erro': str(e)}, status=502)
         except Exception as e:
             return Response({'erro': str(e)}, status=502)
