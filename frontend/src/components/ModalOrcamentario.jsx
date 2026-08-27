@@ -54,11 +54,8 @@ export default function ModalOrcamentario({ onFechar }) {
     return data.find(row => row.grupo === '17' || row.descricao === 'TOTAL') || null
   }, [data])
 
-  // Colunas com pelo menos um valor não-zero
-  const colunasAtivas = useMemo(() => {
-    if (!linhas.length) return []
-    return FONTES.filter(f => linhas.some(row => (row[f.key] || 0) !== 0))
-  }, [linhas])
+  // Todas as 9 colunas do Quadro 1 SIOPS — exibidas sempre
+  const colunasAtivas = FONTES
 
   const totalGeral = linhaTotalAPI?.valor10 || 0
 
