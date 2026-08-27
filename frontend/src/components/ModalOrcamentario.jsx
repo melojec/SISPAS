@@ -4,11 +4,11 @@ import api from '../services/api'
 
 const ANOS = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 
-// SIOPS aceita apenas períodos 1 (1º RDQA), 2 (2º RDQA) e 12 (RAG)
+// SIOPS usa bimestres: 1º RDQA = 2º bimestre, 2º RDQA = 4º bimestre, RAG = 6º bimestre
 const PERIODOS = [
-  { valor: '1',  label: '1º RDQA', desc: 'Jan–Abr' },
-  { valor: '2',  label: '2º RDQA', desc: 'Jan–Ago' },
-  { valor: '12', label: 'RAG',     desc: 'Jan–Dez' },
+  { valor: '2', label: '1º RDQA', desc: 'Jan–Abr' },
+  { valor: '4', label: '2º RDQA', desc: 'Jan–Ago' },
+  { valor: '6', label: 'RAG',     desc: 'Jan–Dez' },
 ]
 
 // Nomes oficiais das fontes — Quadro 1 SIOPS estadual (colunas valor1..valor9)
@@ -39,7 +39,7 @@ function fmtAbrev(v) {
 
 export default function ModalOrcamentario({ onFechar }) {
   const [ano, setAno] = useState(2026)
-  const [periodo, setPeriodo] = useState('1')
+  const [periodo, setPeriodo] = useState('2')
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['siops-despesa-subfuncao', ano, periodo],
