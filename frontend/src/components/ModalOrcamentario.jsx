@@ -4,17 +4,17 @@ import api from '../services/api'
 
 const ANOS = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 
-// Nomes das fontes de recurso — colunas valor1..valor9 do SIOPS (estadual, quadro 1)
+// Nomes oficiais das fontes — Quadro 1 SIOPS estadual (colunas valor1..valor9)
 const FONTES = [
-  { key: 'valor1', label: 'Rec. Própria (Impostos)' },
-  { key: 'valor2', label: 'Transf. União — Fundo SUS' },
-  { key: 'valor3', label: 'Transf. União — Outros' },
-  { key: 'valor4', label: 'Transf. Estado' },
-  { key: 'valor5', label: 'Rec. Ordinários' },
-  { key: 'valor6', label: 'Op. Crédito' },
-  { key: 'valor7', label: 'Outros Recursos (1)' },
-  { key: 'valor8', label: 'Outros Recursos (2)' },
-  { key: 'valor9', label: 'Outros Recursos (3)' },
+  { key: 'valor1', label: 'Recursos Ordinários — Fonte Livre' },
+  { key: 'valor2', label: 'Receitas de Impostos e de Transferência de Impostos — Saúde' },
+  { key: 'valor3', label: 'Transferências Fundo a Fundo de Recursos do SUS provenientes do Governo Federal' },
+  { key: 'valor4', label: 'Transferências Fundo a Fundo de Recursos do SUS provenientes do Governo Estadual' },
+  { key: 'valor5', label: 'Transferências de Convênios destinadas à Saúde' },
+  { key: 'valor6', label: 'Operações de Crédito vinculadas à Saúde' },
+  { key: 'valor7', label: 'Transferências da União — Inciso I do art. 5º da Lei Complementar 173/2020' },
+  { key: 'valor8', label: 'Royalties do Petróleo destinados à Saúde' },
+  { key: 'valor9', label: 'Outros Recursos Destinados à Saúde' },
 ]
 
 function fmt(v) {
